@@ -11,8 +11,7 @@ import RootLayout from './layouts/root-layout'
 import SignInComponent from './views/SignIn'
 import SignUpComponent from './views/SignUp'
 import Dashboard from './views/Dashboard'
-import ProtectedRoute from './layouts/protected-route'
-
+import DashboardLayout from './layouts/dashboard-layout.tsx'
 
 const router = createBrowserRouter([
   {
@@ -23,9 +22,12 @@ const router = createBrowserRouter([
       { path: '/sign-up', element: <SignUpComponent /> },
       {
         path: '/dashboard',
-        element: <ProtectedRoute />,
+        element: <DashboardLayout />,
         children: [
-          { path: '/dashboard', element: <Dashboard /> }
+          {
+            path: '/dashboard',
+            element: <Dashboard />
+          }
         ]
       }
     ]
