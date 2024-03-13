@@ -6,6 +6,13 @@ import { Link, useNavigate } from "react-router-dom"
 import { SignOutButton, SignedIn, SignedOut, useUser } from "@clerk/clerk-react"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "./ui/dropdown-menu"
 import { Input } from "./ui/input"
+import {
+    Drawer,
+    DrawerClose,
+    DrawerContent,
+    DrawerTrigger,
+} from "@/components/ui/drawer"
+  
 
 const Navbar = () => {
 
@@ -14,35 +21,45 @@ const Navbar = () => {
 
   return (
     <nav className="p-4 fixed w-full flex justify-between items-center top-0 z-10 dark:bg-[#0c0a09] bg-white">
-        {/* MOBILE NAVIGATION - [LEFT SHEET] */}
 
+        {/* MOBILE NAVIGATION - [DRAWER] */}
         <SignedIn>
-            <Sheet>
-                <SheetTrigger className="sm:hidden">
+            <Drawer>
+                <DrawerTrigger className="sm:hidden" asChild>
                     <PenLine />
-                </SheetTrigger>
-                <SheetContent side='top'>
-                    <div className="h-[200px] flex flex-col justify-center items-center rounded-md my-4 dark:bg-[#1c1c1c] bg-[#d1d1d1]">
-                        <h3>Dev.hike</h3>
-                        <Button variant='link'>
-                            <Link to='https://www.github.com/goldfish7718/Dev.hike' target="_blank">Github repo</Link>
-                            <ArrowUpRightFromSquare size={18} className="mx-1" />
-                        </Button>
-                    </div>
+                </DrawerTrigger>
+                <DrawerContent>
+                    <div className="p-4">
+                        <div className="h-[200px] flex flex-col justify-center items-center rounded-md my-4 dark:bg-[#1c1c1c] bg-[#d1d1d1]">
+                            <h3>Dev.hike</h3>
+                            <Button variant='link'>
+                                <Link to='https://www.github.com/goldfish7718/Dev.hike' target="_blank">Github repo</Link>
+                                <ArrowUpRightFromSquare size={18} className="mx-1" />
+                            </Button>
+                        </div>
 
-                    <div id="search" className="my-4 flex gap-2">
-                        <Input type="text" placeholder="Search Dev.hike"></Input>
-                        <Button variant='outline'><Search size={18} /></Button>
-                    </div>
+                        <div id="search" className="my-4 flex gap-2">
+                            <Input type="text" placeholder="Search Dev.hike"></Input>
+                            <Button variant='outline'><Search size={18} /></Button>
+                        </div>
 
-                    <div id="options" className="flex flex-col gap-2">
-                        <Button className="w-full" variant='outline'><Plus size={18} className="mx-1" /> Add to Timeline</Button>
-                        <Button className="w-full" variant='outline'><Zap size={18} className="mx-1" /> New Event</Button>
-                        <Button className="w-full" variant='outline'><StickyNote size={18} className="mx-1" /> New Post</Button>
-                        <Button className="w-full" variant='outline'><UserPlus size={18} className="mx-1" /> Invite Users</Button>
+                        <div id="options" className="flex flex-col gap-2">
+                            <DrawerClose asChild>
+                                <Button className="w-full" variant='outline'><Plus size={18} className="mx-1" /> Add to Timeline</Button>
+                            </DrawerClose>
+                            <DrawerClose asChild>
+                                <Button className="w-full" variant='outline'><Zap size={18} className="mx-1" /> New Event</Button>
+                            </DrawerClose>
+                            <DrawerClose asChild>
+                                <Button className="w-full" variant='outline'><StickyNote size={18} className="mx-1" /> New Post</Button>
+                            </DrawerClose>
+                            <DrawerClose asChild>
+                                <Button className="w-full" variant='outline'><UserPlus size={18} className="mx-1" /> Invite Users</Button>
+                            </DrawerClose>
+                        </div>
                     </div>
-                </SheetContent>
-            </Sheet>
+                </DrawerContent>
+            </Drawer>
         </SignedIn>
 
         <h3 className="text-3xl hover:cursor-pointer" onClick={() => navigate('/')}>Dev.hike</h3>
