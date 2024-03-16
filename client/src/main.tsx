@@ -12,12 +12,14 @@ import SignInComponent from './views/SignIn'
 import SignUpComponent from './views/SignUp'
 import Dashboard from './views/Dashboard'
 import DashboardLayout from './layouts/dashboard-layout.tsx'
+import { GlobeDemo } from './views/Landing.tsx'
 
 const router = createBrowserRouter([
   {
     path: '/',
     element: <RootLayout />,
     children: [
+      { path: '/', element: <GlobeDemo /> },
       { path: '/sign-in', element: <SignInComponent /> },
       { path: '/sign-up', element: <SignUpComponent /> },
       {

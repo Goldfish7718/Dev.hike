@@ -62,7 +62,7 @@ const Navbar = () => {
             </Drawer>
         </SignedIn>
 
-        <h3 className="text-3xl hover:cursor-pointer" onClick={() => navigate('/')}>Dev.hike</h3>
+        <h3 className="text-3xl hover:cursor-pointer" onClick={() => window.location.href = '/'}>Dev.hike</h3>
 
         {/* MOBILE NAVIGATION - [RIGHT SHEET] */}
         <Sheet>
