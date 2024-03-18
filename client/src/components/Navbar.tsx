@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button"
 import { ModeToggle } from "./mode-toggle-switch"
-import { ArrowUpRightFromSquare, LogIn, LogOut, Menu, PenLine, Plus, Search, Settings, StickyNote, User, UserPlus, Zap } from "lucide-react"
+import { ArrowUpRightFromSquare, CircleGauge, LogIn, LogOut, Menu, PenLine, Plus, Search, Settings, StickyNote, User, UserPlus, Zap } from "lucide-react"
 import { Sheet, SheetClose, SheetContent, SheetTrigger } from "./ui/sheet"
 import { Link, useNavigate } from "react-router-dom"
 import { SignOutButton, SignedIn, SignedOut, useUser } from "@clerk/clerk-react"
@@ -87,6 +87,10 @@ const Navbar = () => {
                         </SheetClose>
 
                         <SheetClose asChild>
+                            <Button onClick={() => navigate('/dashboard')} variant='outline'>Dashboard <CircleGauge size={18} className="mx-1" /></Button>
+                        </SheetClose>
+
+                        <SheetClose asChild>
                             <Button variant='outline'>Settings<Settings size={18} className="mx-1" /></Button>
                         </SheetClose>
 
@@ -108,6 +112,7 @@ const Navbar = () => {
                 <Button onClick={() => navigate('/sign-up')} variant='outline'>Sign Up <User size={18} className="mx-1" /></Button>
             </SignedOut>
             <SignedIn>
+                <Button variant='outline' onClick={() => navigate('/dashboard')}>Dashboard <CircleGauge size={18} className="mx-1" /></Button>
                 <DropdownMenu>
                     <DropdownMenuTrigger>
                         <Button variant='outline'>

@@ -2,7 +2,7 @@ import Loading from "@/components/Loading"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { useAuth } from "@clerk/clerk-react"
-import { ArrowUpRightFromSquare, Plus, Search, StickyNote, UserPlus, Zap } from "lucide-react"
+import { ArrowUpRightFromSquare, ChevronRight, Plus, Search, StickyNote, UserPlus, Zap } from "lucide-react"
 import { Link, Outlet, useNavigate } from "react-router-dom"
  
 export default function ProtectedRoute() {
@@ -37,7 +37,17 @@ export default function ProtectedRoute() {
               <Button className="w-full" variant='outline'><UserPlus size={18} className="mx-1" /> Invite Users</Button>
             </div>
           </nav>
-          <main className="ml-[300px] mt-[72px]">
+
+          <nav className="min-h-screen fixed xl:w-[300px] right-0 hidden lg:block lg:w-[220px]">
+            <h4 className="dark:text-gray-200 text-black">Dev.hike.info&#40;&#41;</h4>
+
+            <div className="p-3 flex flex-col gap-2 items-start">
+              <Button variant='link' className="dark:text-gray-300 text-gray-900"><span className="hover:mr-1 transition-all duration-200">About Dev.hike</span> <ChevronRight size={18} className="mx-2" /></Button>
+              <Button variant='link' className="dark:text-gray-300 text-gray-900"><span className="hover:mr-1 transition-all duration-200">Contact</span> <ChevronRight size={18} className="mx-2" /></Button>
+              <Button variant='link' className="dark:text-gray-300 text-gray-900"><span className="hover:mr-1 transition-all duration-200">Developers/Contributors</span> <ChevronRight size={18} className="mx-2" /></Button>
+            </div>
+          </nav>
+          <main className="sm:ml-[300px] mt-[72px] p-2">
             <Outlet />
           </main>
         </>
