@@ -45,7 +45,7 @@ const Navbar = () => {
 
                         <div id="options" className="flex flex-col gap-2">
                             <DrawerClose asChild>
-                                <Button className="w-full" variant='outline'><Plus size={18} className="mx-1" /> Add to Timeline</Button>
+                                <Button className="w-full" variant='outline' onClick={() => navigate('/new/timeline')}><Plus size={18} className="mx-1" /> Add to Timeline</Button>
                             </DrawerClose>
                             <DrawerClose asChild>
                                 <Button className="w-full" variant='outline'><Zap size={18} className="mx-1" /> New Event</Button>
