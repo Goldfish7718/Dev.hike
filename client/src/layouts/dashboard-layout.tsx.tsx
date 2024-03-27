@@ -31,7 +31,7 @@ export default function ProtectedRoute() {
             </div>
 
             <div id="options" className="flex flex-col gap-2">
-              <Button className="w-full" variant='outline'><Plus size={18} className="mx-1" /> Add to Timeline</Button>
+              <Button className="w-full" variant='outline' onClick={() => navigate('/new/timeline')}><Plus size={18} className="mx-1" /> Add to Timeline</Button>
               <Button className="w-full" variant='outline' onClick={() => navigate('/new/event')}><Zap size={18} className="mx-1" /> New Event</Button>
               <Button className="w-full" variant='outline'><StickyNote size={18} className="mx-1" /> New Post</Button>
               <Button className="w-full" variant='outline'><UserPlus size={18} className="mx-1" /> Invite Users</Button>
