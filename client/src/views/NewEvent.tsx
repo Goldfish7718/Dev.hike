@@ -7,8 +7,8 @@ import { MapPin } from "lucide-react"
 const NewEvent = () => {
     return (
         <>
-            <div className="flex justify-center mt-20">
-                <div className="w-1/2 p-4">
+            <div className="flex justify-center h-screen items-center">
+                <div className="w-full p-4 sm:w-3/4 md:1/2">
                     <h3 className="mb-4 text-center">New Event</h3>
                     <div className="mb-4 ">                            
                         <Label className="text-base md:text-lg">Event Name :</Label>
