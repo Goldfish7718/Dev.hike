@@ -19,7 +19,7 @@ const NewPost = () => {
           <Textarea className="text-base" />
         </div>
         <div className="flex">
-        <Button className="text-lg my-6 w-full">Add TimeLine</Button>
+        <Button className="text-lg my-6 w-full">Post</Button>
         </div>                       
        </div>
       </div>
