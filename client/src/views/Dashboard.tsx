@@ -2,10 +2,10 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Separator } from "@/components/ui/separator"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Heart, MapPin, MessageSquare, Settings, Users } from "lucide-react"
+import { Heart, MapPin, MessageSquare, Settings, Users, ArrowBigDown, ArrowBigUp } from "lucide-react"
 import feed from '@/data/feedData.json'
-import { Avatar, AvatarImage } from "@/components/ui/avatar"
-import { AvatarFallback } from "@radix-ui/react-avatar"
+import posts from '@/data/postData.json'
+import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar"
 
 const Dashboard = () => {
 
@@ -54,7 +54,35 @@ const Dashboard = () => {
             ))
           }
         </TabsContent>
-      </Tabs>
+        <TabsContent value="posts">
+          {posts.data.map(post => (
+              <Card className="lg:w-2/3 w-full my-4">
+                <CardHeader className="flex flex-row gap-4 justify-start items-center">
+                  <Avatar className="h-12 w-12">
+                    <AvatarImage src="" />
+                    <AvatarFallback className="flex">PM</AvatarFallback>
+                  </Avatar>
+                  <div  className="flex flex-col">
+                    <CardTitle>{post.title}</CardTitle>
+                    <Button className="dark:text-gray-300 text-gray-900 justify-start p-0" variant="link" size="sm">{post.username}</Button>
+                  </div>
+                </CardHeader>
+                <Separator />
+                <CardContent>
+                  <div className="mt-4">
+                    <p>{post.desc}</p>
+                  </div>
+                </CardContent>
+                <Separator />
+                  <div className="flex">
+                    <Button className="w-full" variant='ghost' ><ArrowBigUp size={24} className="mx-1"/>{post.upvotes} Upvotes</Button>
+                    <Button className="w-full" variant='ghost'><ArrowBigDown size={24} className="mx-1"/>{post.downvotes} Downvotes</Button>
+                  </div>
+              </Card>
+            ))
+          }
+          </TabsContent>
+          </Tabs>
     </>
   )
 }
