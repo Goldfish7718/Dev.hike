@@ -20,9 +20,9 @@ const Profile = () => {
               <AvatarFallback className="text-2xl">KK</AvatarFallback>
             </Avatar>
           </div>
-          <div>
+          <div className="text-center md:text-left">
             <h3 className="text-4xl">Khushi Kshatriya</h3>
-            <div className="flex gap-3 my-1">
+            <div className="flex gap-3 my-1 md:flex-col lg:flex-row">
               <h3 className="font-light">Followers <span className="font-bold">569</span></h3>
               <h3 className="font-light">Following <span className="font-bold">786</span></h3>
             </div>
@@ -111,7 +111,7 @@ const Profile = () => {
       
 
       {/* TIMLINE AND POSTS */}
-      <div className="md:my-20 md:w-2/3 w-full">
+      <div className="my-96 md:my-20 md:w-2/3 w-full">
         <Tabs defaultValue="timeline" className="px-4">
           <TabsList className="w-full flex justify-evenly">
             <TabsTrigger value="timeline" className="w-full">My Timeline</TabsTrigger>
@@ -156,7 +156,9 @@ const Profile = () => {
                     <AvatarFallback className="flex">PM</AvatarFallback>
                   </Avatar>
                   <div  className="flex flex-col">
-                    <CardTitle></CardTitle>
+                    <CardTitle>
+                      Lorem ipsum dolor sit amet consectetur adipisicing elit. Culpa, quas?
+                    </CardTitle>
                     <Button className="dark:text-gray-300 text-gray-900 justify-start p-0" variant="link" size="sm">catch-cookies-code</Button>
                   </div>
                 </CardHeader>
