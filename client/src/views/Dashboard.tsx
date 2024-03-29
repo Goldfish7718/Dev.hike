@@ -14,7 +14,7 @@ const Dashboard = () => {
       <Tabs defaultValue="feed" className="">
         <TabsList className="w-full md:w-2/3 justify-evenly">
           <TabsTrigger value="feed" className="w-full">Feed</TabsTrigger>
-          <TabsTrigger value="my timeline" className="w-full">My timeline</TabsTrigger>
+          <TabsTrigger value="events" className="w-full">Events</TabsTrigger>
           <TabsTrigger value="posts" className="w-full">Posts</TabsTrigger>
         </TabsList>
         <TabsContent value="feed">
