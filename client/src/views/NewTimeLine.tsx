@@ -18,6 +18,10 @@ const NewTimeLine = () => {
                         <Input className="text-base md:text-lg border-gray-700"/>
                     </div>
                     <div className="mb-2">
+                        <Label className="text-base md:text-lg">Tag:</Label>
+                        <Input className="text-base md:text-lg"/>
+                    </div>
+                    <div className="mb-2">
                         <Label className="text-base md:text-lg">Links:</Label>
                         <div className="flex items-center gap-1">
                             <Input className="text-base md:text-lg border-gray-700"/>
