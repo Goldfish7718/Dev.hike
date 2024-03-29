@@ -51,7 +51,7 @@ const Navbar = () => {
                                 <Button className="w-full" variant='outline' onClick={() => navigate('/new/event')} ><Zap size={18} className="mx-1" /> New Event</Button>
                             </DrawerClose>
                             <DrawerClose asChild>
-                                <Button className="w-full" variant='outline'><StickyNote size={18} className="mx-1" /> New Post</Button>
+                                <Button className="w-full" variant='outline' onClick={() => navigate('/new/post')}><StickyNote size={18} className="mx-1" /> New Post</Button>
                             </DrawerClose>
                             <DrawerClose asChild>
                                 <Button className="w-full" variant='outline'><UserPlus size={18} className="mx-1" /> Invite Users</Button>
@@ -83,7 +83,7 @@ const Navbar = () => {
                     </SignedOut>
                     <SignedIn>
                         <SheetClose asChild>
-                            <Button variant='outline'> {user?.fullName} <User size={18} className="mx-1" /></Button>
+                            <Button variant='outline' onClick={() => navigate('/profile')}>{user?.fullName} <User size={18} className="mx-1" /></Button>
                         </SheetClose>
 
                         <SheetClose asChild>
@@ -120,7 +120,7 @@ const Navbar = () => {
                         </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent>
-                        <DropdownMenuItem>
+                        <DropdownMenuItem onClick={() => navigate('/profile')}>
                             <User className="mr-2 h-4 w-4" />
                             <span>View Profile</span>
                         </DropdownMenuItem>

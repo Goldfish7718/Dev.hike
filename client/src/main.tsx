@@ -15,6 +15,8 @@ import DashboardLayout from './layouts/dashboard-layout.tsx'
 import { GlobeDemo } from './views/Landing.tsx'
 import NewTimeLine from './views/NewTimeLine.tsx'
 import NewEvent from './views/NewEvent.tsx'
+import NewPost from './views/NewPost.tsx'
+import Profile from './views/Profile.tsx'
 
 const router = createBrowserRouter([
   {
@@ -24,8 +26,10 @@ const router = createBrowserRouter([
       { path: '/', element: <GlobeDemo /> },
       { path: '/sign-in', element: <SignInComponent /> },
       { path: '/sign-up', element: <SignUpComponent /> },
+      { path: '/profile', element: <Profile /> },     
       { path: '/new/timeline', element: <NewTimeLine /> },
       { path: '/new/event', element: <NewEvent /> },
+      { path: '/new/post', element: <NewPost /> },
       {
         path: '/dashboard',
         element: <DashboardLayout />,
