@@ -7,7 +7,7 @@ import { Plus } from "lucide-react"
 const NewTimeLine = () => {
     return (
         <>
-            <div className="flex justify-center w-full items-center h-screen">
+            <div className="flex justify-center w-full items-center h-screen my-8">
                 <div className="w-full p-4 sm:w-3/4 md:1/2">
                     <h3 className="mb-4 text-center">New TimeLine</h3>
                     <div className="mb-2">

@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { ArrowUpRightFromSquare } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
-export function GlobeDemo() {
+function Landing() {
 
   const navigate = useNavigate()
 
@@ -56,3 +56,5 @@ export function GlobeDemo() {
     </>
   );
 }
+
+export default Landing
