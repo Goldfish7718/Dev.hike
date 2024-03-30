@@ -94,11 +94,11 @@ const Navbar = () => {
                             <Button variant='outline'>Settings<Settings size={18} className="mx-1" /></Button>
                         </SheetClose>
 
-                        <SheetClose asChild>
-                            <SignOutButton>
+                        <SignOutButton>
+                            <SheetClose asChild>
                                 <Button variant='outline'>Log Out<LogOut size={18} className="mx-1" /></Button>
-                            </SignOutButton>
-                        </SheetClose>
+                            </SheetClose>
+                        </SignOutButton>
                     </SignedIn>
                 </div>
             </SheetContent>

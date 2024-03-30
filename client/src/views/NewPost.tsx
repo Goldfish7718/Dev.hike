@@ -7,7 +7,7 @@ import {SquarePen} from "lucide-react"
 const NewPost = () => {
   return (
     <>
-      <div className="w-full flex justify-center h-screen items-center">
+      <div className="w-full flex justify-center h-screen items-center my-8">
         <div className="w-full p-5 sm:w-3/4 md:1/2">
         <h3 className="justify-center flex items-center">New Post<SquarePen className="mx-2" size={24} /></h3>
         <div className="my-6">                            
