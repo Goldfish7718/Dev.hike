@@ -7,6 +7,7 @@ import feed from '@/data/feedData.json'
 import posts from '@/data/postData.json'
 import events from '@/data/eventData.json'
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar"
+import EventRegisterTrigger from "@/components/EventRegister"
 
 
 const Dashboard = () => {
@@ -115,10 +116,13 @@ const Dashboard = () => {
                       <span className="text-gray-400 text-sm">
                         Khushi, Samruddhi and 3 others have participated
                       </span>
+                      <EventRegisterTrigger>
                       <Button>
                         <UserRoundPlus size={16} className="mx-2"/>
                         Register
                       </Button>
+                      </EventRegisterTrigger>
+                     
                     </div>
                   </CardFooter>
                 </Card>
