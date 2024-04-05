@@ -74,12 +74,16 @@ const Dashboard = () => {
                 <CardContent>
                   <div className="mt-4">
                     <p>{post.desc}</p>
+                    <div className="mt-4 items-center">
+                      <Button className="w-1/8 flex gap-2" variant='outline'><Users size={24} className="mx-1"/>{post.tags}</Button>
+                    </div>
                   </div>
                 </CardContent>
                 <Separator />
                   <div className="flex">
                     <Button className="w-full" variant='ghost' ><ArrowBigUp size={24} className="mx-1"/>{post.upvotes} Upvotes</Button>
                     <Button className="w-full" variant='ghost'><ArrowBigDown size={24} className="mx-1"/>{post.downvotes} Downvotes</Button>
+                    <Button className="w-full" variant='ghost'><MessageSquare size={24} className="mx-1"/>{post.reply} Reply</Button>
                   </div>
               </Card>
             ))
