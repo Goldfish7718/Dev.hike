@@ -18,6 +18,7 @@ import NewTimeLine from './views/NewTimeLine.tsx'
 import NewEvent from './views/NewEvent.tsx'
 import NewPost from './views/NewPost.tsx'
 import Profile from './views/Profile.tsx'
+import InitiateProfileFirst from './views/InitiateProfileFirst.tsx'
 
 const router = createBrowserRouter([
   {
@@ -34,6 +35,7 @@ const router = createBrowserRouter([
           { path: '/new/timeline', element: <NewTimeLine /> },
           { path: '/new/event', element: <NewEvent /> },
           { path: '/new/post', element: <NewPost /> },
+          { path: '/initiate-profile/1', element: <InitiateProfileFirst /> },
           {
             element: <DashboardLayout />,
             children: [
