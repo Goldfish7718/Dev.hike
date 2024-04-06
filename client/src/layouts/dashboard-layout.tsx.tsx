@@ -2,7 +2,6 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { ArrowUpRightFromSquare, ChevronRight, Plus, Search, StickyNote, UserPlus, Zap } from "lucide-react"
 import { Link, Outlet, useNavigate } from "react-router-dom"
-import ReplyDialogTrigger from '@/components/ReplyDialogTrigger'
  
 export default function ProtectedRoute() {
 
@@ -28,9 +27,7 @@ export default function ProtectedRoute() {
           <Button className="w-full" variant='outline' onClick={() => navigate('/new/timeline')}><Plus size={18} className="mx-1" /> Add to Timeline</Button>
           <Button className="w-full" variant='outline' onClick={() => navigate('/new/event')}><Zap size={18} className="mx-1" /> New Event</Button>
           <Button className="w-full" variant='outline' onClick={() => navigate('/new/post')}><StickyNote size={18} className="mx-1" /> New Post</Button>
-          <ReplyDialogTrigger>
-            <Button className="w-full" variant='outline'><UserPlus size={18} className="mx-1" /> Replies</Button>
-          </ReplyDialogTrigger>
+          <Button className="w-full" variant='outline'><UserPlus size={18} className="mx-1" /> Replies</Button>
         </div>
       </nav>
 
