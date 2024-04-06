@@ -18,7 +18,7 @@ import NewTimeLine from './views/NewTimeLine.tsx'
 import NewEvent from './views/NewEvent.tsx'
 import NewPost from './views/NewPost.tsx'
 import Profile from './views/Profile.tsx'
-
+import User1 from './views/User1.tsx'
 const router = createBrowserRouter([
   {
     path: '/',
@@ -34,6 +34,7 @@ const router = createBrowserRouter([
           { path: '/new/timeline', element: <NewTimeLine /> },
           { path: '/new/event', element: <NewEvent /> },
           { path: '/new/post', element: <NewPost /> },
+          { path: '/user', element: <User1 /> },
           {
             element: <DashboardLayout />,
             children: [
