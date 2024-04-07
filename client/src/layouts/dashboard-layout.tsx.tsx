@@ -27,7 +27,7 @@ export default function ProtectedRoute() {
           <Button className="w-full" variant='outline' onClick={() => navigate('/new/timeline')}><Plus size={18} className="mx-1" /> Add to Timeline</Button>
           <Button className="w-full" variant='outline' onClick={() => navigate('/new/event')}><Zap size={18} className="mx-1" /> New Event</Button>
           <Button className="w-full" variant='outline' onClick={() => navigate('/new/post')}><StickyNote size={18} className="mx-1" /> New Post</Button>
-          <Button className="w-full" variant='outline'><UserPlus size={18} className="mx-1" /> Replies</Button>
+          <Button className="w-full" variant='outline'><UserPlus size={18} className="mx-1" /> Invite Users</Button>
         </div>
       </nav>
 
