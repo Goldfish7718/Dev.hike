@@ -18,30 +18,38 @@ import NewEvent from './views/NewEvent.tsx'
 import NewPost from './views/NewPost.tsx'
 import Profile from './views/Profile.tsx'
 import InitiateProfileSecond from './views/InitiateProfileSecond.tsx'
+import InitiateProfileFirst from './views/InitiateProfileFirst.tsx'
+import User1 from './views/User1.tsx'
 
 const router = createBrowserRouter([
   {
     path: '/',
     element: <RootLayout />,
     children: [
-      { path: '/', element: <GlobeDemo /> },
+      { path: '/', element: <Landing /> },
       { path: '/sign-in', element: <SignInComponent /> },
       { path: '/sign-up', element: <SignUpComponent /> },
-      { path: '/profile', element: <Profile /> },     
-      { path: '/new/timeline', element: <NewTimeLine /> },
-      { path: '/new/event', element: <NewEvent /> },
-      { path: '/new/post', element: <NewPost /> },
-      { path: '/initiate-profile/2', element: <InitiateProfileSecond /> },
-      {
-        path: '/dashboard',
-        element: <DashboardLayout />,
+      { 
+        element: <ProtectRoute />,
         children: [
+          { path: '/profile', element: <Profile /> },     
+          { path: '/new/timeline', element: <NewTimeLine /> },
+          { path: '/new/event', element: <NewEvent /> },
+          { path: '/new/post', element: <NewPost /> },
+          { path: '/initiate-profile/1', element: <InitiateProfileFirst /> },
+          { path: '/initiate-profile/2', element: <InitiateProfileSecond /> },
+          { path: '/user', element: <User1 /> },
           {
-            path: '/dashboard',
-            element: <Dashboard />
+            element: <DashboardLayout />,
+            children: [
+              {
+                path: '/dashboard',
+                element: <Dashboard />
+              }
+            ]
           }
         ]
-      }
+      },
     ]
   }
 ])

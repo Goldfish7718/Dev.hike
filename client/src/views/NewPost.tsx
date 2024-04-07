@@ -18,6 +18,10 @@ const NewPost = () => {
           <Label className="text-base">Post: </Label>
           <Textarea className="text-base" />
         </div>
+        <div className="my-6">
+          <Label className="text-base">Tag: </Label>
+          <Input className="text-base" />
+        </div>
         <div className="flex">
         <Button className="text-lg my-6 w-full">Post</Button>
         </div>                       

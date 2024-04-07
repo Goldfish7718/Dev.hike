@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { ArrowUpRightFromSquare, ChevronRight, Plus, Search, StickyNote, UserPlus, Zap } from "lucide-react"
 import { Link, Outlet, useNavigate } from "react-router-dom"
- 
+import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger,} from "@/components/ui/dialog" 
 export default function ProtectedRoute() {
 
   const navigate = useNavigate()
@@ -18,9 +18,19 @@ export default function ProtectedRoute() {
           </Button>
         </div>
 
-        <div id="search" className="my-4 flex gap-2">
-          <Input type="text" placeholder="Search Dev.hike"></Input>
-          <Button variant='outline'><Search size={18} /></Button>
+        <div id="search" className="my-4 flex">
+          <Dialog>
+            <DialogTrigger className="flex">
+              <Button variant="outline" className="w-72 justify-start text-gray-400">Search Dev.hike<Button variant="outline" className="mx-28 p"><Search size={25} /></Button></Button>
+              
+            </DialogTrigger>
+            <DialogContent className="flex py-8 gap-2">
+                  
+                  <Input type="text" placeholder="Search..."></Input>
+                  <Button>Search<Search size={18} className="mx-2" /></Button>
+      
+            </DialogContent>
+          </Dialog>
         </div>
 
         <div id="options" className="flex flex-col gap-2">
