@@ -1,9 +1,9 @@
+import SearchDialogTrigger from "@/components/SearchDialogTrigger"
 import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
 import { ArrowUpRightFromSquare, ChevronRight, Plus, Search, StickyNote, UserPlus, Zap } from "lucide-react"
 import { Link, Outlet, useNavigate } from "react-router-dom"
-import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog" 
-export default function ProtectedRoute() {
+
+export default function DashboardLayout() {
 
   const navigate = useNavigate()
  
@@ -18,20 +18,9 @@ export default function ProtectedRoute() {
           </Button>
         </div>
 
-        <div id="search" className="my-4 flex">
-          <Dialog>
-            <DialogTrigger className="flex">
-              <Button variant="outline" className="w-72 justify-start text-gray-400">Search Dev.hike<Button variant="outline" className="mx-28 p"><Search size={25} /></Button></Button>
-              
-            </DialogTrigger>
-            <DialogContent className="flex py-8 gap-2">
-                  
-                  <Input type="text" placeholder="Search..."></Input>
-                  <Button>Search<Search size={18} className="mx-2" /></Button>
-      
-            </DialogContent>
-          </Dialog>
-        </div>
+        <SearchDialogTrigger>
+          <Button variant='outline' className="w-full my-4">Search <Search size={18} className="mx-2" /></Button>
+        </SearchDialogTrigger>
 
         <div id="options" className="flex flex-col gap-2">
           <Button className="w-full" variant='outline' onClick={() => navigate('/new/timeline')}><Plus size={18} className="mx-1" /> Add to Timeline</Button>

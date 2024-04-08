@@ -2,7 +2,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Card, CardHeader, CardFooter, CardTitle, CardContent } from "@/components/ui/card"
 import { Separator } from "@/components/ui/separator"
 import { Button } from "@/components/ui/button"
-import { User, SquarePen, Github, Twitter, Slack, Plus, MessagesSquare, BadgePlus, TriangleAlert, UserRoundX, ArrowBigUp, ArrowBigDown } from 'lucide-react'
+import { User, SquarePen, Github, Twitter, Slack, Plus, MessagesSquare, BadgePlus, TriangleAlert, UserRoundX, ArrowBigUp, ArrowBigDown, MessageSquareHeart, Globe } from 'lucide-react'
 import { Tabs, TabsTrigger,TabsContent, TabsList } from "@/components/ui/tabs"
 import { useNavigate } from "react-router-dom"
 import { useUser } from "@clerk/clerk-react"
@@ -79,7 +79,7 @@ const Profile = () => {
               <Button className="w-full" variant="outline">Add Social Link<Plus size={18} className="mx-1"/></Button>
             </CardFooter>
           </Card>
-        </div>
+        </div>        
 
         {/* ADD TO TIMELINE / NEW POST */}
         <div className="my-2">
@@ -96,6 +96,33 @@ const Profile = () => {
             </div>
           </Card>
         </div>
+
+         {/* DOMAINS*/}
+        <div className="my-2">
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center">Domains<Globe size={28} className="mx-2" /></CardTitle>
+            </CardHeader>
+            <CardContent className="flex flex-col gap-2">
+              <Button variant="outline">Web Development</Button>
+              <Button variant="outline">Machine Learning</Button>
+              <Button variant="outline">Cyber Security</Button>
+            </CardContent>
+          </Card>
+        </div>
+
+          {/* INTERESTS */}
+          <div className="my-2">
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center">Interests<MessageSquareHeart size={28} className="mx-2" /></CardTitle>
+              </CardHeader>
+              <CardContent className="flex flex-col gap-2">
+                <Button variant="outline">Collaboration</Button>
+                <Button variant="outline">Project Building</Button>
+              </CardContent>
+            </Card>
+          </div>
 
         {/* DANGER ZONE */}
         <div className="my-2">
