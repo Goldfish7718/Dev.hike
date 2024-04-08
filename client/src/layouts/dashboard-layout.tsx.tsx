@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { ArrowUpRightFromSquare, ChevronRight, Plus, Search, StickyNote, UserPlus, Zap } from "lucide-react"
 import { Link, Outlet, useNavigate } from "react-router-dom"
-import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger,} from "@/components/ui/dialog" 
+import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog" 
 export default function ProtectedRoute() {
 
   const navigate = useNavigate()
