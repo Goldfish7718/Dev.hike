@@ -2,10 +2,11 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Card, CardHeader, CardFooter, CardTitle, CardContent } from "@/components/ui/card"
 import { Separator } from "@/components/ui/separator"
 import { Button } from "@/components/ui/button"
-import { User, SquarePen, Github, Settings, Link, Twitter, Slack, Plus, MessagesSquare, BadgePlus, TriangleAlert, UserRoundX, ArrowBigUp, ArrowBigDown } from 'lucide-react'
+import { User, SquarePen, Github, Twitter, Slack, Plus, MessagesSquare, BadgePlus, TriangleAlert, UserRoundX, ArrowBigUp, ArrowBigDown, MessageSquareHeart, Globe } from 'lucide-react'
 import { Tabs, TabsTrigger,TabsContent, TabsList } from "@/components/ui/tabs"
 import { useNavigate } from "react-router-dom"
 import { useUser } from "@clerk/clerk-react"
+import TimelineCard from "@/components/TimelineCard"
 
 const Profile = () => {
 
@@ -78,7 +79,34 @@ const Profile = () => {
               <Button className="w-full" variant="outline">Add Social Link<Plus size={18} className="mx-1"/></Button>
             </CardFooter>
           </Card>
+        </div>     
+
+        {/* DOMAINS*/}
+        <div className="my-2">
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center">Domains<Globe size={28} className="mx-2" /></CardTitle>
+            </CardHeader>
+            <CardContent className="flex flex-col gap-2">
+              <Button variant="outline">Web Development</Button>
+              <Button variant="outline">Machine Learning</Button>
+              <Button variant="outline">Cyber Security</Button>
+            </CardContent>
+          </Card>
         </div>
+
+        {/* INTERESTS */}
+        <div className="my-2">
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center">Interests<MessageSquareHeart size={28} className="mx-2" /></CardTitle>
+            </CardHeader>
+            <CardContent className="flex flex-col gap-2">
+              <Button variant="outline">Collaboration</Button>
+              <Button variant="outline">Project Building</Button>
+            </CardContent>
+          </Card>
+        </div>   
 
         {/* ADD TO TIMELINE / NEW POST */}
         <div className="my-2">
@@ -120,35 +148,7 @@ const Profile = () => {
             <TabsTrigger value="posts" className="w-full">Posts</TabsTrigger>
           </TabsList>
           <TabsContent value="timeline">
-            <Card className="w-full my-3">
-              <CardHeader>
-                <CardTitle className="flex items-center">
-                  <Github size={24} className="mx-3"/>
-                  <span>Successfully completed Dev.hike project!</span> 
-                  <div className="ml-auto">
-                    <span className="text-sm  text-gray-400">21st June 2023</span>   
-                  </div>   
-                </CardTitle>
-              </CardHeader>
-              <div className="p-5">
-                <div>
-                  <p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Enim sequi natus alias quaerat quos labore magni quas, officia perspiciatis, ipsa, accusamus consequatur veritatis? Tempora mollitia odit fugiat, velit impedit possimus sint vel soluta consectetur voluptatem praesentium doloremque, saepe voluptatibus? Excepturi est in accusantium esse vero corrupti omnis consequuntur? Commodi libero, voluptates velit provident iusto quia cum minus nisi quam quae non, delectus quibusdam error aperiam praesentium quos illo itaque quasi fuga perspiciatis ex, in suscipit. Eum possimus necessitatibus molestias quam atque cum ratione consectetur? Atque doloribus quam expedita et eum deleniti aliquam perferendis porro! Ex natus optio fuga. Provident, doloribus.</p>
-                </div>
-                <Button className="mt-4" variant="outline"><Settings size={18} className="mx-2"/>Web Development</Button>
-              </div>
-              <CardFooter>
-                <div className="flex flex-col gap-1">
-                  <div className="flex items-center">
-                    <Link size={12} className="mx-1"/>
-                    <span className="text-sm">https://www.github.com/catch-cookies-code/Dev.hike</span>
-                  </div>
-                  <div className="flex items-center">
-                    <Link size={12} className="mx-1"/>
-                    <span className="text-sm">https://something.com</span>
-                  </div>
-                </div>
-              </CardFooter>
-            </Card>
+            <TimelineCard />
           </TabsContent>
           <TabsContent value="posts">
             <Card className="w-full my-3">

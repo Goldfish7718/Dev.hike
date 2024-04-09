@@ -5,13 +5,13 @@ import { Sheet, SheetClose, SheetContent, SheetTrigger } from "./ui/sheet"
 import { Link, useNavigate } from "react-router-dom"
 import { SignOutButton, SignedIn, SignedOut, useUser } from "@clerk/clerk-react"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "./ui/dropdown-menu"
-import { Input } from "./ui/input"
 import {
     Drawer,
     DrawerClose,
     DrawerContent,
     DrawerTrigger,
 } from "@/components/ui/drawer"
+import SearchDialogTrigger from "./SearchDialogTrigger"
   
 
 const Navbar = () => {
@@ -38,10 +38,9 @@ const Navbar = () => {
                             </Button>
                         </div>
 
-                        <div id="search" className="my-4 flex gap-2">
-                            <Input type="text" placeholder="Search Dev.hike"></Input>
-                            <Button variant='outline'><Search size={18} /></Button>
-                        </div>
+                        <SearchDialogTrigger>
+                            <Button variant='outline' className="w-full my-4">Search <Search size={18} className="mx-2" /></Button>
+                        </SearchDialogTrigger>
 
                         <div id="options" className="flex flex-col gap-2">
                             <DrawerClose asChild>
