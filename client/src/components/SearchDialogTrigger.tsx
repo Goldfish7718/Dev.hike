@@ -37,7 +37,7 @@ const SearchDialogTrigger = ({ children }: SearchDialogTriggerProps) => {
                         Search Dev.hike
                     </DrawerTitle>
                 </DrawerHeader>
-                <div className="flex flex-col gap-2 px-2 py-4">
+                <div className="flex flex-col gap-2 px-2">
                     <Input type="text" placeholder="Search..."></Input>
                     <Button className="w-full">Search<Search size={18} className="mx-2" /></Button>
                 </div>

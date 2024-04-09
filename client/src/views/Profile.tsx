@@ -79,7 +79,34 @@ const Profile = () => {
               <Button className="w-full" variant="outline">Add Social Link<Plus size={18} className="mx-1"/></Button>
             </CardFooter>
           </Card>
-        </div>        
+        </div>     
+
+        {/* DOMAINS*/}
+        <div className="my-2">
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center">Domains<Globe size={28} className="mx-2" /></CardTitle>
+            </CardHeader>
+            <CardContent className="flex flex-col gap-2">
+              <Button variant="outline">Web Development</Button>
+              <Button variant="outline">Machine Learning</Button>
+              <Button variant="outline">Cyber Security</Button>
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* INTERESTS */}
+        <div className="my-2">
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center">Interests<MessageSquareHeart size={28} className="mx-2" /></CardTitle>
+            </CardHeader>
+            <CardContent className="flex flex-col gap-2">
+              <Button variant="outline">Collaboration</Button>
+              <Button variant="outline">Project Building</Button>
+            </CardContent>
+          </Card>
+        </div>   
 
         {/* ADD TO TIMELINE / NEW POST */}
         <div className="my-2">
@@ -96,33 +123,6 @@ const Profile = () => {
             </div>
           </Card>
         </div>
-
-         {/* DOMAINS*/}
-        <div className="my-2">
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center">Domains<Globe size={28} className="mx-2" /></CardTitle>
-            </CardHeader>
-            <CardContent className="flex flex-col gap-2">
-              <Button variant="outline">Web Development</Button>
-              <Button variant="outline">Machine Learning</Button>
-              <Button variant="outline">Cyber Security</Button>
-            </CardContent>
-          </Card>
-        </div>
-
-          {/* INTERESTS */}
-          <div className="my-2">
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center">Interests<MessageSquareHeart size={28} className="mx-2" /></CardTitle>
-              </CardHeader>
-              <CardContent className="flex flex-col gap-2">
-                <Button variant="outline">Collaboration</Button>
-                <Button variant="outline">Project Building</Button>
-              </CardContent>
-            </Card>
-          </div>
 
         {/* DANGER ZONE */}
         <div className="my-2">
