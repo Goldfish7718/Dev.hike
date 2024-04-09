@@ -12,14 +12,15 @@ import SignInComponent from './views/SignIn'
 import SignUpComponent from './views/SignUp'
 import Dashboard from './views/Dashboard'
 import DashboardLayout from './layouts/dashboard-layout.tsx'
-import  GlobeDemo  from './views/Landing.tsx'
+import Landing from './views/Landing.tsx'
 import NewTimeLine from './views/NewTimeLine.tsx'
 import NewEvent from './views/NewEvent.tsx'
 import NewPost from './views/NewPost.tsx'
 import Profile from './views/Profile.tsx'
 import InitiateProfileSecond from './views/InitiateProfileSecond.tsx'
 import InitiateProfileFirst from './views/InitiateProfileFirst.tsx'
-import User1 from './views/User1.tsx'
+import User from './views/User.tsx'
+import ProtectRoute from './layouts/protect-route.tsx'
 
 const router = createBrowserRouter([
   {
@@ -38,7 +39,7 @@ const router = createBrowserRouter([
           { path: '/new/post', element: <NewPost /> },
           { path: '/initiate-profile/1', element: <InitiateProfileFirst /> },
           { path: '/initiate-profile/2', element: <InitiateProfileSecond /> },
-          { path: '/user', element: <User1 /> },
+          { path: '/user', element: <User /> },
           {
             element: <DashboardLayout />,
             children: [

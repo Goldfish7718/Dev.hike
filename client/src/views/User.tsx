@@ -1,15 +1,14 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { Card, CardHeader, CardFooter, CardTitle, CardContent } from "@/components/ui/card"
+import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card"
 import { Separator } from "@/components/ui/separator"
 import { Button } from "@/components/ui/button"
-import { User, Github, Settings, Link, ArrowBigUp, ArrowBigDown, Award, MessageSquareHeart, UserPlus, Globe, Check } from 'lucide-react'
+import { User as LucideUser, ArrowBigUp, ArrowBigDown, MessageSquareHeart, UserPlus, Globe, Check, Slack, Twitter, Github, MessagesSquare } from 'lucide-react'
 import { Tabs, TabsTrigger,TabsContent, TabsList } from "@/components/ui/tabs"
-import { useNavigate } from "react-router-dom"
 import { useUser } from "@clerk/clerk-react"
+import TimelineCard from "@/components/TimelineCard"
 
 const User1 = () => {
 
-  const navigate = useNavigate()
   const { user } = useUser()
   const fallback = `${user?.fullName?.split(' ')[0].slice(0, 1)}${user?.fullName?.split(' ')[1].slice(0, 1)}`
 
@@ -39,11 +38,12 @@ const User1 = () => {
           <Button className="mt-4 w-full" variant="outline">Following<Check size={20} className="mx-1"/></Button>  
         </div>  
         </div>
-        {/* ABOUT ME */}
+
+        {/* ABOUT */}
         <div className="mt-8">
           <Card>
             <CardHeader>
-              <CardTitle className="flex items-center">About<User size={28} className="mx-2" /></CardTitle>
+              <CardTitle className="flex items-center">About Tejas<LucideUser size={28} className="mx-2" /></CardTitle>
             </CardHeader>
             <Separator/>
             <div className="p-5">
@@ -52,18 +52,43 @@ const User1 = () => {
           </Card>
         </div>
 
-        {/* EXPERIENCE*/}
+        {/* SOCIALS */}
+        <div className="my-2">
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center">
+                Socials<MessagesSquare size={28} className="mx-2" /> 
+              </CardTitle>
+            </CardHeader>
+            <Separator/>
+            <div className="flex flex-col gap-1 p-3">
+              <div className="flex items-center">
+                <Github size={18} className="mx-1"/>
+                <span className="text-sm">https://www.github.com/catch-cookies-code/Dev.hike</span>
+              </div>
+              <div className="flex items-center">
+                <Twitter size={18} className="mx-1"/>
+                <span className="text-sm">https://www.github.com/catch-cookies-code/Dev.hike</span>
+              </div>
+              <div className="flex items-center">
+                <Slack size={18} className="mx-1"/>
+                <span className="text-sm">https://www.github.com/catch-cookies-code/Dev.hike</span>
+              </div>
+            </div>
+          </Card>
+        </div>
+
+        {/* DOMAINS*/}
         <div className="my-2">
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center">Domains<Globe size={28} className="mx-2" /></CardTitle>
             </CardHeader>
-            <CardContent className="flex gap-2">
+            <CardContent className="flex flex-col gap-2">
               <Button variant="outline">Web Development</Button>
               <Button variant="outline">Machine Learning</Button>
               <Button variant="outline">Cyber Security</Button>
             </CardContent>
-            <Separator/>
           </Card>
         </div>
 
@@ -73,11 +98,10 @@ const User1 = () => {
             <CardHeader>
               <CardTitle className="flex items-center">Interests<MessageSquareHeart size={28} className="mx-2" /></CardTitle>
             </CardHeader>
-            <CardContent className="flex gap-2">
+            <CardContent className="flex flex-col gap-2">
               <Button variant="outline">Collaboration</Button>
               <Button variant="outline">Project Building</Button>
             </CardContent>
-            <Separator/>
           </Card>
         </div>
       </div>
@@ -90,35 +114,7 @@ const User1 = () => {
             <TabsTrigger value="posts" className="w-full">Posts</TabsTrigger>
           </TabsList>
           <TabsContent value="timeline">
-            <Card className="w-full my-3">
-              <CardHeader>
-                <CardTitle className="flex items-center">
-                  <Github size={24} className="mx-3"/>
-                  <span>Successfully completed Dev.hike project!</span> 
-                  <div className="ml-auto">
-                    <span className="text-sm  text-gray-400">21st June 2023</span>   
-                  </div>   
-                </CardTitle>
-              </CardHeader>
-              <div className="p-5">
-                <div>
-                  <p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Enim sequi natus alias quaerat quos labore magni quas, officia perspiciatis, ipsa, accusamus consequatur veritatis? Tempora mollitia odit fugiat, velit impedit possimus sint vel soluta consectetur voluptatem praesentium doloremque, saepe voluptatibus? Excepturi est in accusantium esse vero corrupti omnis consequuntur? Commodi libero, voluptates velit provident iusto quia cum minus nisi quam quae non, delectus quibusdam error aperiam praesentium quos illo itaque quasi fuga perspiciatis ex, in suscipit. Eum possimus necessitatibus molestias quam atque cum ratione consectetur? Atque doloribus quam expedita et eum deleniti aliquam perferendis porro! Ex natus optio fuga. Provident, doloribus.</p>
-                </div>
-                <Button className="mt-4" variant="outline"><Settings size={18} className="mx-2"/>Web Development</Button>
-              </div>
-              <CardFooter>
-                <div className="flex flex-col gap-1">
-                  <div className="flex items-center">
-                    <Link size={12} className="mx-1"/>
-                    <span className="text-sm">https://www.github.com/catch-cookies-code/Dev.hike</span>
-                  </div>
-                  <div className="flex items-center">
-                    <Link size={12} className="mx-1"/>
-                    <span className="text-sm">https://something.com</span>
-                  </div>
-                </div>
-              </CardFooter>
-            </Card>
+            <TimelineCard />
           </TabsContent>
           <TabsContent value="posts">
             <Card className="w-full my-3">
