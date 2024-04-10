@@ -5,70 +5,91 @@
             "title": "Anroid Development Course Completion Certificate",
             "desc": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Quis fugit facere ipsam, deleniti ad quia pariatur dolore porro assumenda nostrum temporibus dicta rem quidem vero a corrupti vel earum nulla. Repudiandae dolor temporibus ratione consequatur ipsa libero sit assumenda delectus fugit cum, laboriosam eum eos aut eaque ullam, ducimus velit.",
             "upvotes": 70,
-            "downvotes": 5
+            "downvotes": 5,
+            "replies": 10,
+            "tags": 7
         },
         {
             "username": "JohnDoe",
             "title": "Web Development Bootcamp Certificate",
             "desc": "Join me in celebrating the completion of my Web Development Bootcamp! Over the past few months, I've learned HTML, CSS, JavaScript, and various frameworks. Excited to embark on my journey as a web developer!",
             "upvotes": 120,
-            "downvotes": 3
+            "downvotes": 3,
+            "replies": 46,
+            "tags": 6
+
         },
         {
             "username": "CodingWizard22",
             "title": "Python Programming Certification",
             "desc": "Just received my Python Programming Certification after months of dedication and hard work. Grateful for the support of the programming community. Let's keep coding!",
             "upvotes": 90,
-            "downvotes": 8
+            "downvotes": 8,
+            "replies": 3,
+            "tags": 7
         },
         {
             "username": "TechieGirl",
             "title": "Data Science Specialization",
             "desc": "Thrilled to announce the completion of my Data Science Specialization. From machine learning algorithms to data visualization techniques, this journey has been enlightening. Excited for what's next!",
             "upvotes": 150,
-            "downvotes": 12
+            "downvotes": 12,
+            "replies": 17,
+            "tags": 3
         },
         {
             "username": "CodeNinja007",
             "title": "Full Stack Development Certification",
             "desc": "After countless hours of coding and debugging, I've earned my Full Stack Development Certification. From front-end frameworks to databases, I'm ready to tackle any development challenge!",
             "upvotes": 80,
-            "downvotes": 6
+            "downvotes": 6,
+            "replies": 16,
+            "tags": 8
         },
         {
             "username": "TechExplorer",
             "title": "Machine Learning Course Certificate",
             "desc": "Completed a comprehensive Machine Learning course covering regression, classification, clustering, and neural networks. Excited to apply my newfound knowledge to real-world projects!",
             "upvotes": 100,
-            "downvotes": 4
+            "downvotes": 4,
+            "replies": 36,
+            "tags": 2
         },
         {
             "username": "DataGeek",
             "title": "Big Data Analytics Certification",
             "desc": "Officially certified in Big Data Analytics! From Hadoop to Spark, I've mastered the tools and techniques required to analyze massive datasets. Let's dive into the world of data-driven insights!",
             "upvotes": 110,
-            "downvotes": 9
+            "downvotes": 9,
+            "replies": 30,
+            "tags": 3
         },
         {
             "username": "CodeMaster",
             "title": "Software Engineering Diploma",
             "desc": "Proud to announce the completion of my Software Engineering Diploma. From software design principles to project management, this program has equipped me with the skills to build robust and scalable applications.",
             "upvotes": 130,
-            "downvotes": 7
+            "downvotes": 7,
+            "replies": 56,
+            "tags": 7
         },
         {
             "username": "AIEnthusiast",
             "title": "Artificial Intelligence Nanodegree",
             "desc": "Achieved my goal of obtaining an Artificial Intelligence Nanodegree! From natural language processing to computer vision, this program has broadened my understanding of AI technologies.",
             "upvotes": 95,
-            "downvotes": 3
+            "downvotes": 3,
+            "replies": 89,
+            "tags": 5
         },
         {
             "username": "TechSavvy",
             "title": "Cybersecurity Certification",
             "desc": "Obtained my Cybersecurity Certification after months of rigorous training. Ready to protect digital assets and mitigate security threats in today's interconnected world!",
             "upvotes": 85,
-            "downvotes": 6
+            "downvotes": 6,
+            "replies": 11,
+            "tags": 8
         }
     ]
 }
