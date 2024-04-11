@@ -7,14 +7,18 @@ const profileSchema = new Schema({
         unique: true
     },
     bio: String,
-    timelineRefs: {
-        type: Schema.Types.ObjectId,
-        ref: 'Timelines'
-    },
-    postRefs: {
-        type: Schema.Types.ObjectId,
-        ref: 'Posts'
-    },
+    timelineRefs: [
+        {
+            type: Schema.Types.ObjectId,
+            ref: 'Timelines'
+        }
+    ],
+    postRefs: [
+        {
+            type: Schema.Types.ObjectId,
+            ref: 'Posts'
+        }
+    ],
     domains: [
         {
             type: String,

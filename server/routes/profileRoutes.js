@@ -3,6 +3,6 @@ import { initiateProfile } from '../controllers/profileControllers.js'
 
 const router = Router()
 
-router.post('/first', initiateProfile)
+router.post('/initiate', initiateProfile)
 
 export default router
