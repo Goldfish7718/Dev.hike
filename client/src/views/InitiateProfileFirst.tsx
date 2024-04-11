@@ -4,14 +4,36 @@ import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { ChevronRight, Plus, Rocket } from "lucide-react"
 import { useState } from "react"
+import { useUser } from "@/context/UserContext"
+import { Badge } from "@/components/ui/badge"
+import { useNavigate } from "react-router-dom"
 
 const InitiateProfileFirst = () => {
 
-  const [domains, setDomains] = useState([]);
-  const [interests, setInterests] = useState([]);
+  const { 
+    domains,
+    interests, 
+    addDomain, 
+    addInterest, 
+    setBio,
+    removeDomainByIndex, 
+    removeInterestByIndex 
+  } = useUser()
 
   const [domain, setDomain] = useState('')
   const [interest, setInterest] = useState('')
+
+  const navigate = useNavigate()
+
+  const callAddDomain = () => {
+    addDomain(domain)
+    setDomain('')
+  }
+
+  const callAddInterest = () => {
+    addInterest(interest)
+    setInterest('')
+  }
   
   return (
     <>
@@ -22,26 +44,38 @@ const InitiateProfileFirst = () => {
           <div className="md:w-2/3 w-full">
             <div className="my-6">                            
               <Label className="text-base">Bio: </Label>
-              <Textarea className="text-base" /> 
+              <Textarea className="text-base" onChange={e => setBio(e.target.value)} /> 
             </div>
             <div className="flex flex-col gap-3">
               <div className="w-full">
-                <Label className="text-base">Domain: </Label>
-                <div className="flex gap-1">
-                <Input className="text-base" onChange={e => setDomain(e.target.value)} />
-                <Button><Plus /></Button>
+                {domains.map((domain, index) => (
+                  <Badge variant='secondary' key={index} className="mr-2" onClick={() => removeDomainByIndex(index)}>{domain}</Badge>
+                ))
+                }
+                <div>
+                  <Label className="text-base">Domain: </Label>
+                  <div className="flex gap-1">
+                    <Input value={domain} className="text-base" onChange={e => setDomain(e.target.value)} />
+                    <Button onClick={callAddDomain}><Plus /></Button>
+                  </div>
                 </div>
               </div>
               <div className="w-full">
-                <Label className="text-base">Interests: </Label>
-                <div className="flex gap-1">
-                  <Input className="text-base" onChange={e => setInterest(e.target.value)} />
-                  <Button><Plus /></Button>
+                {interests.map((interest, index) => (
+                  <Badge variant='secondary' className="mr-2" key={index} onClick={() => removeInterestByIndex(index)}>{interest}</Badge>
+                ))
+                }
+                <div>
+                  <Label className="text-base">Interests: </Label>
+                  <div className="flex gap-1">
+                    <Input value={interest} className="text-base" onChange={e => setInterest(e.target.value)} />
+                    <Button onClick={callAddInterest}><Plus /></Button>
+                  </div>
                 </div>
               </div>
             </div>
             <div className="flex justify-end">
-              <Button className="text-lg my-6" variant="link">Next <ChevronRight className="mx-2" /></Button>
+              <Button className="text-lg my-6" variant="link" onClick={() => navigate('/initiate-profile/2')}>Next <ChevronRight className="mx-2" /></Button>
             </div>
           </div>
         </div> 
