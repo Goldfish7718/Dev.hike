@@ -3,6 +3,8 @@ import { config } from 'dotenv'
 import mongoose from 'mongoose'
 import cors from 'cors'
 
+import profileRoutes from './routes/profileRoutes.js'
+
 config()
 
 const app = express()
@@ -18,6 +20,8 @@ if (process.env.ORIGIN) {
 }
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
+
+app.use('/profile', profileRoutes)
 
 const connectDB = async (url) => {
     await mongoose
