@@ -1,13 +1,14 @@
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button"
-import { GithubIcon, InstagramIcon, LinkedinIcon, Plus, Twitter, Link, ChevronRight, ChevronLeft} from "lucide-react"
+import { GithubIcon, InstagramIcon, LinkedinIcon, Plus, Twitter, Link, ChevronRight, ChevronLeft, Loader2} from "lucide-react"
 import { useUser } from "@/context/UserContext";
 import { useNavigate } from "react-router-dom";
 
 const InitiateProfileSecond = () => {
 
-  const { handleSocialsChange, postProfileData } = useUser()
+
+  const { handleSocialsChange, postProfileData, loading } = useUser()
   const navigate = useNavigate()
 
   return (
@@ -43,7 +44,8 @@ const InitiateProfileSecond = () => {
 
           <div className="mt-4 flex justify-between">
             <Button variant='link' className="mt-4 md:text-lg" onClick={() => navigate('/initiate-profile/1')}><ChevronLeft className="mx-2" /> Previous</Button>
-            <Button variant='link' className="mt-4 md:text-lg" onClick={postProfileData}>Let's Go! <ChevronRight className="mx-2" /></Button>
+            {!loading && <Button variant='link' className="mt-4 md:text-lg" onClick={postProfileData}>Let's Go! <ChevronRight className="mx-2" /></Button>}
+            {loading && <Button className="mt-4 md:text-lg" variant='secondary' disabled><Loader2 className="animate-spin duration-500" /></Button>}
           </div>
         </div>
       </div>

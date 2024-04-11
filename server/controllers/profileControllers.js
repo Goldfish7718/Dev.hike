@@ -2,7 +2,7 @@ import Profile from '../models/profileSchema.js'
 
 export const initiateProfile = async (req, res) => {
     try {
-        const { bio, domains, interests, email, socials: { github, twitter, linkedIn, instagram, other } } = req.body;
+        const { bio, domains, interests, email, clerkId, socials: { github, twitter, linkedIn, instagram, other } } = req.body;
 
         const newProfile = await Profile.create({
             bio,
@@ -16,7 +16,8 @@ export const initiateProfile = async (req, res) => {
                 instagram,
                 other
             },
-            profileInitiated: true
+            profileInitiated: true,
+            clerkId
         })
 
         res

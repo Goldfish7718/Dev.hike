@@ -3,6 +3,7 @@ import { ChangeEventHandler, createContext, useContext, useState } from "react";
 import { useUser as clerkUseUser } from "@clerk/clerk-react";
 import axios from 'axios'
 import { API_URL } from "@/main";
+import { useNavigate } from "react-router-dom";
 
 interface UserContextType {
     // USER TYPE
@@ -20,6 +21,9 @@ interface UserContextType {
         other: [string];
     },
     profileInitiated: boolean;
+
+    // GENERAL VARIABLES
+    loading: boolean;
 
     // SETTER FUNCTIONS
     setBio: Function;
@@ -45,8 +49,13 @@ function UserProvider({ children }: UserContextProps) {
     const [domains, setDomains] = useState<string[]>([]);
     const [interests, setInterests] = useState<string[]>([]);
     const [bio, setBio] = useState('')
+    const [profileInitiated, setProfileInitiated] = useState(false);
+
+    const [loading, setLoading] = useState(false);
+
     
     const { user } = clerkUseUser()
+    const navigate = useNavigate()
 
     const [socials, setSocials] = useState({
         github: "",
@@ -123,20 +132,27 @@ function UserProvider({ children }: UserContextProps) {
 
     const postProfileData = async () => {
         try {
+            setLoading(true)
             const res = await axios.post(`${API_URL}/profile/initiate`, {
                 email: user?.emailAddresses[0].emailAddress,
                 bio,
                 domains,
                 interests,
-                socials
+                socials,
+                clerkId: user?.id
             })
 
-            console.log(res.data);
+            const { profileInitiated } = res.data.newProfile
+            setProfileInitiated(profileInitiated)
+            navigate('/dashboard')
         } catch (error) {
             console.log(error);
             toast({
-                title: 'Error!'
+                title: 'Sorry an error occured!',
+                variant: 'destructive'
             })
+        } finally {
+            setLoading(false)
         }
     }
     
@@ -145,6 +161,8 @@ function UserProvider({ children }: UserContextProps) {
         domains,
         interests,
         socials,
+        profileInitiated,
+        loading,
 
         // SHARED SETTER FUNCTIONS
         setBio,

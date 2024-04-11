@@ -62,7 +62,7 @@ const InitiateProfileFirst = () => {
               </div>
               <div className="w-full">
                 {interests.map((interest, index) => (
-                  <Badge variant='secondary' className="mr-2" key={index} onClick={() => removeInterestByIndex(index)}>{interest}</Badge>
+                  <Badge variant='secondary' key={index} className="mr-2" onClick={() => removeInterestByIndex(index)}>{interest}</Badge>
                 ))
                 }
                 <div>
