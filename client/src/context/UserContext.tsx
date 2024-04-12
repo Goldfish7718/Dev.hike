@@ -5,8 +5,7 @@ import axios from 'axios'
 import { API_URL } from "@/main";
 import { useNavigate } from "react-router-dom";
 
-interface UserContextType {
-    // USER TYPE
+interface UserType {
     email: string;
     bio: string;
     timelineRefs: [string];
@@ -21,9 +20,25 @@ interface UserContextType {
         other: [string];
     },
     profileInitiated: boolean;
+}
+
+interface UserContextType {
+    email: string;
+    bio: string;
+    domains: string[];
+    interests: string[];
+    socials: {
+        github: string;
+        twitter: string;
+        linkedIn: string;
+        instagram: string;
+        other?: string[];
+    };
+    profileInitiated: boolean;
 
     // GENERAL VARIABLES
     loading: boolean;
+    currProfile: UserType | null;
 
     // SETTER FUNCTIONS
     setBio: Function;
@@ -34,7 +49,10 @@ interface UserContextType {
     addInterest: (interest: string) => void;
     removeDomainByIndex: (index: number) => void;
     removeInterestByIndex: (index: number) => void;
+
+    // API METHODS
     postProfileData: () => void;
+    fetchCurrentProfile: () => void;
 }
 
 interface UserContextProps {
@@ -51,10 +69,12 @@ function UserProvider({ children }: UserContextProps) {
     const [bio, setBio] = useState('')
     const [profileInitiated, setProfileInitiated] = useState(false);
 
-    const [loading, setLoading] = useState(false);
+    const [currProfile, setCurrProfile] = useState(null);
 
+    const [loading, setLoading] = useState(false);
     
     const { user } = clerkUseUser()
+    const email = user?.emailAddresses[0].emailAddress as string;
     const navigate = useNavigate()
 
     const [socials, setSocials] = useState({
@@ -155,6 +175,19 @@ function UserProvider({ children }: UserContextProps) {
             setLoading(false)
         }
     }
+
+    const fetchCurrentProfile = async () => {
+        try {
+            const res = await axios.get(`${API_URL}/profile/fetchUser/${user?.id}`)        
+            setCurrProfile(res.data.user)
+        } catch (error) {
+            console.log(error);
+            toast({
+                title: 'Sorry an error occured!',
+                variant: 'destructive'
+            })
+        }
+    }
     
     const value = {
         // SHARED VARIABLES
@@ -163,6 +196,9 @@ function UserProvider({ children }: UserContextProps) {
         socials,
         profileInitiated,
         loading,
+        bio,
+        email,
+        currProfile,
 
         // SHARED SETTER FUNCTIONS
         setBio,
@@ -173,7 +209,10 @@ function UserProvider({ children }: UserContextProps) {
         addInterest,
         removeDomainByIndex,
         removeInterestByIndex,
-        postProfileData
+
+        // API METHODS
+        postProfileData,
+        fetchCurrentProfile
     }
 
     return (
