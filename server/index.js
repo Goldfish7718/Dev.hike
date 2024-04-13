@@ -1,9 +1,15 @@
+// MODULE IMPORTS
 import express from 'express'
 import { config } from 'dotenv'
 import mongoose from 'mongoose'
 import cors from 'cors'
 
+// ROUTE IMPORTS
 import profileRoutes from './routes/profileRoutes.js'
+import postRoutes from './routes/postRoutes.js'
+import eventRoutes from './routes/eventRoutes.js'
+import replyRoutes from './routes/replyRoutes.js'
+import timelineRoutes from './routes/timelineRoutes.js'
 
 config()
 
@@ -22,6 +28,10 @@ app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 
 app.use('/profile', profileRoutes)
+app.use('/posts', postRoutes)
+app.use('/replies', replyRoutes)
+app.use('/timeline', timelineRoutes)
+app.use('/events', eventRoutes)
 
 const connectDB = async (url) => {
     await mongoose

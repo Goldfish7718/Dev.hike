@@ -1,4 +1,4 @@
-export const getEvents = async (req, res) => {
+export const postReply = async (req, res) => {
     try {
         
     } catch (error) {
@@ -9,7 +9,7 @@ export const getEvents = async (req, res) => {
     }
 }
 
-export const addEvent = async (req, res) => {
+export const deleteReply = async (req, res) => {
     try {
         
     } catch (error) {
@@ -20,18 +20,7 @@ export const addEvent = async (req, res) => {
     }
 }
 
-export const deleteEvent = async (req, res) => {
-    try {
-        
-    } catch (error) {
-        console.log(error);
-        res
-            .status(500)
-            .json({ message: "Internal server error" })
-    }
-}
-
-export const registerEvent = async (req, res) => {
+export const getReplies = async (req, res) => {
     try {
         
     } catch (error) {
