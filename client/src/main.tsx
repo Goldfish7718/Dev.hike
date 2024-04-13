@@ -60,3 +60,5 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
     <RouterProvider router={router}  />
   </React.StrictMode>,
 )
+
+export const API_URL = import.meta.env.VITE_API_URL || ""
