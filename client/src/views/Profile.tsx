@@ -2,17 +2,25 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Card, CardHeader, CardFooter, CardTitle, CardContent } from "@/components/ui/card"
 import { Separator } from "@/components/ui/separator"
 import { Button } from "@/components/ui/button"
-import { User, SquarePen, Github, Twitter, Slack, Plus, MessagesSquare, BadgePlus, TriangleAlert, UserRoundX, ArrowBigUp, ArrowBigDown, MessageSquareHeart, Globe } from 'lucide-react'
+import { User, SquarePen, Github, Twitter, Plus, MessagesSquare, BadgePlus, TriangleAlert, UserRoundX, ArrowBigUp, ArrowBigDown, MessageSquareHeart, Globe, Linkedin, Instagram } from 'lucide-react'
 import { Tabs, TabsTrigger,TabsContent, TabsList } from "@/components/ui/tabs"
 import { useNavigate } from "react-router-dom"
-import { useUser } from "@clerk/clerk-react"
+import { useUser as clerkUseUser } from "@clerk/clerk-react"
 import TimelineCard from "@/components/TimelineCard"
+import { useUser } from "@/context/UserContext"
+import { useEffect } from "react"
 
 const Profile = () => {
 
   const navigate = useNavigate()
-  const { user } = useUser()
+  const { user } = clerkUseUser()
+  const { currProfile, fetchCurrentProfile } = useUser()
+
   const fallback = `${user?.fullName?.split(' ')[0].slice(0, 1)}${user?.fullName?.split(' ')[1].slice(0, 1)}`
+
+  useEffect(() => {
+    fetchCurrentProfile()
+  }, [])
 
   return (
     <>
@@ -43,7 +51,8 @@ const Profile = () => {
             </CardHeader>
             <Separator/>
             <div className="p-5">
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Qui accusamus alias autem itaque expedita tenetur blanditiis eligendi? Iure nostrum atque inventore labore laborum hic! Odit asperiores esse ex officia quo?
+              {/* Lorem ipsum dolor sit amet consectetur adipisicing elit. Qui accusamus alias autem itaque expedita tenetur blanditiis eligendi? Iure nostrum atque inventore labore laborum hic! Odit asperiores esse ex officia quo? */}
+              {currProfile?.bio}
             </div>
             <Separator/>
             <CardFooter>
@@ -64,15 +73,19 @@ const Profile = () => {
             <div className="flex flex-col gap-1 p-3">
               <div className="flex items-center">
                 <Github size={18} className="mx-1"/>
-                <span className="text-sm">https://www.github.com/catch-cookies-code/Dev.hike</span>
+                <span className="text-sm">{currProfile?.socials.github}</span>
               </div>
               <div className="flex items-center">
                 <Twitter size={18} className="mx-1"/>
-                <span className="text-sm">https://www.github.com/catch-cookies-code/Dev.hike</span>
+                <span className="text-sm">{currProfile?.socials.twitter}</span>
               </div>
               <div className="flex items-center">
-                <Slack size={18} className="mx-1"/>
-                <span className="text-sm">https://www.github.com/catch-cookies-code/Dev.hike</span>
+                <Linkedin size={18} className="mx-1"/>
+                <span className="text-sm">{currProfile?.socials.linkedIn}</span>
+              </div>
+              <div className="flex items-center">
+                <Instagram size={18} className="mx-1"/>
+                <span className="text-sm">{currProfile?.socials.instagram}</span>
               </div>
             </div>
             <CardFooter className="mt-3">
@@ -88,10 +101,15 @@ const Profile = () => {
               <CardTitle className="flex items-center">Domains<Globe size={28} className="mx-2" /></CardTitle>
             </CardHeader>
             <CardContent className="flex flex-col gap-2">
-              <Button variant="outline">Web Development</Button>
-              <Button variant="outline">Machine Learning</Button>
-              <Button variant="outline">Cyber Security</Button>
+              {currProfile?.domains.map((domain, index) => (
+                <Button variant="outline" key={index}>{domain}</Button>
+              ))
+              }
             </CardContent>
+            <Separator />
+            <CardFooter className="mt-3">
+              <Button className="w-full" variant="outline"><SquarePen size={18} className="mx-1"/>Edit</Button>
+            </CardFooter>
           </Card>
         </div>
 
@@ -102,9 +120,15 @@ const Profile = () => {
               <CardTitle className="flex items-center">Interests<MessageSquareHeart size={28} className="mx-2" /></CardTitle>
             </CardHeader>
             <CardContent className="flex flex-col gap-2">
-              <Button variant="outline">Collaboration</Button>
-              <Button variant="outline">Project Building</Button>
+              {currProfile?.interests.map((interest, index) => (
+                <Button variant="outline" key={index}>{interest}</Button>
+              ))
+              }
             </CardContent>
+            <Separator />
+            <CardFooter className="mt-3">
+              <Button className="w-full" variant="outline"><SquarePen size={18} className="mx-1"/>Edit</Button>
+            </CardFooter>
           </Card>
         </div>   
 
