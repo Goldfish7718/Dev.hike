@@ -5,10 +5,10 @@ const router = Router()
 
 router.get('/get', getPosts)
 
-router.post('/post', addPost)
-router.post('/downvote', downvote)
-router.post('/upvote', upvote)
+router.post('/post/:userId', addPost)
+router.post('/downvote/:postId/:userId', downvote)
+router.post('/upvote/:postId/:userId', upvote)
 
-router.delete('/delete', deletePost)
+router.delete('/delete/:postId/:userId', deletePost)
 
 export default router
