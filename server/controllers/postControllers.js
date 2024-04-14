@@ -1,4 +1,5 @@
 import Post from "../models/postSchema.js";
+import Profile from "../models/profileSchema.js";
 
 export const getPosts = async (req, res) => {
     try {
@@ -29,9 +30,18 @@ export const addPost = async (req, res) => {
             userRef: userId
         })
 
+        const user = await Profile.findOneAndUpdate(
+            { clerkId: userId },
+            { $push: {
+                postRefs: newPost._id
+            } },
+            { new: true }
+        )
+
         res
             .status(200)
-            .json({ newPost })
+            .json({ newPost, user })
+
     } catch (error) {
         console.log(error);
         res
@@ -42,12 +52,23 @@ export const addPost = async (req, res) => {
 
 export const deletePost = async (req, res) => {
     try {
-        const { postId } = req.params
+        const { postId, userId } = req.params
+
+        const postToBeDeleted = await Post.findByIdAndDelete(postId)
+
+        const user = await Profile.findOneAndUpdate(
+            { clerkId: userId },
+            { $pull: {
+                postRefs: postToBeDeleted._id
+            } },
+            { new: true }
+        )
+        
         await Post.findByIdAndDelete(postId)
 
         res 
             .status(200)
-            .json({ message: "Post deleted successfully" })
+            .json({ message: "Post deleted successfully", user })
     } catch (error) {
         console.log(error);
         res
