@@ -4,7 +4,7 @@ import { deleteReply, getReplies, postReply } from "../controllers/replyControll
 const router = Router()
 
 router.get('/get/:postId', getReplies)
-router.post('/reply/:postId', postReply)
+router.post('/reply/:postId/:userId', postReply)
 router.delete('/delete/:replyId', deleteReply)
 
 export default router
