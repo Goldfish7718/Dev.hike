@@ -59,15 +59,31 @@ export const deletePost = async (req, res) => {
 export const upvote = async (req, res) => {
     try {
         const { postId, userId } = req.params
+
+        const postToUpvote = await Post.findById(postId)
+
+        if (postToUpvote.downvoteRefs.includes(userId)) {
+            const newDownvoteRefs = postToUpvote.downvoteRefs.filter(downvoteRef => downvoteRef != userId)
+            postToUpvote.downvoteRefs = newDownvoteRefs
+            await postToUpvote.save()
+        }
+
+        if (postToUpvote.upvoteRefs.includes(userId)) {
+            const newUpvoteRefs = postToUpvote.upvoteRefs.filter(upvoteRef => upvoteRef != userId)
+            postToUpvote.upvoteRefs = newUpvoteRefs
+            await postToUpvote.save()
+
+            return res 
+                .status(200)
+                .json({ updatedPost: postToUpvote })
+        }
         
-        const updatedPost = await Post.findByIdAndUpdate(
-            postId,
-            { $push: { upvoteRefs: userId } },
-            { new: true }
-        )
+        postToUpvote.upvoteRefs.push(userId)
+        await postToUpvote.save()
+
         res 
             .status(200)
-            .json({ updatedPost })
+            .json({ updatedPost: postToUpvote })
     } catch (error) {
         console.log(error);
         res
@@ -79,15 +95,31 @@ export const upvote = async (req, res) => {
 export const downvote = async (req, res) => {
     try {
         const { postId, userId } = req.params
+
+        const postToDownvote = await Post.findById(postId)
+
+        if (postToDownvote.upvoteRefs.includes(userId)) {
+            const newUpvoteRefs = postToDownvote.upvoteRefs.filter(downvoteRef => downvoteRef != userId)
+            postToDownvote.upvoteRefs = newUpvoteRefs
+            await postToDownvote.save()
+        }
+
+        if (postToDownvote.downvoteRefs.includes(userId)) {
+            const newDownvoteRefs = postToDownvote.downvoteRefs.filter(upvoteRef => upvoteRef != userId)
+            postToDownvote.downvoteRefs = newDownvoteRefs
+            await postToDownvote.save()
+
+            return res 
+                .status(200)
+                .json({ updatedPost: postToDownvote })
+        }
         
-        const updatedPost = await Post.findByIdAndUpdate(
-            postId,
-            { $push: { downvoteRefs: userId } },
-            { new: true }
-        )
+        postToDownvote.downvoteRefs.push(userId)
+        await postToDownvote.save()
+        
         res 
             .status(200)
-            .json({ updatedPost })
+            .json({ updatedPost: postToDownvote })
     } catch (error) {
         console.log(error);
         res
