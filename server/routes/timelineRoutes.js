@@ -3,8 +3,8 @@ import { addToTimeline, deleteFromTimeline, getTimeline } from '../controllers/t
 
 const router = Router()
 
-router.get('/get', getTimeline)
+router.get('/get/:userId', getTimeline)
 router.post('/add/:userId', addToTimeline)
-router.delete('/delete/:timelineId', deleteFromTimeline)
+router.delete('/delete/:timelineId/:userId', deleteFromTimeline)
 
 export default router

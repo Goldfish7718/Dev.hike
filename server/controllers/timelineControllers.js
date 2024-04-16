@@ -1,8 +1,8 @@
 import Timeline from "../models/timelineSchema.js" 
+import Profile from "../models/profileSchema.js"
 
 export const getTimeline = async (req, res) => {
     try {
-        // EXTRACT THE USER ID FROM PARAMETERS KAR!!!!! BRO COME BACK
         const { userId } = req.params
 
         const timeline = await Timeline.find({ userRef: userId })
@@ -32,6 +32,14 @@ export const addToTimeline = async (req, res) => {
             userRef: userId
         })
 
+        await Profile.findOneAndUpdate(
+            { clerkId: userId },
+            { $push: {
+                timelineRefs: newTimeline._id
+            } },
+            { new: true }
+        )
+
         res
             .status(200)
             .json({ newTimeline })
@@ -45,8 +53,17 @@ export const addToTimeline = async (req, res) => {
 
 export const deleteFromTimeline = async (req, res) => {
     try {
-        const { timelineId } = req.params
-        await Timeline.findByIdAndDelete(timelineId)
+        const { timelineId, userId } = req.params
+
+        const deletedTimeline = await Timeline.findByIdAndDelete(timelineId)
+
+        await Profile.findOneAndUpdate(
+            { clerkId: userId },
+            { $pull: {
+                timelineRefs: deletedTimeline._id
+            } },
+            { new: true }
+        )
 
         res
             .status(200)
