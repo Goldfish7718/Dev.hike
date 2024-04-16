@@ -1,5 +1,7 @@
 import Navbar from '@/components/Navbar'
 import { ThemeProvider } from '@/components/theme-provider'
+import { Toaster } from '@/components/ui/toaster'
+import UserProvider from '@/context/UserContext'
 import { ClerkProvider } from '@clerk/clerk-react'
 import { shadesOfPurple } from '@clerk/themes'
 import { Outlet, useNavigate } from 'react-router-dom'
@@ -27,12 +29,15 @@ const RootLayout = () => {
                 colorTextOnPrimaryBackground: 'black',
             }
         }}>
-            <header className='header'>
-                <Navbar />
-            </header>
-            <main>
-                <Outlet />
-            </main>
+            <UserProvider>
+                <header className='header'>
+                    <Navbar />
+                </header>
+                <main>
+                    <Outlet />
+                    <Toaster />
+                </main>
+            </UserProvider>
         </ClerkProvider>
     </ThemeProvider>
     </>
