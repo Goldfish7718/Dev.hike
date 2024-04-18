@@ -12,28 +12,89 @@ import { useEffect, useState } from "react"
 import { EditBioTrigger, EditDomainsTrigger } from "@/components/EditProfileTriggers"
 import { API_URL } from "@/main"
 import axios from "axios"
-import { ConfirmPostDeleteTriggerProps, PostCardProps } from "@/types/types1"
+import { ConfirmPostDeleteTriggerProps, PostCardProps, ReplyType } from "@/types/types1"
 import { useMediaQuery } from "usehooks-ts"
 import { Drawer, DrawerClose, DrawerContent, DrawerHeader, DrawerTitle, DrawerTrigger } from "@/components/ui/drawer"
 import { useToast } from "@/components/ui/use-toast"
+import ReplyDialogTrigger from "@/components/ReplyDialogTrigger"
 
 const Profile = () => {
 
   const [posts, setPosts] = useState<PostCardProps[]>([]);
+  const [replies, setReplies] = useState<ReplyType[]>([]);
 
   const navigate = useNavigate()
   const { user } = clerkUseUser()
   const { currProfile, fetchCurrentProfile } = useUser()
+  const { toast } = useToast()
 
   const fallback = `${user?.fullName?.split(' ')[0].slice(0, 1)}${user?.fullName?.split(' ')[1].slice(0, 1)}`
 
   const fetchPosts = async () => {
     try {
       const res = await axios.get(`${API_URL}/posts/get/${user?.id}`)
-      console.log(res);
       setPosts(res.data.posts)
     } catch (error) {
       console.log(error);
+    }
+  }
+
+  const requestUpvote = async (postId: string) => {
+    try {
+      const res = await axios.post(`${API_URL}/posts/upvote/${postId}/${user?.id}`)
+
+      const updatedPosts = posts.map(post => {
+        if (post._id === postId) {
+          return res.data.updatedPost;
+        }
+        return post;
+      });
+      
+      setPosts(updatedPosts);
+      console.log(res.data)
+    } catch (error) {
+      console.log(error);
+      toast({
+        title: "Sorry! An error occured!",
+        duration: 3000,
+        variant: 'destructive'
+      })
+    }
+  }
+
+  const requestDownvote = async (postId: string) => {
+    try {
+      const res = await axios.post(`${API_URL}/posts/downvote/${postId}/${user?.id}`)
+
+      const updatedPosts = posts.map(post => {
+        if (post._id === postId) {
+          return res.data.updatedPost;
+        }
+        return post;
+      });
+      
+      setPosts(updatedPosts);
+    } catch (error) {
+      console.log(error);
+      toast({
+        title: "Sorry! An error occured!",
+        duration: 3000,
+        variant: 'destructive'
+      })
+    }
+  }
+
+  const fetchReplies = async (postId: string) => {
+    try {
+      const res = await axios.get(`${API_URL}/replies/get/${postId}`)
+      setReplies(res.data.transformedReplies)
+    } catch (error) {
+      console.log(error);
+      toast({
+        title: "Sorry! An error occured!",
+        duration: 3000,
+        variant: 'destructive'
+      })
     }
   }
 
@@ -50,7 +111,7 @@ const Profile = () => {
         <div className="flex flex-col md:flex-row items-center gap-3">
           <div>
             <Avatar className="h-28 w-28 rounded-full">
-              <AvatarImage src=""/>
+              <AvatarImage src={user?.imageUrl} />
               <AvatarFallback className="text-2xl">{fallback}</AvatarFallback>
             </Avatar>
           </div>
@@ -224,8 +285,12 @@ const Profile = () => {
                 </CardContent>
                 <Separator />
                 <div className="flex">
-                  <Button className="w-full" variant='ghost' ><ArrowBigUp size={24} className="mx-1"/>71 Upvotes</Button>
-                  <Button className="w-full" variant='ghost'><ArrowBigDown size={24} className="mx-1"/>5 Downvotes</Button>
+                  <Button onClick={() => requestUpvote(post._id as string)} className={`w-full ${post.upvoteRefs.includes(user?.id!) ? 'text-red-600' : null}`} variant='ghost' ><ArrowBigUp size={24} className="mx-1" />{post.upvoteRefs.length} Upvotes</Button>
+                  <Button onClick={() => requestDownvote(post._id as string)} className={`w-full ${post.downvoteRefs.includes(user?.id!) ? 'text-red-600' : null}`} variant='ghost'><ArrowBigDown size={24} className="mx-1"/>{post.downvoteRefs.length} Downvotes</Button>
+
+                  <ReplyDialogTrigger replies={replies} postId={post._id as string} onOpenChange={() => setReplies([])}>
+                    <Button className="w-full" variant='ghost'  onClick={() => fetchReplies(post._id as string)}><MessagesSquare size={24} className="mx-1"/>{post.replyRefs.length} Replies</Button>
+                  </ReplyDialogTrigger>
                 </div>
               </Card>
               ))

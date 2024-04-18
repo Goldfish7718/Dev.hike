@@ -29,9 +29,20 @@ export interface PostCardProps {
     content: string;
     email: string;
     tags: number;
-    upvotes: number;
-    downvotes: number;
-    replies: number;
+    upvoteRefs: string[];
+    downvoteRefs: string[];
+    replyRefs: string[];
     _id?: string;
 }
 
+export interface ReplyType {
+    content: string;
+    fullname: string;
+    imageUrl: string;
+}
+
+export interface ReplyDialogTriggerProps extends TriggerProps {
+    replies: ReplyType[];
+    postId: string;
+    onOpenChange: () => void;
+}

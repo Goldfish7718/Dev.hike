@@ -30,10 +30,10 @@ const PostCard = (post: PostCardProps) => {
         </CardContent>
         <Separator />
         <div className="flex">
-            <Button className="w-full" variant='ghost' ><ArrowBigUp size={24} className="mx-1"/>{post.upvotes} Upvotes</Button>
-            <Button className="w-full" variant='ghost'><ArrowBigDown size={24} className="mx-1"/>{post.downvotes} Downvotes</Button>
+            <Button className="w-full" variant='ghost' ><ArrowBigUp size={24} className="mx-1"/>37 Upvotes</Button>
+            <Button className="w-full" variant='ghost'><ArrowBigDown size={24} className="mx-1"/>37 Downvotes</Button>
             <ReplyDialogTrigger>
-                <Button className="w-full" variant='ghost'><MessagesSquare size={24} className="mx-1"/>{post.replies} Replies</Button>
+                <Button className="w-full" variant='ghost'><MessagesSquare size={24} className="mx-1"/>37 Replies</Button>
             </ReplyDialogTrigger>
         </div>
     </Card>

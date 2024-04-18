@@ -57,7 +57,7 @@ export const deleteReply = async (req, res) => {
 
 export const getReplies = async (req, res) => {
     try {
-        
+        const { postId } = req.params;
         const replies = await Reply.find({ postRef: postId })
 
         const transformedReplies = await Promise.all(replies.map(async reply => {
