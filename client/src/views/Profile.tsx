@@ -2,7 +2,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Card, CardHeader, CardFooter, CardTitle, CardContent } from "@/components/ui/card"
 import { Separator } from "@/components/ui/separator"
 import { Button } from "@/components/ui/button"
-import { User, SquarePen, Github, Twitter, Plus, MessagesSquare, BadgePlus, TriangleAlert, UserRoundX, ArrowBigUp, ArrowBigDown, MessageSquareHeart, Globe, Linkedin, Instagram } from 'lucide-react'
+import { User, SquarePen, Github, Twitter, Plus, MessagesSquare, BadgePlus, TriangleAlert, UserRoundX, ArrowBigUp, ArrowBigDown, MessageSquareHeart, Globe, Linkedin, Instagram, Trash } from 'lucide-react'
 import { Tabs, TabsTrigger,TabsContent, TabsList } from "@/components/ui/tabs"
 import { useNavigate } from "react-router-dom"
 import { useUser as clerkUseUser } from "@clerk/clerk-react"
@@ -12,7 +12,10 @@ import { useEffect, useState } from "react"
 import { EditBioTrigger, EditDomainsTrigger } from "@/components/EditProfileTriggers"
 import { API_URL } from "@/main"
 import axios from "axios"
-import { PostCardProps } from "@/types/types1"
+import { ConfirmPostDeleteTriggerProps, PostCardProps } from "@/types/types1"
+import { useMediaQuery } from "usehooks-ts"
+import { Drawer, DrawerClose, DrawerContent, DrawerHeader, DrawerTitle, DrawerTrigger } from "@/components/ui/drawer"
+import { useToast } from "@/components/ui/use-toast"
 
 const Profile = () => {
 
@@ -197,7 +200,7 @@ const Profile = () => {
           </TabsContent>
           <TabsContent value="posts">
             {posts.map(post => (
-              <Card className="w-full my-3">
+              <Card className="w-full my-3" key={post._id}>
                 <CardHeader className="flex flex-row gap-4 justify-start items-center">
                   <Avatar className="h-12 w-12">
                     <AvatarImage src="" />
@@ -214,6 +217,9 @@ const Profile = () => {
                 <CardContent>
                   <div className="mt-4">
                     <p>{post.content}</p>
+                    <ConfirmPostDeleteTrigger postId={post._id as string}>
+                      <Button variant="outline" className="mt-2">Delete <Trash className="mx-2" size={18} /></Button>
+                    </ConfirmPostDeleteTrigger>
                   </div>
                 </CardContent>
                 <Separator />
@@ -229,6 +235,54 @@ const Profile = () => {
       </div>
     </div>
     </>
+  )
+}
+
+const ConfirmPostDeleteTrigger = ({ children, postId }: ConfirmPostDeleteTriggerProps) => {
+  const matches = useMediaQuery('(min-width: 768px)')
+  const { toast } = useToast()
+  const { user } = clerkUseUser()
+
+  const requestDeletePost = async () => {
+    try {
+      await axios.delete(`${API_URL}/posts/delete/${postId}/${user?.id}`)
+      window.location.reload()
+    } catch (error) {
+      console.log(error);
+      toast({
+        title: "Sorry! An Error Occured!",
+        duration: 3000,
+        variant: 'destructive'
+      })
+    }
+  }
+
+  if (matches)
+    return (
+      <></>
+    )
+
+  return (
+    <Drawer>
+      <DrawerTrigger asChild>
+        {children}
+      </DrawerTrigger>
+      <DrawerContent>
+        <DrawerHeader>
+          <DrawerTitle>Delete Post</DrawerTitle>
+        </DrawerHeader>
+        <div className="m-2 w-full">
+          <p>Are you sure you want to delete this post?</p>
+
+          <div className="flex gap-1 flex-col my-3">
+            <DrawerClose>
+              <Button className="w-full">No</Button>
+            </DrawerClose>
+            <Button onClick={requestDeletePost} className="w-full" variant='destructive'>Yes</Button>
+          </div>
+        </div>
+      </DrawerContent>
+    </Drawer>
   )
 }
 

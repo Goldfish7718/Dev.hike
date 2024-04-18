@@ -20,6 +20,10 @@ export interface EditDomainsTriggerProps extends TriggerProps {
     currDomains: string[]
 }
 
+export interface ConfirmPostDeleteTriggerProps extends TriggerProps {
+    postId: string;
+}
+
 export interface PostCardProps {
     title: string;
     content: string;
@@ -28,5 +32,6 @@ export interface PostCardProps {
     upvotes: number;
     downvotes: number;
     replies: number;
+    _id?: string;
 }
 
