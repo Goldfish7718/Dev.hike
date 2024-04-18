@@ -8,9 +8,15 @@ import { useNavigate } from "react-router-dom"
 import { useUser as clerkUseUser } from "@clerk/clerk-react"
 import TimelineCard from "@/components/TimelineCard"
 import { useUser } from "@/context/UserContext"
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
+import { EditBioTrigger, EditDomainsTrigger } from "@/components/EditProfileTriggers"
+import { API_URL } from "@/main"
+import axios from "axios"
+import { PostCardProps } from "@/types/types1"
 
 const Profile = () => {
+
+  const [posts, setPosts] = useState<PostCardProps[]>([]);
 
   const navigate = useNavigate()
   const { user } = clerkUseUser()
@@ -18,8 +24,19 @@ const Profile = () => {
 
   const fallback = `${user?.fullName?.split(' ')[0].slice(0, 1)}${user?.fullName?.split(' ')[1].slice(0, 1)}`
 
+  const fetchPosts = async () => {
+    try {
+      const res = await axios.get(`${API_URL}/posts/get/${user?.id}`)
+      console.log(res);
+      setPosts(res.data.posts)
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   useEffect(() => {
     fetchCurrentProfile()
+    fetchPosts()
   }, [])
 
   return (
@@ -56,7 +73,9 @@ const Profile = () => {
             </div>
             <Separator/>
             <CardFooter>
-              <Button className="mt-5" variant='outline'><SquarePen size={18} className="mx-1" />Edit</Button>
+              <EditBioTrigger bio={currProfile?.bio as string}>
+                <Button className="mt-5" variant='outline'><SquarePen size={18} className="mx-1" />Edit</Button>
+              </EditBioTrigger>
             </CardFooter>
           </Card>
         </div>
@@ -108,7 +127,9 @@ const Profile = () => {
             </CardContent>
             <Separator />
             <CardFooter className="mt-3">
-              <Button className="w-full" variant="outline"><SquarePen size={18} className="mx-1"/>Edit</Button>
+              <EditDomainsTrigger>
+                <Button className="w-full" variant="outline"><SquarePen size={18} className="mx-1"/>Edit</Button>
+              </EditDomainsTrigger>
             </CardFooter>
           </Card>
         </div>
@@ -175,31 +196,34 @@ const Profile = () => {
             <TimelineCard />
           </TabsContent>
           <TabsContent value="posts">
-            <Card className="w-full my-3">
-              <CardHeader className="flex flex-row gap-4 justify-start items-center">
-                <Avatar className="h-12 w-12">
-                  <AvatarImage src="" />
-                  <AvatarFallback className="flex">PM</AvatarFallback>
-                </Avatar>
-                <div  className="flex flex-col">
-                  <CardTitle>
-                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Culpa, quas?
-                  </CardTitle>
-                  <Button className="dark:text-gray-300 text-gray-900 justify-start p-0" variant="link" size="sm">catch-cookies-code</Button>
+            {posts.map(post => (
+              <Card className="w-full my-3">
+                <CardHeader className="flex flex-row gap-4 justify-start items-center">
+                  <Avatar className="h-12 w-12">
+                    <AvatarImage src="" />
+                    <AvatarFallback className="flex">{fallback}</AvatarFallback>
+                  </Avatar>
+                  <div  className="flex flex-col">
+                    <CardTitle>
+                      {post.title}
+                    </CardTitle>
+                    <Button className="dark:text-gray-300 text-gray-900 justify-start p-0" variant="link" size="sm">{user?.emailAddresses[0].emailAddress}</Button>
+                  </div>
+                </CardHeader>
+                <Separator />
+                <CardContent>
+                  <div className="mt-4">
+                    <p>{post.content}</p>
+                  </div>
+                </CardContent>
+                <Separator />
+                <div className="flex">
+                  <Button className="w-full" variant='ghost' ><ArrowBigUp size={24} className="mx-1"/>71 Upvotes</Button>
+                  <Button className="w-full" variant='ghost'><ArrowBigDown size={24} className="mx-1"/>5 Downvotes</Button>
                 </div>
-              </CardHeader>
-              <Separator />
-              <CardContent>
-                <div className="mt-4">
-                  <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quas, iste. Officiis dicta tempore a enim explicabo praesentium repudiandae neque ipsum aut aliquid porro temporibus dignissimos voluptatem repellat, quas numquam voluptate sed doloremque, ut quibusdam, soluta sunt at dolorem! Quod laborum facere voluptate omnis quisquam fuga culpa facilis nihil officiis nulla.</p>
-                </div>
-              </CardContent>
-              <Separator />
-              <div className="flex">
-                <Button className="w-full" variant='ghost' ><ArrowBigUp size={24} className="mx-1"/>71 Upvotes</Button>
-                <Button className="w-full" variant='ghost'><ArrowBigDown size={24} className="mx-1"/>5 Downvotes</Button>
-              </div>
-            </Card>
+              </Card>
+              ))
+            }
           </TabsContent>
         </Tabs>
       </div>
@@ -207,5 +231,7 @@ const Profile = () => {
     </>
   )
 }
+
+
 
 export default Profile

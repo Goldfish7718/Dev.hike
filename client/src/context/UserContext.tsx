@@ -43,6 +43,7 @@ interface UserContextType {
     // SETTER FUNCTIONS
     setBio: Function;
     handleSocialsChange: ChangeEventHandler;
+    setCurrProfile: Function;
 
     // SHARED METHODS
     addDomain: (domain: string) => void;
@@ -103,8 +104,6 @@ function UserProvider({ children }: UserContextProps) {
           const newDomains = [...domains, domain]
           setDomains(newDomains)
         }
-
-        console.log(domains);
     }
 
     const addInterest = (interest: string) => {
@@ -124,8 +123,6 @@ function UserProvider({ children }: UserContextProps) {
           const newInterests = [...interests, interest]
           setInterests(newInterests)
         }
-
-        console.log(interests);
     }
 
     const removeDomainByIndex = (index: number) => {
@@ -146,8 +143,6 @@ function UserProvider({ children }: UserContextProps) {
           ...prevSocials,
           [name]: value
         }));
-
-        console.log(socials);
     };
 
     const postProfileData = async () => {
@@ -203,6 +198,7 @@ function UserProvider({ children }: UserContextProps) {
         // SHARED SETTER FUNCTIONS
         setBio,
         handleSocialsChange,
+        setCurrProfile,
 
         // SHARED METHODS
         addDomain,
