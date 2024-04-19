@@ -1,11 +1,18 @@
 import Timeline from "../models/timelineSchema.js" 
 import Profile from "../models/profileSchema.js"
+import convertDate from "../utils/convertDate.js"
 
 export const getTimeline = async (req, res) => {
     try {
         const { userId } = req.params
 
-        const timeline = await Timeline.find({ userRef: userId })
+        let timeline = await Timeline.find({ userRef: userId })
+        timeline = timeline.map(item => {
+            return {
+                ...item.toObject(),
+                date: convertDate(item.createdAt.toLocaleDateString())
+            }
+        })
 
         res
             .status(200)

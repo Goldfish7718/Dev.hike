@@ -12,7 +12,7 @@ import { useEffect, useState } from "react"
 import { EditBioTrigger, EditDomainsTrigger } from "@/components/EditProfileTriggers"
 import { API_URL } from "@/main"
 import axios from "axios"
-import { ConfirmPostDeleteTriggerProps, PostCardProps, ReplyType } from "@/types/types1"
+import { ConfirmPostDeleteTriggerProps, PostCardProps, ReplyType, TimelineType } from "@/types/types1"
 import { useMediaQuery } from "usehooks-ts"
 import { Drawer, DrawerClose, DrawerContent, DrawerFooter, DrawerHeader, DrawerTitle, DrawerTrigger } from "@/components/ui/drawer"
 import { useToast } from "@/components/ui/use-toast"
@@ -24,6 +24,7 @@ const Profile = () => {
   const [posts, setPosts] = useState<PostCardProps[]>([]);
   const [replies, setReplies] = useState<ReplyType[]>([]);
   const [repliesLoading, setRepliesLoading] = useState(false);
+  const [timeline, setTimeline] = useState<TimelineType[]>([]);
 
   const navigate = useNavigate()
   const { user } = clerkUseUser()
@@ -103,8 +104,19 @@ const Profile = () => {
     }
   }
 
+  const fetchTimeline = async () => {
+    try {
+      const res = await axios.get(`${API_URL}/timeline/get/${user?.id}`)
+      // console.log(res.data);
+      setTimeline(res.data.timeline)
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
   useEffect(() => {
     fetchCurrentProfile()
+    fetchTimeline()
     fetchPosts()
   }, [])
 
@@ -262,7 +274,10 @@ const Profile = () => {
             <TabsTrigger value="posts" className="w-full">Posts</TabsTrigger>
           </TabsList>
           <TabsContent value="timeline">
-            <TimelineCard />
+            {timeline.map(item => (
+              <TimelineCard key={item._id} {...item} />
+            ))
+            }
           </TabsContent>
           <TabsContent value="posts">
             {posts.map(post => (

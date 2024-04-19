@@ -1,35 +1,48 @@
-import { Github, Link, Settings } from "lucide-react"
+import { Award, Check, Link, Settings, Sparkles, Star } from "lucide-react"
 import { Card, CardFooter, CardHeader, CardTitle } from "./ui/card"
 import { Button } from "./ui/button"
+import { TimelineType } from "@/types/types1"
 
-const TimelineCard = () => {
+const TimelineCard = ({ title, content, links, tag, date }: TimelineType) => {
+
+  const icons = [
+    <Star size={24} className="mx-3" />,
+    <Check size={24} className="mx-3" />,
+    <Award size={24} className="mx-3" />,
+    <Sparkles size={24} className="mx-3" />,
+  ]
+
   return (
     <Card className="w-full my-3">
         <CardHeader>
         <CardTitle className="flex items-center">
-            <Github size={24} className="mx-3"/>
-            <span>Successfully completed Dev.hike project!</span> 
+            {/* <Star size={24} className="mx-3"/> */}
+            {icons[Math.floor(Math.random() * 4)]}
+            <span>{title}</span> 
             <div className="ml-auto">
-            <span className="text-sm  text-gray-400">21st June 2023</span>   
+            <span className="text-sm  text-gray-400">{date}</span>   
             </div>   
         </CardTitle>
         </CardHeader>
         <div className="p-5">
         <div>
-            <p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Enim sequi natus alias quaerat quos labore magni quas, officia perspiciatis, ipsa, accusamus consequatur veritatis? Tempora mollitia odit fugiat, velit impedit possimus sint vel soluta consectetur voluptatem praesentium doloremque, saepe voluptatibus? Excepturi est in accusantium esse vero corrupti omnis consequuntur? Commodi libero, voluptates velit provident iusto quia cum minus nisi quam quae non, delectus quibusdam error aperiam praesentium quos illo itaque quasi fuga perspiciatis ex, in suscipit. Eum possimus necessitatibus molestias quam atque cum ratione consectetur? Atque doloribus quam expedita et eum deleniti aliquam perferendis porro! Ex natus optio fuga. Provident, doloribus.</p>
+            <p>{content}</p>
         </div>
-        <Button className="mt-4" variant="outline"><Settings size={18} className="mx-2"/>Web Development</Button>
+        <Button className="mt-4" variant="outline"><Settings size={18} className="mx-2"/>{tag}</Button>
         </div>
         <CardFooter>
         <div className="flex flex-col gap-1">
-            <div className="flex items-center">
-            <Link size={12} className="mx-1"/>
-            <span className="text-sm">https://www.github.com/catch-cookies-code/Dev.hike</span>
-            </div>
-            <div className="flex items-center">
+          {links.map(link => (
+              <div className="flex items-center">
+                <Link size={12} className="mx-1"/>
+                <span className="text-sm">{link}</span>
+              </div>
+            ))
+          }
+            {/* <div className="flex items-center">
             <Link size={12} className="mx-1"/>
             <span className="text-sm">https://something.com</span>
-            </div>
+            </div> */}
         </div>
         </CardFooter>
     </Card>

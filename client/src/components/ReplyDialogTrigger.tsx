@@ -125,7 +125,12 @@ const ReplyDialogTrigger = ({ children, replies, postId, onOpenChange, loading, 
                 </DrawerHeader>
                 <div className="p-4">
                     <ScrollArea className="h-96">
-                    {replies.length === 0 &&
+                    {loading && 
+                        <div className="flex items-center justify-center h-full">
+                            <Loader2 size={48} className="animate-spin duration-500 my-auto" />
+                        </div>
+                    }
+                    {!loading && replies.length === 0 &&
                         <h2>No replies</h2>
                     }
                     {

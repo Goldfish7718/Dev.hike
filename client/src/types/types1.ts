@@ -48,3 +48,12 @@ export interface ReplyDialogTriggerProps extends TriggerProps {
     loading: boolean;
     setReplies: Function;
 }
+
+export interface TimelineType {
+    title: string;
+    content: string;
+    date: string;
+    tag: string;
+    links: string[];
+    _id: string;
+}
