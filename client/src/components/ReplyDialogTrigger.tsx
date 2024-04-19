@@ -11,9 +11,8 @@ import {
     DrawerHeader,
     DrawerTrigger,
     DrawerTitle,
-    DrawerClose
 } from "@/components/ui/drawer"
-import { MessagesSquare, SendHorizonal } from "lucide-react";
+import { Loader2, MessagesSquare, SendHorizonal } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Card, CardHeader, CardTitle } from "./ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -27,7 +26,7 @@ import { useToast } from "./ui/use-toast";
 import axios from "axios";
 import { API_URL } from "@/main";
 
-const ReplyDialogTrigger = ({ children, replies, postId, onOpenChange }: ReplyDialogTriggerProps) => {
+const ReplyDialogTrigger = ({ children, replies, postId, onOpenChange, loading, setReplies }: ReplyDialogTriggerProps) => {
 
     const matches = useMediaQuery('(min-width: 768px)')
     const { user } = useUser()
@@ -40,7 +39,10 @@ const ReplyDialogTrigger = ({ children, replies, postId, onOpenChange }: ReplyDi
             const res = await axios.post(`${API_URL}/replies/reply/${postId}/${user?.id}`, {
                 content: reply
             })
-            console.log(res);
+            console.log(res.data);
+
+            const newReplies = [res.data.replyInResponse, ...replies]
+            setReplies(newReplies)
         } catch (error) {
             console.log(error);
             toast({
@@ -67,7 +69,12 @@ const ReplyDialogTrigger = ({ children, replies, postId, onOpenChange }: ReplyDi
                         </DialogHeader>
                         <div>
                             <ScrollArea className="h-96">
-                            {replies.length === 0 &&
+                            {loading && 
+                                <div className="flex items-center justify-center h-full">
+                                    <Loader2 size={48} className="animate-spin duration-500 my-auto" />
+                                </div>
+                            }
+                            {!loading && replies.length === 0 &&
                                 <h2>No replies</h2>
                             }
                             {
@@ -96,9 +103,7 @@ const ReplyDialogTrigger = ({ children, replies, postId, onOpenChange }: ReplyDi
 
                             <div className="mt-4 mx-2 flex gap-2">
                                 <Input placeholder="Reply" onChange={e => setReply(e.target.value)} />
-                                <DrawerClose>
-                                    <Button onClick={postReply}><SendHorizonal /></Button>
-                                </DrawerClose>
+                                <Button onClick={postReply}><SendHorizonal /></Button>
                             </div>
                         </div>
                     </DialogContent>
@@ -149,9 +154,7 @@ const ReplyDialogTrigger = ({ children, replies, postId, onOpenChange }: ReplyDi
 
                     <div className="mt-4 mx-2 flex gap-2">
                         <Input placeholder="Reply" onChange={e => setReply(e.target.value)} />
-                        <DrawerClose>
-                            <Button onClick={postReply}><SendHorizonal /></Button>
-                        </DrawerClose>
+                        <Button onClick={postReply}><SendHorizonal /></Button>
                     </div>
                 </div>
             </DrawerContent>

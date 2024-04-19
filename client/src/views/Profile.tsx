@@ -14,14 +14,16 @@ import { API_URL } from "@/main"
 import axios from "axios"
 import { ConfirmPostDeleteTriggerProps, PostCardProps, ReplyType } from "@/types/types1"
 import { useMediaQuery } from "usehooks-ts"
-import { Drawer, DrawerClose, DrawerContent, DrawerHeader, DrawerTitle, DrawerTrigger } from "@/components/ui/drawer"
+import { Drawer, DrawerClose, DrawerContent, DrawerFooter, DrawerHeader, DrawerTitle, DrawerTrigger } from "@/components/ui/drawer"
 import { useToast } from "@/components/ui/use-toast"
 import ReplyDialogTrigger from "@/components/ReplyDialogTrigger"
+import { Dialog, DialogClose, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
 
 const Profile = () => {
 
   const [posts, setPosts] = useState<PostCardProps[]>([]);
   const [replies, setReplies] = useState<ReplyType[]>([]);
+  const [repliesLoading, setRepliesLoading] = useState(false);
 
   const navigate = useNavigate()
   const { user } = clerkUseUser()
@@ -85,6 +87,7 @@ const Profile = () => {
   }
 
   const fetchReplies = async (postId: string) => {
+    setRepliesLoading(true)
     try {
       const res = await axios.get(`${API_URL}/replies/get/${postId}`)
       setReplies(res.data.transformedReplies)
@@ -95,6 +98,8 @@ const Profile = () => {
         duration: 3000,
         variant: 'destructive'
       })
+    } finally {
+      setRepliesLoading(false)
     }
   }
 
@@ -288,7 +293,7 @@ const Profile = () => {
                   <Button onClick={() => requestUpvote(post._id as string)} className={`w-full ${post.upvoteRefs.includes(user?.id!) ? 'text-red-600' : null}`} variant='ghost' ><ArrowBigUp size={24} className="mx-1" />{post.upvoteRefs.length} Upvotes</Button>
                   <Button onClick={() => requestDownvote(post._id as string)} className={`w-full ${post.downvoteRefs.includes(user?.id!) ? 'text-red-600' : null}`} variant='ghost'><ArrowBigDown size={24} className="mx-1"/>{post.downvoteRefs.length} Downvotes</Button>
 
-                  <ReplyDialogTrigger replies={replies} postId={post._id as string} onOpenChange={() => setReplies([])}>
+                  <ReplyDialogTrigger setReplies={setReplies} loading={repliesLoading} replies={replies} postId={post._id as string} onOpenChange={() => setReplies([])}>
                     <Button className="w-full" variant='ghost'  onClick={() => fetchReplies(post._id as string)}><MessagesSquare size={24} className="mx-1"/>{post.replyRefs.length} Replies</Button>
                   </ReplyDialogTrigger>
                 </div>
@@ -324,7 +329,26 @@ const ConfirmPostDeleteTrigger = ({ children, postId }: ConfirmPostDeleteTrigger
 
   if (matches)
     return (
-      <></>
+      <Dialog>
+        <DialogTrigger asChild>
+          {children}
+        </DialogTrigger>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Delete Post</DialogTitle>
+          </DialogHeader>
+          <div className="m-2 w-full">
+            <p>Are you sure you want to delete this post?</p>
+          </div>
+
+          <DialogFooter>
+            <DialogClose>
+              <Button>No</Button>
+            </DialogClose>
+            <Button onClick={requestDeletePost} variant='destructive'>Yes</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     )
 
   return (
@@ -338,14 +362,14 @@ const ConfirmPostDeleteTrigger = ({ children, postId }: ConfirmPostDeleteTrigger
         </DrawerHeader>
         <div className="m-2 w-full">
           <p>Are you sure you want to delete this post?</p>
-
-          <div className="flex gap-1 flex-col my-3">
-            <DrawerClose>
-              <Button className="w-full">No</Button>
-            </DrawerClose>
-            <Button onClick={requestDeletePost} className="w-full" variant='destructive'>Yes</Button>
-          </div>
         </div>
+
+        <DrawerFooter>
+          <DrawerClose>
+            <Button className="w-full">No</Button>
+          </DrawerClose>
+          <Button onClick={requestDeletePost} className="w-full" variant='destructive'>Yes</Button>
+        </DrawerFooter>
       </DrawerContent>
     </Drawer>
   )

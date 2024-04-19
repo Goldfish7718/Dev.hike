@@ -45,4 +45,6 @@ export interface ReplyDialogTriggerProps extends TriggerProps {
     replies: ReplyType[];
     postId: string;
     onOpenChange: () => void;
+    loading: boolean;
+    setReplies: Function;
 }
