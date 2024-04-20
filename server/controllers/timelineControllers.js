@@ -6,7 +6,7 @@ export const getTimeline = async (req, res) => {
     try {
         const { userId } = req.params
 
-        let timeline = await Timeline.find({ userRef: userId })
+        let timeline = await Timeline.find({ userRef: userId }).sort({ createdAt: -1 })
         timeline = timeline.map(item => {
             return {
                 ...item.toObject(),

@@ -2,7 +2,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Card, CardHeader, CardFooter, CardTitle, CardContent } from "@/components/ui/card"
 import { Separator } from "@/components/ui/separator"
 import { Button } from "@/components/ui/button"
-import { User, SquarePen, Github, Twitter, Plus, MessagesSquare, BadgePlus, TriangleAlert, UserRoundX, ArrowBigUp, ArrowBigDown, MessageSquareHeart, Globe, Linkedin, Instagram, Trash } from 'lucide-react'
+import { User, SquarePen, Github, Twitter, Plus, MessagesSquare, BadgePlus, TriangleAlert, UserRoundX, ArrowBigUp, ArrowBigDown, MessageSquareHeart, Globe, Linkedin, Instagram, Trash, Calendar } from 'lucide-react'
 import { Tabs, TabsTrigger,TabsContent, TabsList } from "@/components/ui/tabs"
 import { useNavigate } from "react-router-dom"
 import { useUser as clerkUseUser } from "@clerk/clerk-react"
@@ -149,7 +149,6 @@ const Profile = () => {
             </CardHeader>
             <Separator/>
             <div className="p-5">
-              {/* Lorem ipsum dolor sit amet consectetur adipisicing elit. Qui accusamus alias autem itaque expedita tenetur blanditiis eligendi? Iure nostrum atque inventore labore laborum hic! Odit asperiores esse ex officia quo? */}
               {currProfile?.bio}
             </div>
             <Separator/>
@@ -246,6 +245,7 @@ const Profile = () => {
             <div className="p-3 flex flex-col gap-3">
               <Button variant="outline" onClick={()=>navigate('/new/timeline')}>Add to Timeline<Plus size={18} className="mx-1"/></Button>
               <Button variant="outline" onClick={()=>navigate('/new/post')}>New Post<SquarePen size={18} className="mx-1" /></Button>
+              <Button variant="outline" onClick={()=>navigate('/new/event')}>New Event<Calendar size={18} className="mx-1" /></Button>
             </div>
           </Card>
         </div>

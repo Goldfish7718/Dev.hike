@@ -24,6 +24,10 @@ export interface ConfirmPostDeleteTriggerProps extends TriggerProps {
     postId: string;
 }
 
+export interface ConfirmTimeLineDeleteTriggerProps extends TriggerProps {
+    timelineId: string;
+}
+
 export interface PostCardProps {
     title: string;
     content: string;
@@ -56,4 +60,5 @@ export interface TimelineType {
     tag: string;
     links: string[];
     _id: string;
+    userRef: string;
 }
