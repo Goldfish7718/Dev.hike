@@ -88,3 +88,34 @@ export const deleteUser = async (req, res) => {
             .json({ message: 'Internal Server Error' })
     }
 }
+
+export const followUser = async (req, res) => {
+    try {
+        const { userId, followerId } = req.params;
+
+        const userToFollow = await Profile.findById(userId);
+        
+        if (userToFollow.followerRefs.includes(followerId)) {
+            const newFollowerRefs = userToFollow.followerRefs.filter(follower => follower != followerId)
+            userToFollow.followerRefs = newFollowerRefs;
+            userToFollow.save()
+
+            return res
+                .status(200)
+                .json({ userToFollow })
+        } else {
+            userToFollow.followerRefs.push(followerId)
+            userToFollow.save()
+
+            return res
+                .status(200)
+                .json({ userToFollow })
+        }
+
+    } catch (error) {
+        console.log(error);   
+        res
+            .status(500)
+            .json({ message: 'Internal Server Error' })
+    }
+}

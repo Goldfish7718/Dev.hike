@@ -4,7 +4,7 @@ import { addEvent, deleteEvent, getEvents, registerEvent } from '../controllers/
 const router = Router()
 
 router.get('/get', getEvents)
-router.post('/post', addEvent)
+router.post('/post/:userRef', addEvent)
 router.delete('/delete/:eventId', deleteEvent)
 router.post('/register/:eventId/:userId', registerEvent)
 

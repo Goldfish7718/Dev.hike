@@ -5,13 +5,41 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Heart, MapPin, MessageSquare, Settings, Users } from "lucide-react"
 import feed from '@/data/feedData.json'
 import posts from '@/data/postData.json'
-import events from '@/data/eventData.json'
+// import events from '@/data/eventData.json'
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar"
 import EventCard from "@/components/EventCard"
 import PostCard from "@/components/PostCard"
+import { EventCardProps } from "@/types/types1"
+import { useEffect, useState } from "react"
+import { useToast } from "@/components/ui/use-toast"
+import { API_URL } from "@/main"
+import axios from "axios"
 
 
 const Dashboard = () => {
+
+  const [events, setEvents] = useState<EventCardProps[]>([]);
+
+  const { toast } = useToast()
+
+  const fetchEvents = async () => {
+    try {
+      const res = await axios.get(`${API_URL}/events/get`)
+      console.log(res.data);
+      setEvents(res.data.events)
+    } catch (error) {
+      console.log(error);
+      toast({
+        title: 'Sorry! An Error occured!',
+        duration: 3000,
+        variant: 'destructive'
+      })
+    }
+  }
+
+  useEffect(() => {
+    fetchEvents()
+  }, [])
 
   return (
     <>
@@ -65,7 +93,7 @@ const Dashboard = () => {
           }
           </TabsContent>
           <TabsContent value="events">
-            {events.data.map(event => (
+            {events.map(event => (
                 <EventCard {...event} />
               ))
             }

@@ -10,24 +10,24 @@ const EventCard = (event: EventCardProps) => {
         <Card className="w-full md:w-2/3 my-3">
             <CardHeader>
                 <CardTitle className="flex items-center">
-                    <Zap size={24} className="mx-2"/> {event.eventTitle}
+                    <Zap size={24} className="mx-2"/> {event.title}
                 </CardTitle>
             </CardHeader>
             <CardContent>
                 <p>
-                    {event.eventDesc}
+                    {event.description}
                 </p>
                 <div className="my-4">
                     <span className="dark:text-gray-400 text-sm text-neutral-800">
-                        Organized by: {event.eventOrganizer}
+                        Organized by: <span className='hover:underline hover:cursor-pointer text-black'>{event.organiser}</span>
                     </span>
                 </div>
                 <div className="flex gap-2">
                     <Button className="flex items-center" variant='outline'>
-                        <MapPin size={18} className="mx-2" /> {event.eventLocation}
+                        <MapPin size={18} className="mx-2" /> {event.location}
                     </Button>
                     <Button className="flex items-center" variant='outline'>
-                        <Users size={18} className="mx-2" /> {event.eventRegistrations}
+                        <Users size={18} className="mx-2" /> {event.registrations.length}
                     </Button>
                 </div>
             </CardContent>

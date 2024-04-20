@@ -1,11 +1,12 @@
 import React from "react";
 
 export interface EventCardProps {
-    eventTitle: string;
-    eventDesc: string;
-    eventOrganizer: string;
-    eventLocation: string;
-    eventRegistrations: number;
+    title: string;
+    description: string;
+    organiser: string;
+    location: string;
+    registrations: string[];
+    userRef: string;
 }
 
 export interface TriggerProps {

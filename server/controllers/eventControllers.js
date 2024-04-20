@@ -18,12 +18,14 @@ export const getEvents = async (req, res) => {
 export const addEvent = async (req, res) => {
     try {
         const { title, description, organiser, location } = req.body 
+        const { userRef } = req.params
 
         const newEvent = await Event.create({
             title,
             description,
             organiser,
-            location
+            location,
+            userRef
         })
 
         res
