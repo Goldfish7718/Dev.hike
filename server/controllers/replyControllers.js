@@ -6,6 +6,7 @@ export const postReply = async (req, res) => {
     try {
         const { userId, postId } = req.params;
         const { content } = req.body;
+        const { firstName, lastName, imageUrl } = await clerkClient.users.getUser(userId)
 
         const newReply = await Reply.create({
             content,
@@ -19,9 +20,15 @@ export const postReply = async (req, res) => {
             { new: true }
         )
 
+        const replyInResponse = {
+            content,
+            fullname: `${firstName} ${lastName}`,
+            imageUrl
+        }
+
         res
             .status(200)
-            .json({ newReply, postReplied })
+            .json({ replyInResponse, postReplied })
     } catch (error) {
         console.log(error);
         res
@@ -57,7 +64,7 @@ export const deleteReply = async (req, res) => {
 
 export const getReplies = async (req, res) => {
     try {
-        
+        const { postId } = req.params;
         const replies = await Reply.find({ postRef: postId })
 
         const transformedReplies = await Promise.all(replies.map(async reply => {

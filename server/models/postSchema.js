@@ -26,12 +26,6 @@ const postSchema = new Schema({
             ref: 'Profile'
         }
     ],
-    tagRefs: [
-        {
-            type: String,
-            ref: 'Profile'
-        }
-    ],
     replyRefs: [
         {
             type: Schema.Types.ObjectId,

@@ -19,6 +19,29 @@ export const getPosts = async (req, res) => {
     }
 }
 
+export const getFeedPosts = async (req, res) => {
+    try {
+        const todayStart = new Date().setHours(0, 0, 0, 0)        
+        const todayEnd = new Date().setHours(23, 59, 59, 999)
+
+        const posts = await Post.find({
+            createdAt: {
+                $gte: todayStart,
+                $lt: todayEnd,
+            }
+        })
+
+        res
+            .status(200)
+            .json({ posts })
+    } catch (error) {
+        console.log(error);
+        res
+            .status(500)
+            .json({ message: "Internal server error" })
+    }
+}
+
 export const addPost = async (req, res) => {
     try {
         const { userId } = req.params
@@ -68,7 +91,7 @@ export const deletePost = async (req, res) => {
 
         res 
             .status(200)
-            .json({ message: "Post deleted successfully", user })
+            .json({ message: "Post deleted successfully" })
     } catch (error) {
         console.log(error);
         res

@@ -6,14 +6,16 @@ const profileSchema = new Schema({
         required: true,
         unique: true
     },
-    followers: {
-        type: Number,
-        default: 0
-    },
-    following: {
-        type: Number,
-        default: 0
-    },
+    followerRefs: [
+        {
+            type: String,
+        }
+    ],
+    followingRefs: [
+        {
+            type: String,
+        },
+    ],
     email: {
         type: String,
         required: true,
