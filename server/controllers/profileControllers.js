@@ -15,6 +15,7 @@ export const initiateProfile = async (req, res) => {
                 github,
                 linkedIn,
                 instagram,
+                twitter,
                 other
             },
             profileInitiated: true,
@@ -34,9 +35,20 @@ export const initiateProfile = async (req, res) => {
 
 export const fetchUser = async (req, res) => {
     try {
-        const { userId } = req.params;
+        const { userId, method } = req.params;
+        let user;
 
-        const user = await Profile.findOne({ clerkId: userId })
+        if (method === 'clerkId') {
+            user = await Profile.findOne({ clerkId: userId })
+        } else {
+            user = await Profile.findById(userId)
+            const { firstName, lastName, imageUrl } = await clerkClient.users.getUser(user.clerkId)
+            user = {
+                ...user.toObject(),
+                fullname: `${firstName} ${lastName}`,
+                imageUrl
+            }
+        }
 
         res
             .status(200)
@@ -81,6 +93,37 @@ export const deleteUser = async (req, res) => {
         res
             .status(200)
             .json({ message: "User deleted successfully" })
+    } catch (error) {
+        console.log(error);   
+        res
+            .status(500)
+            .json({ message: 'Internal Server Error' })
+    }
+}
+
+export const followUser = async (req, res) => {
+    try {
+        const { userId, followerId } = req.params;
+
+        const userToFollow = await Profile.findById(userId);
+        
+        if (userToFollow.followerRefs.includes(followerId)) {
+            const newFollowerRefs = userToFollow.followerRefs.filter(follower => follower != followerId)
+            userToFollow.followerRefs = newFollowerRefs;
+            userToFollow.save()
+
+            return res
+                .status(200)
+                .json({ userToFollow })
+        } else {
+            userToFollow.followerRefs.push(followerId)
+            userToFollow.save()
+
+            return res
+                .status(200)
+                .json({ user: userToFollow })
+        }
+
     } catch (error) {
         console.log(error);   
         res

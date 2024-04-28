@@ -10,29 +10,53 @@ import {
     DrawerContent,
     DrawerHeader,
     DrawerTrigger,
-    DrawerTitle
+    DrawerTitle,
 } from "@/components/ui/drawer"
-import { MessagesSquare, SendHorizonal } from "lucide-react";
+import { Loader2, MessagesSquare, SendHorizonal } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Card, CardHeader, CardTitle } from "./ui/card";
-import replyData from '@/data/replyData.json';
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import { useMediaQuery } from "usehooks-ts"
+import { ReplyDialogTriggerProps } from "@/types/types1";
+import { useState } from "react";
+import { useUser } from "@clerk/clerk-react";
+import { useToast } from "./ui/use-toast";
+import axios from "axios";
+import { API_URL } from "@/main";
 
-interface EventRegisterProps {
-    children: React.ReactNode;
-}
-
-const ReplyDialogTrigger = ({ children }: EventRegisterProps) => {
+const ReplyDialogTrigger = ({ children, replies, postId, onOpenChange, loading, setReplies }: ReplyDialogTriggerProps) => {
 
     const matches = useMediaQuery('(min-width: 768px)')
+    const { user } = useUser()
+    const { toast } = useToast()
+
+    const [reply, setReply] = useState('');
+
+    const postReply = async () => {
+        try {
+            const res = await axios.post(`${API_URL}/replies/reply/${postId}/${user?.id}`, {
+                content: reply
+            })
+            console.log(res.data);
+
+            const newReplies = [res.data.replyInResponse, ...replies]
+            setReplies(newReplies)
+        } catch (error) {
+            console.log(error);
+            toast({
+                title: 'Sorry! An error occured!',
+                duration: 3000,
+                variant: 'destructive'
+            })
+        }
+    }
 
     if (matches)
         return (
             <>
-                <Dialog>
+                <Dialog onOpenChange={onOpenChange}>
                     <DialogTrigger asChild>
                         {children}
                     </DialogTrigger>
@@ -45,33 +69,41 @@ const ReplyDialogTrigger = ({ children }: EventRegisterProps) => {
                         </DialogHeader>
                         <div>
                             <ScrollArea className="h-96">
+                            {loading && 
+                                <div className="flex items-center justify-center h-full">
+                                    <Loader2 size={48} className="animate-spin duration-500 my-auto" />
+                                </div>
+                            }
+                            {!loading && replies.length === 0 &&
+                                <h2>No replies</h2>
+                            }
                             {
-                                replyData.data.map(reply => (
+                                replies.length > 0 && replies.map(reply => (
                                     <>
-                                    <Card className="my-2">
-                                        <CardHeader>    
-                                            <CardTitle className="flex items-center gap-2">
-                                                <Avatar className="h-12 w-12" >
-                                                    <AvatarImage src=""/>
-                                                    <AvatarFallback className="font-light text-lg">
-                                                        SM
-                                                    </AvatarFallback>
-                                                </Avatar>
-                                                {reply.fullname}
-                                            </CardTitle>
-                                        </CardHeader>
-                                        <div className="px-5 mb-5">
-                                            {reply.comment}
-                                        </div>
-                                    </Card>
+                                        <Card className="my-2">
+                                            <CardHeader>    
+                                                <CardTitle className="flex items-center gap-2">
+                                                    <Avatar className="h-12 w-12" >
+                                                        <AvatarImage src={reply.imageUrl} />
+                                                        <AvatarFallback className="font-light text-lg">
+                                                            SM
+                                                        </AvatarFallback>
+                                                    </Avatar>
+                                                    {reply.fullname}
+                                                </CardTitle>
+                                            </CardHeader>
+                                            <div className="px-5 mb-5">
+                                                {reply.content}
+                                            </div>
+                                        </Card>
                                     </>
                                 ))
                             }
                             </ScrollArea>
 
                             <div className="mt-4 mx-2 flex gap-2">
-                                <Input placeholder="Reply" />
-                                <Button><SendHorizonal /></Button>
+                                <Input placeholder="Reply" onChange={e => setReply(e.target.value)} />
+                                <Button onClick={postReply}><SendHorizonal /></Button>
                             </div>
                         </div>
                     </DialogContent>
@@ -80,7 +112,7 @@ const ReplyDialogTrigger = ({ children }: EventRegisterProps) => {
         )
 
     return (
-        <Drawer>
+        <Drawer onOpenChange={onOpenChange}>
             <DrawerTrigger asChild>
                 {children}
             </DrawerTrigger>
@@ -93,33 +125,41 @@ const ReplyDialogTrigger = ({ children }: EventRegisterProps) => {
                 </DrawerHeader>
                 <div className="p-4">
                     <ScrollArea className="h-96">
+                    {loading && 
+                        <div className="flex items-center justify-center h-full">
+                            <Loader2 size={48} className="animate-spin duration-500 my-auto" />
+                        </div>
+                    }
+                    {!loading && replies.length === 0 &&
+                        <h2>No replies</h2>
+                    }
                     {
-                        replyData.data.map(reply => (
+                        replies.length > 0 && replies.map(reply => (
                             <>
-                            <Card className="my-2">
-                                <CardHeader>    
-                                    <CardTitle className="flex items-center gap-2">
-                                        <Avatar className="h-12 w-12" >
-                                            <AvatarImage src=""/>
-                                            <AvatarFallback className="font-light text-lg">
-                                                SM
-                                            </AvatarFallback>
-                                        </Avatar>
-                                        {reply.fullname}
-                                    </CardTitle>
-                                </CardHeader>
-                                <div className="px-5 mb-5">
-                                    {reply.comment}
-                                </div>
-                            </Card>
+                                <Card className="my-2">
+                                    <CardHeader>    
+                                        <CardTitle className="flex items-center gap-2">
+                                            <Avatar className="h-12 w-12" >
+                                                <AvatarImage src={reply.imageUrl}/>
+                                                <AvatarFallback className="font-light text-lg">
+                                                    SM
+                                                </AvatarFallback>
+                                            </Avatar>
+                                            {reply.fullname}
+                                        </CardTitle>
+                                    </CardHeader>
+                                    <div className="px-5 mb-5">
+                                        {reply.content}
+                                    </div>
+                                </Card>
                             </>
                         ))
                     }
                     </ScrollArea>
 
                     <div className="mt-4 mx-2 flex gap-2">
-                        <Input placeholder="Reply" />
-                        <Button><SendHorizonal /></Button>
+                        <Input placeholder="Reply" onChange={e => setReply(e.target.value)} />
+                        <Button onClick={postReply}><SendHorizonal /></Button>
                     </div>
                 </div>
             </DrawerContent>

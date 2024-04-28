@@ -5,21 +5,27 @@ import axios from 'axios'
 import { API_URL } from "@/main";
 import { useNavigate } from "react-router-dom";
 
-interface UserType {
+export interface UserType {
     email: string;
     bio: string;
-    timelineRefs: [string];
-    postRefs: [string];
-    domains: [string];
-    interests: [string];
+    timelineRefs: string[];
+    postRefs: string[];
+    domains: string[];
+    interests: string[];
+    followerRefs: string[];
+    followingRefs: string[];
+    clerkId: string;
     socials: {
         github: string;
         twitter: string;
         linkedIn: string;
         instagram: string;
-        other: [string];
+        other: string[];
     },
     profileInitiated: boolean;
+    fullname: string;
+    imageUrl: string;
+    _id: string;
 }
 
 interface UserContextType {
@@ -43,6 +49,7 @@ interface UserContextType {
     // SETTER FUNCTIONS
     setBio: Function;
     handleSocialsChange: ChangeEventHandler;
+    setCurrProfile: Function;
 
     // SHARED METHODS
     addDomain: (domain: string) => void;
@@ -103,8 +110,6 @@ function UserProvider({ children }: UserContextProps) {
           const newDomains = [...domains, domain]
           setDomains(newDomains)
         }
-
-        console.log(domains);
     }
 
     const addInterest = (interest: string) => {
@@ -124,8 +129,6 @@ function UserProvider({ children }: UserContextProps) {
           const newInterests = [...interests, interest]
           setInterests(newInterests)
         }
-
-        console.log(interests);
     }
 
     const removeDomainByIndex = (index: number) => {
@@ -146,8 +149,6 @@ function UserProvider({ children }: UserContextProps) {
           ...prevSocials,
           [name]: value
         }));
-
-        console.log(socials);
     };
 
     const postProfileData = async () => {
@@ -178,7 +179,7 @@ function UserProvider({ children }: UserContextProps) {
 
     const fetchCurrentProfile = async () => {
         try {
-            const res = await axios.get(`${API_URL}/profile/fetchUser/${user?.id}`)        
+            const res = await axios.get(`${API_URL}/profile/fetchUser/clerkId/${user?.id}`)        
             setCurrProfile(res.data.user)
         } catch (error) {
             console.log(error);
@@ -203,6 +204,7 @@ function UserProvider({ children }: UserContextProps) {
         // SHARED SETTER FUNCTIONS
         setBio,
         handleSocialsChange,
+        setCurrProfile,
 
         // SHARED METHODS
         addDomain,

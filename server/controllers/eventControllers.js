@@ -18,12 +18,14 @@ export const getEvents = async (req, res) => {
 export const addEvent = async (req, res) => {
     try {
         const { title, description, organiser, location } = req.body 
+        const { userRef } = req.params
 
         const newEvent = await Event.create({
             title,
             description,
             organiser,
-            location
+            location,
+            userRef
         })
 
         res
@@ -57,11 +59,17 @@ export const deleteEvent = async (req, res) => {
 export const registerEvent = async (req, res) => {
     try {
         const { userId, eventId } = req.params;
-        const { firstName, lastname } = req.body;
+        const { firstName, lastName } = req.body;
+
+        const userToRegister = {
+            userRef: userId,
+            firstName,
+            lastName
+        }
 
         const updatedEvent = await Event.findByIdAndUpdate(
             eventId,
-            { $push: { registrations: userId } },
+            { $push: { registrations: userToRegister } },
             { new: true }
         )
 

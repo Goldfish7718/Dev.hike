@@ -19,9 +19,14 @@ const eventSchema = new Schema({
     },
     registrations: [
         {
-            type: String,
+            userRef: String,
+            firstName: String,
+            lastName: String
         }
-    ]
+    ],
+    userRef: {
+        type: String
+    }
 },
 {
     timestamps: true

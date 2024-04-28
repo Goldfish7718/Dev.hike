@@ -13,15 +13,50 @@ import { Label } from "@/components/ui/label"
 import { RadioGroup, RadioGroupItem } from "./ui/radio-group"
 import { Plus, UserRoundPlus } from "lucide-react"
 import { useMediaQuery } from "usehooks-ts"
-import { Drawer, DrawerContent, DrawerFooter, DrawerHeader, DrawerTitle, DrawerTrigger } from "./ui/drawer"
+import { Drawer, DrawerClose, DrawerContent, DrawerFooter, DrawerHeader, DrawerTitle, DrawerTrigger } from "./ui/drawer"
+import { EventCardProps } from "@/types/types1"
+import { useUser } from "@clerk/clerk-react"
+import { useState } from "react"
+import axios from "axios"
+import { API_URL } from "@/main"
+import { useToast } from "./ui/use-toast"
+import { DialogClose } from "@radix-ui/react-dialog"
 
-interface EventRegisterProps {
-children: React.ReactNode;
+interface EventRegisterProps extends EventCardProps {
+  children: React.ReactNode;
 }  
 
-const EventRegisterTrigger = ({ children }: EventRegisterProps) => {
+const EventRegisterTrigger = ({ children, title, userRef, _id }: EventRegisterProps) => {
 
   const matches = useMediaQuery('(min-width: 768px)')
+  const { user } = useUser()
+  const { toast } = useToast()
+
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
+
+  const setFullname = () => {
+    setFirstName(user?.firstName as string)
+    setLastName(user?.lastName as string)
+  }
+
+  const requestRegistration = async () => {
+    try {
+      await axios.post(`${API_URL}/events/register/${_id}/${userRef}`, {
+        firstName,
+        lastName
+      })
+
+      window.location.reload()
+    } catch (error) {
+      console.log(error);
+      toast({
+        title: 'Sorry! An Error occured!',
+        duration: 3000,
+        variant: 'destructive'
+      })
+    }
+  }
 
   if (matches)
     return (
@@ -32,7 +67,7 @@ const EventRegisterTrigger = ({ children }: EventRegisterProps) => {
         </DialogTrigger>
           <DialogContent>
               <DialogHeader>
-                <DialogTitle>Register for TFUG</DialogTitle>
+                <DialogTitle>Register for {title}</DialogTitle>
               </DialogHeader>
               <div className="flex flex-col gap-3">
                 <div className="flex flex-col gap-3">
@@ -40,18 +75,18 @@ const EventRegisterTrigger = ({ children }: EventRegisterProps) => {
                     <Label>
                       First Name:
                     </Label>
-                    <Input />
+                    <Input value={firstName} onChange={e => setFirstName(e.target.value)} />
                   </div>
 
                   <div className="flex flex-col gap-2">
                     <Label>
                       Last Name:  
                     </Label>
-                    <Input />
+                    <Input value={lastName} onChange={e => setLastName(e.target.value)} />
                   </div>
                 </div>
 
-                <RadioGroup defaultValue="solo" className="flex mt-2 gap-3">
+                {/* <RadioGroup defaultValue="solo" className="flex mt-2 gap-3">
                   <div className="flex gap-2 items-center">
                     <RadioGroupItem value="solo"/>
                     <Label>Solo</Label>
@@ -68,10 +103,13 @@ const EventRegisterTrigger = ({ children }: EventRegisterProps) => {
                     <Input placeholder="Team member name"/>
                     <Button><Plus size={18} /></Button>
                   </div>
-                </div>
+                </div> */}
+                <Button variant='secondary' onClick={setFullname}>Use my Default name</Button>
               </div>
               <DialogFooter>
-                <Button type="submit" className="px-3 w-full">Register <UserRoundPlus size={16} className="mx-1" /></Button>
+                <DialogClose asChild>
+                  <Button onClick={requestRegistration} type="submit" className="px-3 w-full">Register <UserRoundPlus size={16} className="mx-1" /></Button>
+                </DialogClose>
               </DialogFooter>  
             </DialogContent>
           </Dialog>
@@ -86,7 +124,7 @@ const EventRegisterTrigger = ({ children }: EventRegisterProps) => {
       </DrawerTrigger>
       <DrawerContent>
         <DrawerHeader>
-          <DrawerTitle>Register for TFUG</DrawerTitle>
+          <DrawerTitle>Register for {title}</DrawerTitle>
         </DrawerHeader>
         <div className="flex flex-col gap-3 px-4">
           <div className="flex flex-col gap-3">
@@ -94,18 +132,18 @@ const EventRegisterTrigger = ({ children }: EventRegisterProps) => {
               <Label>
                 First Name:
               </Label>
-              <Input />
+              <Input value={firstName} onChange={e => setFirstName(e.target.value)} />
             </div>
 
             <div className="flex flex-col gap-2">
               <Label>
                 Last Name:  
               </Label>
-              <Input />
+              <Input value={lastName} onChange={e => setLastName(e.target.value)} />
             </div>
           </div>
 
-          <RadioGroup defaultValue="solo" className="flex mt-2 gap-3">
+          {/* <RadioGroup defaultValue="solo" className="flex mt-2 gap-3">
             <div className="flex gap-2 items-center">
               <RadioGroupItem value="solo"/>
               <Label>Solo</Label>
@@ -122,10 +160,13 @@ const EventRegisterTrigger = ({ children }: EventRegisterProps) => {
               <Input placeholder="Team member name"/>
               <Button><Plus size={18} /></Button>
             </div>
-          </div>
+          </div> */}
+          <Button variant='secondary' onClick={setFullname}>Use my Default name</Button>
         </div>
         <DrawerFooter>
-          <Button type="submit" className="px-3 w-full">Register <UserRoundPlus size={16} className="mx-1" /></Button>
+          <DrawerClose asChild>
+            <Button onClick={requestRegistration} type="submit" className="px-3 w-full">Register <UserRoundPlus size={16} className="mx-1" /></Button>
+          </DrawerClose>
         </DrawerFooter>  
       </DrawerContent>
     </Drawer>
