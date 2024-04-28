@@ -3,7 +3,7 @@ import { deleteUser, fetchUser, followUser, initiateProfile, updateUser } from '
 
 const router = Router()
 
-router.get('/fetchUser/:userId', fetchUser)
+router.get('/fetchUser/:method/:userId', fetchUser)
 router.post('/initiate', initiateProfile)
 router.put('/updateUser/:userId', updateUser)
 router.delete('/deleteUser/:userId', deleteUser)

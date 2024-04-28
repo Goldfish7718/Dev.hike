@@ -39,6 +39,11 @@ const Profile = () => {
       setPosts(res.data.posts)
     } catch (error) {
       console.log(error);
+      toast({
+        title: 'Sorry an error occured!',
+        duration: 3000,
+        variant: 'destructive'
+      })
     }
   }
 
@@ -135,8 +140,8 @@ const Profile = () => {
           <div className="text-center md:text-left">
             <h3 className="text-4xl">{user?.fullName}</h3>
             <div className="flex gap-3 my-1 md:flex-col lg:flex-row">
-              <h3 className="font-light">Followers <span className="font-bold">569</span></h3>
-              <h3 className="font-light">Following <span className="font-bold">786</span></h3>
+              <h3 className="font-light">Followers <span className="font-bold">{currProfile?.followerRefs.length}</span></h3>
+              <h3 className="font-light">Following <span className="font-bold">{currProfile?.followingRefs.length}</span></h3>
             </div>
           </div>
         </div>
@@ -323,7 +328,7 @@ const Profile = () => {
   )
 }
 
-const ConfirmPostDeleteTrigger = ({ children, postId }: ConfirmPostDeleteTriggerProps) => {
+export const ConfirmPostDeleteTrigger = ({ children, postId }: ConfirmPostDeleteTriggerProps) => {
   const matches = useMediaQuery('(min-width: 768px)')
   const { toast } = useToast()
   const { user } = clerkUseUser()

@@ -6,8 +6,9 @@ import { useToast } from "@/components/ui/use-toast"
 import { API_URL } from "@/main"
 import { useUser } from "@clerk/clerk-react"
 import axios from "axios"
-import { CalendarPlus } from "lucide-react"
+import { CalendarPlus, Loader2 } from "lucide-react"
 import { useState } from "react"
+import { useNavigate } from "react-router-dom"
 
 const NewEvent = () => {
 
@@ -15,24 +16,28 @@ const NewEvent = () => {
     const [description, setDescription] = useState('');
     const [organiser, setOrganiser] = useState('');
     const [location, setLocation] = useState('');
+    const [loading, setLoading] = useState(false);
 
     const { user } = useUser()
     const { toast } = useToast()
+    const navigate = useNavigate()
 
     const setDefaultName = () => {
         setOrganiser(user?.fullName as string)
     }
 
     const requestAddEvent = async () => {
+        setLoading(true)
         try {
-            const res = await axios.post(`${API_URL}/events/post/${user?.id}`, {
+            await axios.post(`${API_URL}/events/post/${user?.id}`, {
                 title,
                 description,
                 location,
                 organiser,
                 userRef: user?.id
             })
-            console.log(res.data);
+
+            navigate('/dashboard')
         } catch (error) {
             console.log(error);
             toast({
@@ -40,6 +45,8 @@ const NewEvent = () => {
                 duration: 3000,
                 variant: 'destructive'
             })
+        } finally {
+            setLoading(false)
         }
     }
 
@@ -69,7 +76,17 @@ const NewEvent = () => {
                         <Input className="md:text-lg" onChange={e => setLocation(e.target.value)} />   
                     </div>
                     <div className="flex justify-end">
-                        <Button onClick={requestAddEvent} className="text-lg my-6 w-full">Add Event<CalendarPlus className="mx-2" size={24} /></Button>
+                        <Button onClick={requestAddEvent} className="text-lg my-6 w-full" disabled={loading}>
+                            {!loading &&
+                                <>
+                                    <span>Add Event</span>
+                                    <CalendarPlus className="mx-2" size={24} />
+                                </>
+                            }
+                            {loading &&
+                                <Loader2 className="animate-spin duration-500" />
+                            }
+                        </Button>
                     </div>
                </div>
             </div>

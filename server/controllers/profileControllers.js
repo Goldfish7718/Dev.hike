@@ -15,6 +15,7 @@ export const initiateProfile = async (req, res) => {
                 github,
                 linkedIn,
                 instagram,
+                twitter,
                 other
             },
             profileInitiated: true,
@@ -34,9 +35,20 @@ export const initiateProfile = async (req, res) => {
 
 export const fetchUser = async (req, res) => {
     try {
-        const { userId } = req.params;
+        const { userId, method } = req.params;
+        let user;
 
-        const user = await Profile.findOne({ clerkId: userId })
+        if (method === 'clerkId') {
+            user = await Profile.findOne({ clerkId: userId })
+        } else {
+            user = await Profile.findById(userId)
+            const { firstName, lastName, imageUrl } = await clerkClient.users.getUser(user.clerkId)
+            user = {
+                ...user.toObject(),
+                fullname: `${firstName} ${lastName}`,
+                imageUrl
+            }
+        }
 
         res
             .status(200)

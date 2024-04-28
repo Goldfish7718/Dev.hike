@@ -39,7 +39,7 @@ const router = createBrowserRouter([
           { path: '/new/post', element: <NewPost /> },
           { path: '/initiate-profile/1', element: <InitiateProfileFirst /> },
           { path: '/initiate-profile/2', element: <InitiateProfileSecond /> },
-          { path: '/user', element: <User /> },
+          { path: '/user/:userId', element: <User /> },
           {
             element: <DashboardLayout />,
             children: [

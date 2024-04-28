@@ -5,8 +5,15 @@ export interface EventCardProps {
     description: string;
     organiser: string;
     location: string;
-    registrations: string[];
+    registrations: [
+        {
+            firstName: string;
+            lastName: string;
+            userRef: string;
+        }
+    ];
     userRef: string;
+    _id: string;
 }
 
 export interface TriggerProps {

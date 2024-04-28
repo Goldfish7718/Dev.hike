@@ -5,21 +5,27 @@ import axios from 'axios'
 import { API_URL } from "@/main";
 import { useNavigate } from "react-router-dom";
 
-interface UserType {
+export interface UserType {
     email: string;
     bio: string;
-    timelineRefs: [string];
-    postRefs: [string];
-    domains: [string];
-    interests: [string];
+    timelineRefs: string[];
+    postRefs: string[];
+    domains: string[];
+    interests: string[];
+    followerRefs: string[];
+    followingRefs: string[];
+    clerkId: string;
     socials: {
         github: string;
         twitter: string;
         linkedIn: string;
         instagram: string;
-        other: [string];
+        other: string[];
     },
     profileInitiated: boolean;
+    fullname: string;
+    imageUrl: string;
+    _id: string;
 }
 
 interface UserContextType {
@@ -173,7 +179,7 @@ function UserProvider({ children }: UserContextProps) {
 
     const fetchCurrentProfile = async () => {
         try {
-            const res = await axios.get(`${API_URL}/profile/fetchUser/${user?.id}`)        
+            const res = await axios.get(`${API_URL}/profile/fetchUser/clerkId/${user?.id}`)        
             setCurrProfile(res.data.user)
         } catch (error) {
             console.log(error);

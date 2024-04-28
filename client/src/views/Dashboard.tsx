@@ -5,7 +5,6 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Heart, MapPin, MessageSquare, Settings, Users } from "lucide-react"
 import feed from '@/data/feedData.json'
 import posts from '@/data/postData.json'
-// import events from '@/data/eventData.json'
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar"
 import EventCard from "@/components/EventCard"
 import PostCard from "@/components/PostCard"
@@ -25,7 +24,6 @@ const Dashboard = () => {
   const fetchEvents = async () => {
     try {
       const res = await axios.get(`${API_URL}/events/get`)
-      console.log(res.data);
       setEvents(res.data.events)
     } catch (error) {
       console.log(error);
@@ -94,7 +92,7 @@ const Dashboard = () => {
           </TabsContent>
           <TabsContent value="events">
             {events.map(event => (
-                <EventCard {...event} />
+                <EventCard {...event} key={event._id} />
               ))
             }
           </TabsContent>

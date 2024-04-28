@@ -59,11 +59,17 @@ export const deleteEvent = async (req, res) => {
 export const registerEvent = async (req, res) => {
     try {
         const { userId, eventId } = req.params;
-        const { firstName, lastname } = req.body;
+        const { firstName, lastName } = req.body;
+
+        const userToRegister = {
+            userRef: userId,
+            firstName,
+            lastName
+        }
 
         const updatedEvent = await Event.findByIdAndUpdate(
             eventId,
-            { $push: { registrations: userId } },
+            { $push: { registrations: userToRegister } },
             { new: true }
         )
 
