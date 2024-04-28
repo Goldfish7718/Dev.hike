@@ -134,7 +134,9 @@ const User1 = () => {
 
   const requestFollow = async () => {
     try {
-      
+      const res = await axios.put(`${API_URL}/profile/follow/${user?._id}/${currProfile?._id}`)
+      console.log(res.data)
+      setUser(res.data.user)
     } catch (error) {
       console.log(error)
       toast({
@@ -181,8 +183,10 @@ const User1 = () => {
         </div>
         {currProfile?._id !== userId &&
           <div> 
-            <Button className="mt-4 w-full">Follow<UserPlus size={20} className="mx-1"/></Button>  
-            <Button className="mt-4 w-full" variant="outline">Following<Check size={20} className="mx-1"/></Button>  
+            {user?.followerRefs.includes(currProfile?._id as string) ?
+              <Button className="mt-4 w-full" variant="outline" onClick={requestFollow}>Following<Check size={20} className="mx-1"/></Button> :
+              <Button className="mt-4 w-full" onClick={requestFollow}>Follow<UserPlus size={20} className="mx-1"/></Button>  
+            }  
           </div>  
         }
 

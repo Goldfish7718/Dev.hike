@@ -121,7 +121,7 @@ export const followUser = async (req, res) => {
 
             return res
                 .status(200)
-                .json({ userToFollow })
+                .json({ user: userToFollow })
         }
 
     } catch (error) {
