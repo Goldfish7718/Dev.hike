@@ -1,10 +1,10 @@
 # Dev.hike - For Developers, by developers.
 
-> Dev.hike is a social media platform intended for software developers and enthusiasts. Dev.hike will provide certain features like posts, discussion forums and most importantly, documenting their development journey. Dev.hike will be built on the MERN stack with Shadcn-ui as the design system & Clerk for powering authentication. This project is currently under development and is expected to complete in the next 2 months.
+![Landing Page](/snapshots/devhike.png)
+
+> Dev.hike is a social media platform intended for software developers and enthusiasts. Dev.hike will provide certain features like posts, discussion forums and most importantly, documenting their development journey. Dev.hike will be built on the MERN stack with Shadcn-ui as the design system & Clerk for powering authentication. 
 
 ## How to run project
-
-#### Currently, Dev.hike only has client side files with authentication system and some basic components.
 
 - Clone the repository
 
@@ -20,10 +20,6 @@ git clone https://github.com/Goldfish7718/Dev.hike.git
 npm install
 npm run dev
 ```
-
-## Important 🚨
-
-- Dev.hike is currently under active development and everything may not work as expected.
 
 ## Licenses 📃
 
