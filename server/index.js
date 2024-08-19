@@ -3,6 +3,7 @@ import express from 'express'
 import { config } from 'dotenv'
 import mongoose from 'mongoose'
 import cors from 'cors'
+import cookieParser from 'cookie-parser'
 
 // ROUTE IMPORTS
 import profileRoutes from './routes/profileRoutes.js'
@@ -10,6 +11,9 @@ import postRoutes from './routes/postRoutes.js'
 import eventRoutes from './routes/eventRoutes.js'
 import replyRoutes from './routes/replyRoutes.js'
 import timelineRoutes from './routes/timelineRoutes.js'
+
+// MIDDLEWARE
+import authenticateToken from './middleware/verifyToken.js'
 
 config()
 
@@ -26,12 +30,13 @@ if (process.env.ORIGIN) {
 }
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
+app.use(cookieParser())
 
-app.use('/profile', profileRoutes)
-app.use('/posts', postRoutes)
-app.use('/replies', replyRoutes)
-app.use('/timeline', timelineRoutes)
-app.use('/events', eventRoutes)
+app.use('/profile', authenticateToken, profileRoutes)
+app.use('/posts', authenticateToken, postRoutes)
+app.use('/replies', authenticateToken, replyRoutes)
+app.use('/timeline', authenticateToken, timelineRoutes)
+app.use('/events', authenticateToken, eventRoutes)
 
 const connectDB = async (url) => {
     await mongoose

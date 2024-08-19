@@ -21,6 +21,7 @@ import InitiateProfileSecond from './views/InitiateProfileSecond.tsx'
 import InitiateProfileFirst from './views/InitiateProfileFirst.tsx'
 import User from './views/User.tsx'
 import ProtectRoute from './layouts/protect-route.tsx'
+import axios from 'axios'
 
 const router = createBrowserRouter([
   {
@@ -62,3 +63,4 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
 )
 
 export const API_URL = import.meta.env.VITE_API_URL || ""
+axios.defaults.withCredentials = true
