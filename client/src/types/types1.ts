@@ -1,72 +1,72 @@
 import React from "react";
 
 export interface EventCardProps {
-    title: string;
-    description: string;
-    organiser: string;
-    location: string;
-    registrations: [
-        {
-            firstName: string;
-            lastName: string;
-            userRef: string;
-        }
-    ];
-    userRef: string;
-    _id: string;
+  title: string;
+  description: string;
+  organiser: string;
+  location: string;
+  registrations: [
+    {
+      firstName: string;
+      lastName: string;
+      userRef: string;
+    }
+  ];
+  userRef: string;
+  _id: string;
 }
 
 export interface TriggerProps {
-    children: React.ReactNode
+  children: React.ReactNode;
 }
 
 export interface EditBioTriggerProps extends TriggerProps {
-    bio: string;
+  bio: string;
 }
 
 export interface EditDomainsTriggerProps extends TriggerProps {
-    currDomains: string[]
+  currDomains: string[];
 }
 
 export interface ConfirmPostDeleteTriggerProps extends TriggerProps {
-    postId: string;
+  postId: string;
 }
 
 export interface ConfirmTimeLineDeleteTriggerProps extends TriggerProps {
-    timelineId: string;
+  timelineId: string;
 }
 
 export interface PostCardProps {
-    title: string;
-    content: string;
-    email: string;
-    tags: number;
-    upvoteRefs: string[];
-    downvoteRefs: string[];
-    replyRefs: string[];
-    _id?: string;
+  title: string;
+  content: string;
+  email: string;
+  upvoteRefs: string[];
+  downvoteRefs: string[];
+  replyRefs: string[];
+  replies: ReplyType[];
+  _id: string;
 }
 
 export interface ReplyType {
-    content: string;
-    fullname: string;
-    imageUrl: string;
+  content: string;
+  fullname: string;
+  imageUrl: string;
 }
 
 export interface ReplyDialogTriggerProps extends TriggerProps {
-    replies: ReplyType[];
-    postId: string;
-    onOpenChange: () => void;
-    loading: boolean;
-    setReplies: Function;
+  replies: ReplyType[];
+  postId: string;
+  onOpenChange?: () => void;
+  loading?: boolean;
+  setReplies: Function;
 }
 
 export interface TimelineType {
-    title: string;
-    content: string;
-    date: string;
-    tag: string;
-    links: string[];
-    _id: string;
-    userRef: string;
+  title: string;
+  content: string;
+  date: string;
+  tag: string;
+  links: string[];
+  _id: string;
+  userRef: string;
 }
