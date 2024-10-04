@@ -6,7 +6,6 @@ import clerkClient from "@clerk/clerk-sdk-node";
 export const getPosts = async (req, res) => {
   try {
     const { userId } = req.params;
-
     const posts = await Post.find({ userRef: userId });
 
     res.status(200).json({ posts });
@@ -64,23 +63,15 @@ export const addPost = async (req, res) => {
     const { userId } = req.params;
     const { title, content } = req.body;
 
+    console.log(userId);
+
     const newPost = await Post.create({
       title,
       content,
       userRef: userId,
     });
 
-    const user = await Profile.findOneAndUpdate(
-      { clerkId: userId },
-      {
-        $push: {
-          postRefs: newPost._id,
-        },
-      },
-      { new: true }
-    );
-
-    res.status(200).json({ newPost, user });
+    res.status(200).json({ newPost, userProfile });
   } catch (error) {
     console.log(error);
     res.status(500).json({ message: "Internal server error" });
@@ -89,21 +80,9 @@ export const addPost = async (req, res) => {
 
 export const deletePost = async (req, res) => {
   try {
-    const { postId, userId } = req.params;
+    const { postId } = req.params;
 
-    const postToBeDeleted = await Post.findByIdAndDelete(postId);
-
-    const user = await Profile.findOneAndUpdate(
-      { clerkId: userId },
-      {
-        $pull: {
-          postRefs: postToBeDeleted._id,
-        },
-      },
-      { new: true }
-    );
-
-    await Post.findByIdAndDelete(postId);
+    await Post.findOneAndDelete({ _id: postId });
 
     res.status(200).json({ message: "Post deleted successfully" });
   } catch (error) {
