@@ -200,7 +200,7 @@ function UserProvider({ children }: UserContextProps) {
   };
 
   useEffect(() => {
-    fetchCurrentProfile();
+    if (user) fetchCurrentProfile();
   }, [user]);
 
   const value = {

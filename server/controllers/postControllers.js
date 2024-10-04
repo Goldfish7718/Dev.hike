@@ -1,5 +1,4 @@
 import Post from "../models/postSchema.js";
-import Profile from "../models/profileSchema.js";
 import Reply from "../models/replySchema.js";
 import clerkClient from "@clerk/clerk-sdk-node";
 
@@ -63,15 +62,13 @@ export const addPost = async (req, res) => {
     const { userId } = req.params;
     const { title, content } = req.body;
 
-    console.log(userId);
-
     const newPost = await Post.create({
       title,
       content,
       userRef: userId,
     });
 
-    res.status(200).json({ newPost, userProfile });
+    res.status(200).json({ newPost });
   } catch (error) {
     console.log(error);
     res.status(500).json({ message: "Internal server error" });

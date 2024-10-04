@@ -42,19 +42,17 @@ const postSchema = new Schema(
 
 postSchema.post("findOneAndDelete", async function (post) {
   await Reply.deleteMany({ postRef: post._id });
-  await Profile.findByIdAndUpdate(
-    post.userRef,
-    {
-      $pull: {
-        postRefs: post._id,
-      },
+  await Profile.findByIdAndUpdate(post.userRef, {
+    $pull: {
+      postRefs: post._id,
     },
-    { new: true }
-  );
+  });
 });
 
 postSchema.post("save", async function (post) {
-  Profile.findOneAndUpdate(post.userRef, { $push: { postRefs: post._id } });
+  await Profile.findByIdAndUpdate(post.userRef, {
+    $push: { postRefs: post._id },
+  });
 });
 
 const Post = model("Post", postSchema);
