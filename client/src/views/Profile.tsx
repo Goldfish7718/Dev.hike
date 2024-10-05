@@ -245,28 +245,54 @@ const Profile = () => {
               </CardHeader>
               <Separator />
               <div className="flex flex-col gap-1 p-3">
-                <div className="flex items-center">
-                  <Github size={18} className="mx-1" />
-                  <span className="text-sm">{currProfile?.socials.github}</span>
-                </div>
-                <div className="flex items-center">
-                  <Twitter size={18} className="mx-1" />
-                  <span className="text-sm">
-                    {currProfile?.socials.twitter}
-                  </span>
-                </div>
-                <div className="flex items-center">
-                  <Linkedin size={18} className="mx-1" />
-                  <span className="text-sm">
-                    {currProfile?.socials.linkedIn}
-                  </span>
-                </div>
-                <div className="flex items-center">
-                  <Instagram size={18} className="mx-1" />
-                  <span className="text-sm">
-                    {currProfile?.socials.instagram}
-                  </span>
-                </div>
+                {currProfile?.socials.github && (
+                  <div className="flex items-center">
+                    <Github size={18} className="mx-1" />
+                    <span
+                      className="text-sm hover:underline hover:decoration-white hover:cursor-pointer"
+                      onClick={() =>
+                        window.open(currProfile.socials.github, "_blank")
+                      }>
+                      {currProfile?.socials.github}
+                    </span>
+                  </div>
+                )}
+                {currProfile?.socials.twitter && (
+                  <div className="flex items-center">
+                    <Twitter size={18} className="mx-1" />
+                    <span
+                      className="text-sm hover:underline hover:decoration-white hover:cursor-pointer"
+                      onClick={() =>
+                        window.open(currProfile.socials.twitter, "_blank")
+                      }>
+                      {currProfile?.socials.twitter}
+                    </span>
+                  </div>
+                )}
+                {currProfile?.socials.linkedIn && (
+                  <div className="flex items-center">
+                    <Linkedin size={18} className="mx-1" />
+                    <span
+                      className="text-sm hover:underline hover:decoration-white hover:cursor-pointer"
+                      onClick={() =>
+                        window.open(currProfile.socials.linkedIn, "_blank")
+                      }>
+                      {currProfile?.socials.linkedIn}
+                    </span>
+                  </div>
+                )}
+                {currProfile?.socials.instagram && (
+                  <div className="flex items-center">
+                    <Instagram size={18} className="mx-1" />
+                    <span
+                      className="text-sm hover:underline hover:decoration-white hover:cursor-pointer"
+                      onClick={() =>
+                        window.open(currProfile.socials.instagram, "_blank")
+                      }>
+                      {currProfile?.socials.instagram}
+                    </span>
+                  </div>
+                )}
               </div>
               <CardFooter className="mt-3">
                 <Button className="w-full" variant="outline">
