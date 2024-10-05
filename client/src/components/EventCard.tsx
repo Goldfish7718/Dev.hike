@@ -35,7 +35,7 @@ const EventCard = (event: EventCardProps) => {
           <p>{event.description}</p>
           <div className="my-4">
             <span className="dark:text-gray-400 text-sm text-neutral-800">
-              Organized by:{" "}
+              Organized by: {event.organiser}
               <span className="hover:underline hover:cursor-pointer text-black">
                 {event.organiser}
               </span>

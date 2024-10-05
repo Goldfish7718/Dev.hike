@@ -10,8 +10,7 @@ import {
 import { Button } from "./ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { RadioGroup, RadioGroupItem } from "./ui/radio-group";
-import { Plus, UserRoundPlus } from "lucide-react";
+import { UserRoundPlus } from "lucide-react";
 import { useMediaQuery } from "usehooks-ts";
 import {
   Drawer,
@@ -35,12 +34,7 @@ interface EventRegisterProps extends EventCardProps {
   children: React.ReactNode;
 }
 
-const EventRegisterTrigger = ({
-  children,
-  title,
-  userRef,
-  _id,
-}: EventRegisterProps) => {
+const EventRegisterTrigger = ({ children, title, _id }: EventRegisterProps) => {
   const matches = useMediaQuery("(min-width: 768px)");
   const { user } = useClerkUser();
   const { currProfile } = useUser();
