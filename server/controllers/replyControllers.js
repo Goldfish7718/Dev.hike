@@ -10,6 +10,9 @@ export const postReply = async (req, res) => {
 
     const replyingUserProfile = await Profile.findById(userId);
 
+    console.log(userId);
+    console.log(replyingUserProfile);
+
     const { firstName, lastName, imageUrl } = await clerkClient.users.getUser(
       replyingUserProfile.clerkId
     );

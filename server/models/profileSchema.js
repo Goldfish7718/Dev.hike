@@ -71,13 +71,20 @@ profileSchema.post("findOneAndDelete", async function (profile) {
   console.log(profile);
 
   await Event.deleteMany({ userRef: profile._id });
-  await Event.findOneAndUpdate(
+  await Event.updateMany(
     { "registrations.userRef": profile._id },
     { $pull: { registrations: { userRef: profile._id } } }
   );
 
-  const deletedReplies = await Reply.deleteMany({ userRef: profile._id });
-  console.log(deletedReplies);
+  const repliesTobeDeleted = await Reply.find({ userRef: profile._id });
+  const replyRefsToBeDeleted = repliesTobeDeleted.map((reply) => reply._id);
+
+  await Reply.deleteMany({ userRef: profile._id });
+
+  await Post.updateMany(
+    { replyRefs: { $in: replyRefsToBeDeleted } },
+    { $pull: { replyRefs: { $in: replyRefsToBeDeleted } } }
+  );
 
   await Post.deleteMany({ userRef: profile._id });
   await Timeline.deleteMany({ userRef: profile._id });
