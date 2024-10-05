@@ -75,7 +75,7 @@ const Profile = () => {
 
   const navigate = useNavigate();
   const { user } = clerkUseUser();
-  const { currProfile, fetchCurrentProfile } = useUser();
+  const { currProfile } = useUser();
   const { toast } = useToast();
 
   const fallback = `${user?.fullName?.split(" ")[0].slice(0, 1)}${user?.fullName
@@ -164,7 +164,9 @@ const Profile = () => {
 
   const fetchTimeline = async () => {
     try {
-      const res = await axios.get(`${API_URL}/timeline/get/${user?.id}`);
+      const res = await axios.get(
+        `${API_URL}/timeline/get/${currProfile?._id}`
+      );
       // console.log(res.data);
       setTimeline(res.data.timeline);
     } catch (error) {
@@ -173,12 +175,10 @@ const Profile = () => {
   };
 
   useEffect(() => {
-    fetchCurrentProfile();
-    fetchTimeline();
-  }, []);
-
-  useEffect(() => {
-    if (currProfile) fetchPosts();
+    if (currProfile) {
+      fetchTimeline();
+      fetchPosts();
+    }
   }, [currProfile]);
 
   return (
