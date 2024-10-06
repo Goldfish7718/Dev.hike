@@ -99,7 +99,7 @@ const Profile = () => {
   const requestUpvote = async (postId: string) => {
     try {
       const res = await axios.post(
-        `${API_URL}/posts/upvote/${postId}/${user?.id}`
+        `${API_URL}/posts/upvote/${postId}/${currProfile?._id}`
       );
 
       const updatedPosts = posts.map((post) => {
@@ -124,7 +124,7 @@ const Profile = () => {
   const requestDownvote = async (postId: string) => {
     try {
       const res = await axios.post(
-        `${API_URL}/posts/downvote/${postId}/${user?.id}`
+        `${API_URL}/posts/downvote/${postId}/${currProfile?._id}`
       );
 
       const updatedPosts = posts.map((post) => {
@@ -460,7 +460,7 @@ const Profile = () => {
                     <Button
                       onClick={() => requestUpvote(post._id as string)}
                       className={`w-full ${
-                        post.upvoteRefs.includes(user?.id!)
+                        post.upvoteRefs.includes(currProfile?._id as string)
                           ? "text-red-600"
                           : null
                       }`}
@@ -471,7 +471,7 @@ const Profile = () => {
                     <Button
                       onClick={() => requestDownvote(post._id as string)}
                       className={`w-full ${
-                        post.downvoteRefs.includes(user?.id!)
+                        post.downvoteRefs.includes(currProfile?._id as string)
                           ? "text-red-600"
                           : null
                       }`}

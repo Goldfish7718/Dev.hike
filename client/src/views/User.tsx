@@ -15,7 +15,6 @@ import {
   MessagesSquare,
   Linkedin,
   Instagram,
-  Trash,
 } from "lucide-react";
 import { Tabs, TabsTrigger, TabsContent, TabsList } from "@/components/ui/tabs";
 import TimelineCard from "@/components/TimelineCard";
@@ -26,7 +25,6 @@ import { useToast } from "@/components/ui/use-toast";
 import { UserType } from "@/context/UserContext";
 import { useParams } from "react-router-dom";
 import { PostCardProps, ReplyType, TimelineType } from "@/types/types1";
-import { ConfirmPostDeleteTrigger } from "./Profile";
 import ReplyDialogTrigger from "@/components/ReplyDialogTrigger";
 import { useUser } from "../context/UserContext";
 
@@ -91,7 +89,7 @@ const User1 = () => {
   const requestUpvote = async (postId: string) => {
     try {
       const res = await axios.post(
-        `${API_URL}/posts/upvote/${postId}/${userId}`
+        `${API_URL}/posts/upvote/${postId}/${currProfile?._id}`
       );
 
       const updatedPosts = posts.map((post) => {
@@ -116,7 +114,7 @@ const User1 = () => {
   const requestDownvote = async (postId: string) => {
     try {
       const res = await axios.post(
-        `${API_URL}/posts/downvote/${postId}/${userId}`
+        `${API_URL}/posts/downvote/${postId}/${currProfile?._id}`
       );
 
       const updatedPosts = posts.map((post) => {
@@ -356,11 +354,6 @@ const User1 = () => {
                   <CardContent>
                     <div className="mt-4">
                       <p>{post.content}</p>
-                      <ConfirmPostDeleteTrigger postId={post._id as string}>
-                        <Button variant="outline" className="mt-2">
-                          Delete <Trash className="mx-2" size={18} />
-                        </Button>
-                      </ConfirmPostDeleteTrigger>
                     </div>
                   </CardContent>
                   <Separator />
@@ -368,7 +361,7 @@ const User1 = () => {
                     <Button
                       onClick={() => requestUpvote(post._id as string)}
                       className={`w-full ${
-                        post.upvoteRefs.includes(user?.clerkId as string)
+                        post.upvoteRefs.includes(currProfile?._id as string)
                           ? "text-red-600"
                           : null
                       }`}
@@ -379,7 +372,7 @@ const User1 = () => {
                     <Button
                       onClick={() => requestDownvote(post._id as string)}
                       className={`w-full ${
-                        post.downvoteRefs.includes(user?.clerkId as string)
+                        post.downvoteRefs.includes(currProfile?._id as string)
                           ? "text-red-600"
                           : null
                       }`}
