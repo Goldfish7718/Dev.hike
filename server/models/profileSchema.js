@@ -70,8 +70,6 @@ const profileSchema = new Schema(
 );
 
 profileSchema.post("findOneAndDelete", async function (profile) {
-  console.log(profile);
-
   // DELETE EVENTS CREATED BY USER
   await Event.deleteMany({ userRef: profile._id });
 

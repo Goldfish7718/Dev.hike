@@ -3,30 +3,9 @@ import clerkClient from "@clerk/clerk-sdk-node";
 
 export const initiateProfile = async (req, res) => {
   try {
-    const {
-      bio,
-      domains,
-      interests,
-      email,
-      clerkId,
-      socials: { github, twitter, linkedIn, instagram, other },
-    } = req.body;
-
     const newProfile = await Profile.create({
-      bio,
-      domains,
-      interests,
-      email,
+      ...req.body,
       profileInitiated: true,
-      socials: {
-        github,
-        linkedIn,
-        instagram,
-        twitter,
-        other,
-      },
-      profileInitiated: true,
-      clerkId,
     });
 
     res.status(200).json({ newProfile });
@@ -67,7 +46,7 @@ export const updateUser = async (req, res) => {
     const { userId } = req.params;
     const { newUser } = req.body;
 
-    const user = await Profile.findOneAndUpdate({ clerkId: userId }, newUser, {
+    const user = await Profile.findByIdAndUpdate(userId, newUser, {
       new: true,
     });
 
@@ -83,7 +62,6 @@ export const deleteUser = async (req, res) => {
     const { userId } = req.params;
 
     await Profile.findOneAndDelete({ clerkId: userId });
-    // await clerkClient.users.deleteUser(userId)
 
     res.status(200).json({ message: "User deleted successfully" });
   } catch (error) {
