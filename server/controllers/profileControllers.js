@@ -96,7 +96,7 @@ export const followUser = async (req, res) => {
   try {
     const { userId, followerId } = req.params;
 
-    const userToFollow = await Profile.findById(userId);
+    let userToFollow = await Profile.findById(userId);
 
     if (userToFollow.followerRefs.includes(followerId)) {
       const newFollowerRefs = userToFollow.followerRefs.filter(
@@ -104,14 +104,22 @@ export const followUser = async (req, res) => {
       );
       userToFollow.followerRefs = newFollowerRefs;
       userToFollow.save();
-
-      return res.status(200).json({ userToFollow });
     } else {
       userToFollow.followerRefs.push(followerId);
       userToFollow.save();
-
-      return res.status(200).json({ user: userToFollow });
     }
+
+    const { firstName, lastName, imageUrl } = await clerkClient.users.getUser(
+      userToFollow.clerkId
+    );
+
+    userToFollow = {
+      ...userToFollow.toObject(),
+      fullname: `${firstName} ${lastName}`,
+      imageUrl,
+    };
+
+    return res.status(200).json({ user: userToFollow });
   } catch (error) {
     console.log(error);
     res.status(500).json({ message: "Internal Server Error" });
