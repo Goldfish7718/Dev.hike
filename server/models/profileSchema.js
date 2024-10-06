@@ -14,12 +14,14 @@ const profileSchema = new Schema(
     },
     followerRefs: [
       {
-        type: String,
+        type: Schema.Types.ObjectId,
+        ref: "Profile",
       },
     ],
     followingRefs: [
       {
-        type: String,
+        type: Schema.Types.ObjectId,
+        ref: "Profile",
       },
     ],
     email: {
@@ -70,8 +72,10 @@ const profileSchema = new Schema(
 profileSchema.post("findOneAndDelete", async function (profile) {
   console.log(profile);
 
-  // DELETE EVENTS CREATED BY THE USER AND EVENTS IN WHICH THE USER WAS REGISTERED.
+  // DELETE EVENTS CREATED BY USER
   await Event.deleteMany({ userRef: profile._id });
+
+  // DELETE REFERENCES OF USER IN EVENTS IT HAS REGISTERED IN
   await Event.updateMany(
     { "registrations.userRef": profile._id },
     { $pull: { registrations: { userRef: profile._id } } }
@@ -85,9 +89,24 @@ profileSchema.post("findOneAndDelete", async function (profile) {
   await Reply.deleteMany({ userRef: profile._id });
 
   // REMOVE REFERENCES OF THE REPLIES BY THE USER IN ALL POSTS
+  // REMOVE UPVOTE AND DOWNVOTE REFERENCES BY THE USERS ON OTHER POSTS
   await Post.updateMany(
-    { replyRefs: { $in: replyRefsToBeDeleted } },
-    { $pull: { replyRefs: { $in: replyRefsToBeDeleted } } }
+    {
+      $or: [
+        { upvoteRefs: { $in: profile._id } },
+        { downvoteRefs: { $in: profile._id } },
+        { replyRefs: { $in: replyRefsToBeDeleted } },
+      ],
+    },
+    {
+      $pull: {
+        replyRefs: {
+          $in: repliesTobeDeleted,
+        },
+        upvoteRefs: profile._id,
+        downvoteRefs: profile._id,
+      },
+    }
   );
 
   // DELETE POSTS AND ITS ASSOCIATED REPLIES CREATED BY THE USER
@@ -100,8 +119,21 @@ profileSchema.post("findOneAndDelete", async function (profile) {
   // DELETE ALL TIMELINES CREATED BY THE USER
   await Timeline.deleteMany({ userRef: profile._id });
 
+  // DELETE REFERENCES USER FROM FOLLOWING AND FOLLOWERS IN OTHER PROFILES
+  await Profile.updateMany(
+    {
+      $or: [{ followerRefs: profile._id }, { followingRefs: profile._id }],
+    },
+    {
+      $pull: {
+        followerRefs: profile._id,
+        followingRefs: profile._id,
+      },
+    }
+  );
+
   // DELETE USER FROM CLERK
-  //   await clerkClient.users.deleteUser(profile.clerkId);
+  await clerkClient.users.deleteUser(profile.clerkId);
 });
 
 const Profile = model("Profile", profileSchema);

@@ -97,16 +97,28 @@ export const followUser = async (req, res) => {
     const { userId, followerId } = req.params;
 
     let userToFollow = await Profile.findById(userId);
+    let followingUser = await Profile.findById(followerId);
 
     if (userToFollow.followerRefs.includes(followerId)) {
       const newFollowerRefs = userToFollow.followerRefs.filter(
         (follower) => follower != followerId
       );
+
+      const newFollowingRefs = followingUser.followingRefs.filter(
+        (following) => following != userId
+      );
+
       userToFollow.followerRefs = newFollowerRefs;
-      userToFollow.save();
+      followingUser.followingRefs = newFollowingRefs;
+
+      await userToFollow.save();
+      await followingUser.save();
     } else {
       userToFollow.followerRefs.push(followerId);
-      userToFollow.save();
+      followingUser.followingRefs.push(userId);
+
+      await userToFollow.save();
+      await followingUser.save();
     }
 
     const { firstName, lastName, imageUrl } = await clerkClient.users.getUser(
