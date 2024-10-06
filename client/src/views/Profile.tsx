@@ -110,7 +110,6 @@ const Profile = () => {
       });
 
       setPosts(updatedPosts);
-      console.log(res.data);
     } catch (error) {
       console.log(error);
       toast({
@@ -321,7 +320,7 @@ const Profile = () => {
               </CardContent>
               <Separator />
               <CardFooter className="mt-3">
-                <EditDomainsTrigger>
+                <EditDomainsTrigger mode="domains">
                   <Button className="w-full" variant="outline">
                     <SquarePen size={18} className="mx-1" />
                     Edit
@@ -349,10 +348,12 @@ const Profile = () => {
               </CardContent>
               <Separator />
               <CardFooter className="mt-3">
-                <Button className="w-full" variant="outline">
-                  <SquarePen size={18} className="mx-1" />
-                  Edit
-                </Button>
+                <EditDomainsTrigger mode="interests">
+                  <Button className="w-full" variant="outline">
+                    <SquarePen size={18} className="mx-1" />
+                    Edit
+                  </Button>
+                </EditDomainsTrigger>
               </CardFooter>
             </Card>
           </div>

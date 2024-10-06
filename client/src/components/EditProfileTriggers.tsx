@@ -19,7 +19,7 @@ import {
 } from "@/components/ui/drawer";
 import { Check, Plus, SquarePen } from "lucide-react";
 import { Button } from "./ui/button";
-import { EditBioTriggerProps, TriggerProps } from "@/types/types1";
+import { EditBioTriggerProps } from "@/types/types1";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { API_URL } from "@/main";
@@ -123,7 +123,13 @@ export const EditBioTrigger = ({ children, bio }: EditBioTriggerProps) => {
   );
 };
 
-export const EditDomainsTrigger = ({ children }: TriggerProps) => {
+export const EditDomainsTrigger = ({
+  children,
+  mode,
+}: {
+  children: React.ReactNode;
+  mode: string;
+}) => {
   const matches = useMediaQuery("(min-width: 768px)");
 
   const { currProfile, setCurrProfile } = useUser();
@@ -158,14 +164,27 @@ export const EditDomainsTrigger = ({ children }: TriggerProps) => {
 
   const handleSaveChanges = async () => {
     try {
-      const res = await axios.put(
-        `${API_URL}/profile/updateUser/${currProfile?._id}`,
-        {
+      let payload;
+
+      if (mode == "domains") {
+        payload = {
           newUser: {
             ...currProfile,
             domains,
           },
-        }
+        };
+      } else if (mode == "interests") {
+        payload = {
+          newUser: {
+            ...currProfile,
+            interests: domains,
+          },
+        };
+      }
+
+      const res = await axios.put(
+        `${API_URL}/profile/updateUser/${currProfile?._id}`,
+        payload
       );
 
       setCurrProfile(res.data.user);
@@ -177,7 +196,9 @@ export const EditDomainsTrigger = ({ children }: TriggerProps) => {
   };
 
   useEffect(() => {
-    if (currProfile) setDomains(currProfile?.domains);
+    if (currProfile && mode == "domains") setDomains(currProfile?.domains);
+    else if (currProfile && mode == "interests")
+      setDomains(currProfile?.interests);
   }, [currProfile]);
 
   if (matches)
