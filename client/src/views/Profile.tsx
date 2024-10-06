@@ -41,7 +41,6 @@ import { API_URL } from "@/main";
 import axios from "axios";
 import {
   ConfirmPostDeleteTriggerProps,
-  PostCardProps,
   ReplyType,
   TimelineType,
 } from "@/types/types1";
@@ -66,9 +65,9 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import usePost from "@/hooks/usePost";
 
 const Profile = () => {
-  const [posts, setPosts] = useState<PostCardProps[]>([]);
   const [replies, setReplies] = useState<ReplyType[]>([]);
   const [repliesLoading, setRepliesLoading] = useState(false);
   const [timeline, setTimeline] = useState<TimelineType[]>([]);
@@ -77,72 +76,11 @@ const Profile = () => {
   const { user } = clerkUseUser();
   const { currProfile } = useUser();
   const { toast } = useToast();
+  const { posts, requestDownvote, requestUpvote, fetchPosts } = usePost();
 
   const fallback = `${user?.fullName?.split(" ")[0].slice(0, 1)}${user?.fullName
     ?.split(" ")[1]
     .slice(0, 1)}`;
-
-  const fetchPosts = async () => {
-    try {
-      const res = await axios.get(`${API_URL}/posts/get/${currProfile?._id}`);
-      setPosts(res.data.posts);
-    } catch (error) {
-      console.log(error);
-      toast({
-        title: "Sorry an error occured!",
-        duration: 3000,
-        variant: "destructive",
-      });
-    }
-  };
-
-  const requestUpvote = async (postId: string) => {
-    try {
-      const res = await axios.post(
-        `${API_URL}/posts/upvote/${postId}/${currProfile?._id}`
-      );
-
-      const updatedPosts = posts.map((post) => {
-        if (post._id === postId) {
-          return res.data.updatedPost;
-        }
-        return post;
-      });
-
-      setPosts(updatedPosts);
-    } catch (error) {
-      console.log(error);
-      toast({
-        title: "Sorry! An error occured!",
-        duration: 3000,
-        variant: "destructive",
-      });
-    }
-  };
-
-  const requestDownvote = async (postId: string) => {
-    try {
-      const res = await axios.post(
-        `${API_URL}/posts/downvote/${postId}/${currProfile?._id}`
-      );
-
-      const updatedPosts = posts.map((post) => {
-        if (post._id === postId) {
-          return res.data.updatedPost;
-        }
-        return post;
-      });
-
-      setPosts(updatedPosts);
-    } catch (error) {
-      console.log(error);
-      toast({
-        title: "Sorry! An error occured!",
-        duration: 3000,
-        variant: "destructive",
-      });
-    }
-  };
 
   const fetchReplies = async (postId: string) => {
     setRepliesLoading(true);
@@ -166,7 +104,6 @@ const Profile = () => {
       const res = await axios.get(
         `${API_URL}/timeline/get/${currProfile?._id}`
       );
-      // console.log(res.data);
       setTimeline(res.data.timeline);
     } catch (error) {
       console.log(error);
@@ -176,7 +113,7 @@ const Profile = () => {
   useEffect(() => {
     if (currProfile) {
       fetchTimeline();
-      fetchPosts();
+      fetchPosts(currProfile._id);
     }
   }, [currProfile]);
 
@@ -511,22 +448,8 @@ export const ConfirmPostDeleteTrigger = ({
   postId,
 }: ConfirmPostDeleteTriggerProps) => {
   const matches = useMediaQuery("(min-width: 768px)");
-  const { toast } = useToast();
   const { user } = clerkUseUser();
-
-  const requestDeletePost = async () => {
-    try {
-      await axios.delete(`${API_URL}/posts/delete/${postId}/${user?.id}`);
-      window.location.reload();
-    } catch (error) {
-      console.log(error);
-      toast({
-        title: "Sorry! An Error Occured!",
-        duration: 3000,
-        variant: "destructive",
-      });
-    }
-  };
+  const { requestDeletePost } = usePost();
 
   if (matches)
     return (
@@ -544,7 +467,9 @@ export const ConfirmPostDeleteTrigger = ({
             <DialogClose>
               <Button>No</Button>
             </DialogClose>
-            <Button onClick={requestDeletePost} variant="destructive">
+            <Button
+              onClick={() => requestDeletePost(postId, user?.id as string)}
+              variant="destructive">
               Yes
             </Button>
           </DialogFooter>
@@ -568,7 +493,7 @@ export const ConfirmPostDeleteTrigger = ({
             <Button className="w-full">No</Button>
           </DrawerClose>
           <Button
-            onClick={requestDeletePost}
+            onClick={() => requestDeletePost(postId, user?.id as string)}
             className="w-full"
             variant="destructive">
             Yes

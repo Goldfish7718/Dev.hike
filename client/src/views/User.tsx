@@ -24,17 +24,18 @@ import { useEffect, useState } from "react";
 import { useToast } from "@/components/ui/use-toast";
 import { UserType } from "@/context/UserContext";
 import { useParams } from "react-router-dom";
-import { PostCardProps, ReplyType, TimelineType } from "@/types/types1";
+import { ReplyType, TimelineType } from "@/types/types1";
 import ReplyDialogTrigger from "@/components/ReplyDialogTrigger";
 import { useUser } from "../context/UserContext";
+import usePost from "@/hooks/usePost";
 
 const User1 = () => {
   const { toast } = useToast();
   const { userId } = useParams();
   const { currProfile } = useUser();
+  const { posts, requestDownvote, requestUpvote, fetchPosts } = usePost();
 
   const [user, setUser] = useState<UserType | null>(null);
-  const [posts, setPosts] = useState<PostCardProps[]>([]);
   const [replies, setReplies] = useState<ReplyType[]>([]);
   const [repliesLoading, setRepliesLoading] = useState(false);
   const [timeline, setTimeline] = useState<TimelineType[]>([]);
@@ -45,20 +46,6 @@ const User1 = () => {
         `${API_URL}/profile/fetchUser/mongoId/${userId}`
       );
       setUser(res.data.user);
-    } catch (error) {
-      console.log(error);
-      toast({
-        title: "Sorry an error occured!",
-        duration: 3000,
-        variant: "destructive",
-      });
-    }
-  };
-
-  const fetchPosts = async () => {
-    try {
-      const res = await axios.get(`${API_URL}/posts/get/${userId}`);
-      setPosts(res.data.posts);
     } catch (error) {
       console.log(error);
       toast({
@@ -83,55 +70,6 @@ const User1 = () => {
       });
     } finally {
       setRepliesLoading(false);
-    }
-  };
-
-  const requestUpvote = async (postId: string) => {
-    try {
-      const res = await axios.post(
-        `${API_URL}/posts/upvote/${postId}/${currProfile?._id}`
-      );
-
-      const updatedPosts = posts.map((post) => {
-        if (post._id === postId) {
-          return res.data.updatedPost;
-        }
-        return post;
-      });
-
-      setPosts(updatedPosts);
-      console.log(res.data);
-    } catch (error) {
-      console.log(error);
-      toast({
-        title: "Sorry! An error occured!",
-        duration: 3000,
-        variant: "destructive",
-      });
-    }
-  };
-
-  const requestDownvote = async (postId: string) => {
-    try {
-      const res = await axios.post(
-        `${API_URL}/posts/downvote/${postId}/${currProfile?._id}`
-      );
-
-      const updatedPosts = posts.map((post) => {
-        if (post._id === postId) {
-          return res.data.updatedPost;
-        }
-        return post;
-      });
-
-      setPosts(updatedPosts);
-    } catch (error) {
-      console.log(error);
-      toast({
-        title: "Sorry! An error occured!",
-        duration: 3000,
-        variant: "destructive",
-      });
     }
   };
 
@@ -173,7 +111,7 @@ const User1 = () => {
   useEffect(() => {
     if (user) {
       fetchTimeline();
-      fetchPosts();
+      fetchPosts(userId as string);
     }
   }, [user]);
 
