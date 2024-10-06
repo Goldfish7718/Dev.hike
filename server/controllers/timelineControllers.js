@@ -1,5 +1,4 @@
 import Timeline from "../models/timelineSchema.js";
-import Profile from "../models/profileSchema.js";
 import convertDate from "../utils/convertDate.js";
 
 export const getTimeline = async (req, res) => {
@@ -9,6 +8,7 @@ export const getTimeline = async (req, res) => {
     let timeline = await Timeline.find({ userRef: userId }).sort({
       createdAt: -1,
     });
+
     timeline = timeline.map((item) => {
       return {
         ...item.toObject(),
@@ -37,16 +37,6 @@ export const addToTimeline = async (req, res) => {
       userRef: userId,
     });
 
-    await Profile.findOneAndUpdate(
-      { clerkId: userId },
-      {
-        $push: {
-          timelineRefs: newTimeline._id,
-        },
-      },
-      { new: true }
-    );
-
     res.status(200).json({ newTimeline });
   } catch (error) {
     console.log(error);
@@ -56,20 +46,9 @@ export const addToTimeline = async (req, res) => {
 
 export const deleteFromTimeline = async (req, res) => {
   try {
-    const { timelineId, userId } = req.params;
+    const { timelineId } = req.params;
 
-    const deletedTimeline = await Timeline.findByIdAndDelete(timelineId);
-
-    await Profile.findOneAndUpdate(
-      { _id: userId },
-      {
-        $pull: {
-          timelineRefs: deletedTimeline._id,
-        },
-      },
-      { new: true }
-    );
-
+    await Timeline.findByIdAndDelete(timelineId);
     res.status(200).json({ message: "Timeline post deleted successfully" });
   } catch (error) {
     console.log(error);
