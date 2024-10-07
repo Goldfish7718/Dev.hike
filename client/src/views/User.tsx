@@ -92,7 +92,6 @@ const User1 = () => {
       const res = await axios.put(
         `${API_URL}/profile/follow/${userId}/${currProfile?._id}`
       );
-      console.log(res.data);
       setUser(res.data.user);
     } catch (error) {
       console.log(error);

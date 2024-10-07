@@ -10,9 +10,6 @@ export const postReply = async (req, res) => {
 
     const replyingUserProfile = await Profile.findById(userId);
 
-    console.log(userId);
-    console.log(replyingUserProfile);
-
     const { firstName, lastName, imageUrl } = await clerkClient.users.getUser(
       replyingUserProfile.clerkId
     );
@@ -47,7 +44,6 @@ export const deleteReply = async (req, res) => {
     const { replyId } = req.params;
 
     const deletedReply = await Reply.findByIdAndDelete(replyId);
-    console.log(deletedReply._id);
     const updatedPost = await Post.findByIdAndUpdate(
       deletedReply.postRef,
       {

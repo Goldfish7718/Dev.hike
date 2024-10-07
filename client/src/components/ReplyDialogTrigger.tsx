@@ -48,7 +48,6 @@ const ReplyDialogTrigger = ({
           content: reply,
         }
       );
-      console.log(res.data);
 
       const newReplies = [res.data.replyInResponse, ...replies];
       setReplies(newReplies);

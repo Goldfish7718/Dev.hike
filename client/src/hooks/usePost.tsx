@@ -17,8 +17,8 @@ interface UsePostReturns {
   fetchFeedPosts: () => void;
   requestAddPost: (title: string, content: string) => void;
   requestDeletePost: (postId: string, userId: string) => void;
-  requestUpvote: (postId: string) => void;
-  requestDownvote: (postId: string) => void;
+  requestUpvote: (postId: string) => Promise<PostCardProps | null>;
+  requestDownvote: (postId: string) => Promise<PostCardProps | null>;
 }
 
 function usePost(): UsePostReturns {
@@ -33,7 +33,6 @@ function usePost(): UsePostReturns {
     try {
       const res = await axios.get(`${API_URL}/posts/get/${userId}`);
       setPosts(res.data.posts);
-      console.log(res.data.posts);
     } catch (error) {
       console.log(error);
       toast({
@@ -48,7 +47,6 @@ function usePost(): UsePostReturns {
     try {
       const res = await axios.get(`${API_URL}/posts/get/feed-posts`);
       setPosts(res.data.posts);
-      console.log(res.data);
     } catch (error) {
       console.log(error);
       toast({
@@ -122,13 +120,16 @@ function usePost(): UsePostReturns {
       });
 
       setPosts(updatedPosts);
+      return res.data.updatedPost;
     } catch (error) {
       console.log(error);
       toast({
-        title: "Sorry! An error occured!",
+        title: "Sorry! An error occurred!",
         duration: 3000,
         variant: "destructive",
       });
+      // Return the old post to avoid undefined issues
+      return posts.find((post) => post._id === postId) || null;
     }
   };
 
@@ -146,13 +147,16 @@ function usePost(): UsePostReturns {
       });
 
       setPosts(updatedPosts);
+      return res.data.updatedPost;
     } catch (error) {
       console.log(error);
       toast({
-        title: "Sorry! An error occured!",
+        title: "Sorry! An error occurred!",
         duration: 3000,
         variant: "destructive",
       });
+      // Return the old post to avoid undefined issues
+      return posts.find((post) => post._id === postId) || null;
     }
   };
 
