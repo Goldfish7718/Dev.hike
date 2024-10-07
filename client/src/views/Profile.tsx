@@ -39,11 +39,7 @@ import {
 } from "@/components/EditProfileTriggers";
 import { API_URL } from "@/main";
 import axios from "axios";
-import {
-  ConfirmPostDeleteTriggerProps,
-  ReplyType,
-  TimelineType,
-} from "@/types/types1";
+import { ConfirmPostDeleteTriggerProps, ReplyType } from "@/types/types1";
 import { useMediaQuery } from "usehooks-ts";
 import {
   Drawer,
@@ -66,17 +62,18 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import usePost from "@/hooks/usePost";
+import useTimeline from "@/hooks/useTimeline";
 
 const Profile = () => {
   const [replies, setReplies] = useState<ReplyType[]>([]);
   const [repliesLoading, setRepliesLoading] = useState(false);
-  const [timeline, setTimeline] = useState<TimelineType[]>([]);
 
   const navigate = useNavigate();
   const { user } = clerkUseUser();
   const { currProfile } = useUser();
   const { toast } = useToast();
   const { posts, requestDownvote, requestUpvote, fetchPosts } = usePost();
+  const { timeline, fetchTimeline } = useTimeline();
 
   const fallback = `${user?.fullName?.split(" ")[0].slice(0, 1)}${user?.fullName
     ?.split(" ")[1]
@@ -96,17 +93,6 @@ const Profile = () => {
       });
     } finally {
       setRepliesLoading(false);
-    }
-  };
-
-  const fetchTimeline = async () => {
-    try {
-      const res = await axios.get(
-        `${API_URL}/timeline/get/${currProfile?._id}`
-      );
-      setTimeline(res.data.timeline);
-    } catch (error) {
-      console.log(error);
     }
   };
 

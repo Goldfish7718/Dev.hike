@@ -21,9 +21,6 @@ import {
 } from "@/types/types1";
 import { Separator } from "./ui/separator";
 import { useMediaQuery } from "usehooks-ts";
-import { useToast } from "./ui/use-toast";
-import axios from "axios";
-import { API_URL } from "@/main";
 import {
   Dialog,
   DialogClose,
@@ -43,6 +40,7 @@ import {
   DrawerTrigger,
 } from "./ui/drawer";
 import { useUser } from "@/context/UserContext";
+import useTimeline from "@/hooks/useTimeline";
 
 const TimelineCard = ({
   title,
@@ -119,24 +117,8 @@ const ConfirmTimeLineDeleteTrigger = ({
   timelineId,
 }: ConfirmTimeLineDeleteTriggerProps) => {
   const matches = useMediaQuery("(min-width: 768px)");
-  const { toast } = useToast();
-  const { currProfile } = useUser();
 
-  const requestDeleteTimeline = async () => {
-    try {
-      await axios.delete(
-        `${API_URL}/timeline/delete/${timelineId}/${currProfile?._id}`
-      );
-      window.location.reload();
-    } catch (error) {
-      console.log(error);
-      toast({
-        title: "Sorry! An Error Occured!",
-        duration: 3000,
-        variant: "destructive",
-      });
-    }
-  };
+  const { requestDeleteTimeline } = useTimeline();
 
   if (matches)
     return (
@@ -154,7 +136,9 @@ const ConfirmTimeLineDeleteTrigger = ({
             <DialogClose>
               <Button>No</Button>
             </DialogClose>
-            <Button onClick={requestDeleteTimeline} variant="destructive">
+            <Button
+              onClick={() => requestDeleteTimeline(timelineId)}
+              variant="destructive">
               Yes
             </Button>
           </DialogFooter>
@@ -178,7 +162,7 @@ const ConfirmTimeLineDeleteTrigger = ({
             <Button className="w-full">No</Button>
           </DrawerClose>
           <Button
-            onClick={requestDeleteTimeline}
+            onClick={() => requestDeleteTimeline(timelineId)}
             className="w-full"
             variant="destructive">
             Yes

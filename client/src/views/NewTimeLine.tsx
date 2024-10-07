@@ -2,23 +2,18 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { useUser } from "@/context/UserContext";
-import { API_URL } from "@/main";
-import axios from "axios";
+import useTimeline from "@/hooks/useTimeline";
 import { Link, Loader2, Plus } from "lucide-react";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
 
 const NewTimeLine = () => {
   const [link, setLink] = useState("");
   const [links, setLinks] = useState<string[]>([]);
   const [tag, setTag] = useState("");
   const [content, setContent] = useState("");
-  const [loading, setLoading] = useState(false);
   const [title, setTitle] = useState("");
 
-  const { currProfile } = useUser();
-  const navigate = useNavigate();
+  const { requestAddToTimeline, loading } = useTimeline();
 
   const addLink = () => {
     const newLinks = [...links, link];
@@ -30,24 +25,6 @@ const NewTimeLine = () => {
     setLinks((prevItems) => {
       return [...prevItems.slice(0, index), ...prevItems.slice(index + 1)];
     });
-  };
-
-  const requestAddToTimeline = async () => {
-    setLoading(true);
-    try {
-      await axios.post(`${API_URL}/timeline/add/${currProfile?._id}`, {
-        title,
-        content,
-        tag,
-        links,
-      });
-
-      navigate("/profile");
-    } catch (error) {
-      console.log(error);
-    } finally {
-      setLoading(false);
-    }
   };
 
   return (
@@ -102,7 +79,7 @@ const NewTimeLine = () => {
           </div>
           <div className="flex">
             <Button
-              onClick={requestAddToTimeline}
+              onClick={() => requestAddToTimeline(title, content, tag, links)}
               className="text-lg my-6 w-full">
               {!loading && "Add to TimeLine"}
               {loading && <Loader2 className="animate-spin duration-500" />}
