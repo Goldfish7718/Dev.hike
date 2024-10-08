@@ -1,32 +1,13 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import EventCard from "@/components/EventCard";
 import PostCard from "@/components/PostCard";
-import { EventCardProps } from "@/types/types1";
-import { useEffect, useState } from "react";
-import { useToast } from "@/components/ui/use-toast";
-import { API_URL } from "@/main";
-import axios from "axios";
+import { useEffect } from "react";
 import usePost from "@/hooks/usePost";
+import useEvent from "@/hooks/useEvent";
 
 const Dashboard = () => {
-  const [events, setEvents] = useState<EventCardProps[]>([]);
-
-  const { toast } = useToast();
   const { posts, fetchFeedPosts } = usePost();
-
-  const fetchEvents = async () => {
-    try {
-      const res = await axios.get(`${API_URL}/events/get`);
-      setEvents(res.data.events);
-    } catch (error) {
-      console.log(error);
-      toast({
-        title: "Sorry! An Error occured!",
-        duration: 3000,
-        variant: "destructive",
-      });
-    }
-  };
+  const { events, fetchEvents } = useEvent();
 
   useEffect(() => {
     fetchEvents();

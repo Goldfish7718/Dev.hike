@@ -24,11 +24,8 @@ import {
 import { EventCardProps } from "@/types/types1";
 import { useUser as useClerkUser } from "@clerk/clerk-react";
 import { useState } from "react";
-import axios from "axios";
-import { API_URL } from "@/main";
-import { useToast } from "./ui/use-toast";
 import { DialogClose } from "@radix-ui/react-dialog";
-import { useUser } from "@/context/UserContext";
+import useEvent from "@/hooks/useEvent";
 
 interface EventRegisterProps extends EventCardProps {
   children: React.ReactNode;
@@ -37,8 +34,7 @@ interface EventRegisterProps extends EventCardProps {
 const EventRegisterTrigger = ({ children, title, _id }: EventRegisterProps) => {
   const matches = useMediaQuery("(min-width: 768px)");
   const { user } = useClerkUser();
-  const { currProfile } = useUser();
-  const { toast } = useToast();
+  const { requestRegistration } = useEvent();
 
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
@@ -46,27 +42,6 @@ const EventRegisterTrigger = ({ children, title, _id }: EventRegisterProps) => {
   const setFullname = () => {
     setFirstName(user?.firstName as string);
     setLastName(user?.lastName as string);
-  };
-
-  const requestRegistration = async () => {
-    try {
-      await axios.post(
-        `${API_URL}/events/register/${_id}/${currProfile?._id}`,
-        {
-          firstName,
-          lastName,
-        }
-      );
-
-      window.location.reload();
-    } catch (error) {
-      console.log(error);
-      toast({
-        title: "Sorry! An Error occured!",
-        duration: 3000,
-        variant: "destructive",
-      });
-    }
   };
 
   if (matches)
@@ -96,25 +71,6 @@ const EventRegisterTrigger = ({ children, title, _id }: EventRegisterProps) => {
                   />
                 </div>
               </div>
-
-              {/* <RadioGroup defaultValue="solo" className="flex mt-2 gap-3">
-                  <div className="flex gap-2 items-center">
-                    <RadioGroupItem value="solo"/>
-                    <Label>Solo</Label>
-                  </div>
-                  <div className="flex gap-2 items-center">
-                    <RadioGroupItem value="team"/>
-                    <Label>Team</Label>
-                  </div>
-                </RadioGroup>
-
-                <div>
-                  <Label>You can add upto 3 members</Label>
-                  <div className="flex gap-3 mt-2">
-                    <Input placeholder="Team member name"/>
-                    <Button><Plus size={18} /></Button>
-                  </div>
-                </div> */}
               <Button variant="secondary" onClick={setFullname}>
                 Use my Default name
               </Button>
@@ -122,7 +78,7 @@ const EventRegisterTrigger = ({ children, title, _id }: EventRegisterProps) => {
             <DialogFooter>
               <DialogClose asChild>
                 <Button
-                  onClick={requestRegistration}
+                  onClick={() => requestRegistration(firstName, lastName, _id)}
                   type="submit"
                   className="px-3 w-full">
                   Register <UserRoundPlus size={16} className="mx-1" />
@@ -161,24 +117,6 @@ const EventRegisterTrigger = ({ children, title, _id }: EventRegisterProps) => {
               </div>
             </div>
 
-            {/* <RadioGroup defaultValue="solo" className="flex mt-2 gap-3">
-            <div className="flex gap-2 items-center">
-              <RadioGroupItem value="solo"/>
-              <Label>Solo</Label>
-            </div>
-            <div className="flex gap-2 items-center">
-              <RadioGroupItem value="team"/>
-              <Label>Team</Label>
-            </div>
-          </RadioGroup>
-
-          <div>
-            <Label>You can add upto 3 members</Label>
-            <div className="flex gap-3 mt-2">
-              <Input placeholder="Team member name"/>
-              <Button><Plus size={18} /></Button>
-            </div>
-          </div> */}
             <Button variant="secondary" onClick={setFullname}>
               Use my Default name
             </Button>
@@ -186,7 +124,7 @@ const EventRegisterTrigger = ({ children, title, _id }: EventRegisterProps) => {
           <DrawerFooter>
             <DrawerClose asChild>
               <Button
-                onClick={requestRegistration}
+                onClick={() => requestRegistration(firstName, lastName, _id)}
                 type="submit"
                 className="px-3 w-full">
                 Register <UserRoundPlus size={16} className="mx-1" />

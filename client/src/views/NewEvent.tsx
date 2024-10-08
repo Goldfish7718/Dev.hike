@@ -2,53 +2,22 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { useToast } from "@/components/ui/use-toast";
-import { useUser } from "@/context/UserContext";
-import { API_URL } from "@/main";
+import useEvent from "@/hooks/useEvent";
 import { useUser as useClerkUser } from "@clerk/clerk-react";
-import axios from "axios";
 import { CalendarPlus, Loader2 } from "lucide-react";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
 
 const NewEvent = () => {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [organiser, setOrganiser] = useState("");
   const [location, setLocation] = useState("");
-  const [loading, setLoading] = useState(false);
 
   const { user } = useClerkUser();
-  const { currProfile } = useUser();
-  const { toast } = useToast();
-  const navigate = useNavigate();
+  const { loading, requestAddEvent } = useEvent();
 
   const setDefaultName = () => {
     setOrganiser(user?.fullName as string);
-  };
-
-  const requestAddEvent = async () => {
-    setLoading(true);
-    try {
-      await axios.post(`${API_URL}/events/post/${currProfile?._id}`, {
-        title,
-        description,
-        location,
-        organiser,
-        userRef: user?.id,
-      });
-
-      navigate("/dashboard");
-    } catch (error) {
-      console.log(error);
-      toast({
-        title: "Sorry! An error occured!",
-        duration: 3000,
-        variant: "destructive",
-      });
-    } finally {
-      setLoading(false);
-    }
   };
 
   return (
@@ -94,7 +63,9 @@ const NewEvent = () => {
           </div>
           <div className="flex justify-end">
             <Button
-              onClick={requestAddEvent}
+              onClick={() =>
+                requestAddEvent(title, description, organiser, location)
+              }
               className="text-lg my-6 w-full"
               disabled={loading}>
               {!loading && (
