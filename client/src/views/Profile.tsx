@@ -70,7 +70,7 @@ const Profile = () => {
 
   const navigate = useNavigate();
   const { user } = clerkUseUser();
-  const { currProfile } = useUser();
+  const { currProfile, requestDeleteProfile } = useUser();
   const { toast } = useToast();
   const { posts, requestDownvote, requestUpvote, fetchPosts } = usePost();
   const { timeline, fetchTimeline } = useTimeline();
@@ -323,7 +323,7 @@ const Profile = () => {
               </CardHeader>
               <Separator />
               <div className="p-3 flex flex-col gap-3">
-                <Button variant="destructive">
+                <Button variant="destructive" onClick={requestDeleteProfile}>
                   Delete Account
                   <UserRoundX size={18} className="mx-1" />
                 </Button>

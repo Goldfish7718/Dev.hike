@@ -6,7 +6,7 @@ import {
   useEffect,
   useState,
 } from "react";
-import { useUser as clerkUseUser } from "@clerk/clerk-react";
+import { useUser as clerkUseUser, useClerk } from "@clerk/clerk-react";
 import axios from "axios";
 import { API_URL } from "@/main";
 import { useNavigate } from "react-router-dom";
@@ -66,6 +66,7 @@ interface UserContextType {
   // API METHODS
   postProfileData: () => void;
   fetchCurrentProfile: () => void;
+  requestDeleteProfile: () => void;
 }
 
 interface UserContextProps {
@@ -88,6 +89,7 @@ function UserProvider({ children }: UserContextProps) {
   const [loading, setLoading] = useState(false);
 
   const { user } = clerkUseUser();
+  const clerk = useClerk();
   const email = user?.emailAddresses[0].emailAddress as string;
   const navigate = useNavigate();
 
@@ -189,7 +191,24 @@ function UserProvider({ children }: UserContextProps) {
       const res = await axios.get(
         `${API_URL}/profile/fetchUser/clerkId/${user?.id}`
       );
-      setCurrProfile(res.data.user);
+
+      if (!res.data.user) {
+        navigate("/initiate-profile/1");
+      } else setCurrProfile(res.data.user);
+    } catch (error) {
+      console.log(error);
+      toast({
+        title: "Sorry an error occured!",
+        variant: "destructive",
+      });
+    }
+  };
+
+  const requestDeleteProfile = async () => {
+    try {
+      await axios.delete(`${API_URL}/profile/deleteUser/${user?.id}`);
+
+      clerk.signOut();
     } catch (error) {
       console.log(error);
       toast({
@@ -228,6 +247,7 @@ function UserProvider({ children }: UserContextProps) {
     // API METHODS
     postProfileData,
     fetchCurrentProfile,
+    requestDeleteProfile,
   };
 
   return <UserContext.Provider value={value}>{children}</UserContext.Provider>;
