@@ -24,21 +24,24 @@ import { useEffect, useState } from "react";
 import { useToast } from "@/components/ui/use-toast";
 import { UserType } from "@/context/UserContext";
 import { useParams } from "react-router-dom";
-import { ReplyType, TimelineType } from "@/types/types1";
+import { ReplyType } from "@/types/types1";
 import ReplyDialogTrigger from "@/components/ReplyDialogTrigger";
 import { useUser } from "../context/UserContext";
 import usePost from "@/hooks/usePost";
+import useTimeline from "@/hooks/useTimeline";
 
 const User1 = () => {
   const { toast } = useToast();
   const { userId } = useParams();
+
   const { currProfile } = useUser();
   const { posts, requestDownvote, requestUpvote, fetchPosts } = usePost();
+  const { fetchTimeline, timeline } = useTimeline();
 
   const [user, setUser] = useState<UserType | null>(null);
   const [replies, setReplies] = useState<ReplyType[]>([]);
   const [repliesLoading, setRepliesLoading] = useState(false);
-  const [timeline, setTimeline] = useState<TimelineType[]>([]);
+  // const [timeline, setTimeline] = useState<TimelineType[]>([]);
 
   const fetchUser = async () => {
     try {
@@ -73,20 +76,6 @@ const User1 = () => {
     }
   };
 
-  const fetchTimeline = async () => {
-    try {
-      const res = await axios.get(`${API_URL}/timeline/get/${userId}`);
-      setTimeline(res.data.timeline);
-    } catch (error) {
-      console.log(error);
-      toast({
-        title: "Sorry! An error occured!",
-        duration: 3000,
-        variant: "destructive",
-      });
-    }
-  };
-
   const requestFollow = async () => {
     try {
       const res = await axios.put(
@@ -109,7 +98,7 @@ const User1 = () => {
 
   useEffect(() => {
     if (user) {
-      fetchTimeline();
+      fetchTimeline(userId as string);
       fetchPosts(userId as string);
     }
   }, [user]);

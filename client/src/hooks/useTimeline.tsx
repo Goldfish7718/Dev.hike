@@ -12,7 +12,7 @@ interface UseTimelineReturns {
   loading: boolean;
 
   // FUNCTIONS
-  fetchTimeline: () => void;
+  fetchTimeline: (id: string) => void;
   requestAddToTimeline: (
     title: string,
     content: string,
@@ -31,11 +31,9 @@ function useTimeline(): UseTimelineReturns {
 
   const { currProfile } = useUser();
 
-  const fetchTimeline = async () => {
+  const fetchTimeline = async (id: string) => {
     try {
-      const res = await axios.get(
-        `${API_URL}/timeline/get/${currProfile?._id}`
-      );
+      const res = await axios.get(`${API_URL}/timeline/get/${id}`);
       setTimeline(res.data.timeline);
     } catch (error) {
       console.log(error);

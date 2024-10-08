@@ -98,7 +98,7 @@ const Profile = () => {
 
   useEffect(() => {
     if (currProfile) {
-      fetchTimeline();
+      fetchTimeline(currProfile._id);
       fetchPosts(currProfile._id);
     }
   }, [currProfile]);
