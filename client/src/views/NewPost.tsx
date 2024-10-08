@@ -2,57 +2,15 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { useToast } from "@/components/ui/use-toast";
-import { useUser } from "@/context/UserContext";
-import { API_URL } from "@/main";
-import axios from "axios";
+import usePost from "@/hooks/usePost";
 import { Loader2, SquarePen } from "lucide-react";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
 
 const NewPost = () => {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
-  const [loading, setLoading] = useState(false);
 
-  const { toast } = useToast();
-  const { currProfile } = useUser();
-  const navigate = useNavigate();
-
-  const requestAddPost = async () => {
-    setLoading(true);
-    try {
-      if (!title || !content) {
-        toast({
-          title: "Please provide all fields!",
-          duration: 3000,
-          variant: "destructive",
-        });
-
-        return;
-      }
-
-      const res = await axios.post(
-        `${API_URL}/posts/post/${currProfile?._id}`,
-        {
-          title,
-          content,
-        }
-      );
-
-      console.log(res);
-      navigate("/profile");
-    } catch (error) {
-      console.log(error);
-      toast({
-        title: "Sorry! An error occured!",
-        duration: 3000,
-        variant: "destructive",
-      });
-    } finally {
-      setLoading(false);
-    }
-  };
+  const { loading, requestAddPost } = usePost();
 
   return (
     <>
@@ -78,7 +36,7 @@ const NewPost = () => {
           </div>
           <div className="flex">
             <Button
-              onClick={requestAddPost}
+              onClick={() => requestAddPost(title, content)}
               className="text-lg my-6 w-full"
               disabled={loading}>
               {!loading && "Post"}

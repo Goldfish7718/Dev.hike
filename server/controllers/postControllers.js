@@ -1,4 +1,5 @@
 import Post from "../models/postSchema.js";
+import Profile from "../models/profileSchema.js";
 import Reply from "../models/replySchema.js";
 import clerkClient from "@clerk/clerk-sdk-node";
 
@@ -32,7 +33,8 @@ export const getFeedPosts = async (req, res) => {
 
         const transformedReplies = await Promise.all(
           replies.map(async (reply) => {
-            const user = await clerkClient.users.getUser(reply.userRef);
+            const dbUser = await Profile.findById(reply.userRef);
+            const user = await clerkClient.users.getUser(dbUser.clerkId);
             const { imageUrl, firstName, lastName } = user;
 
             return {

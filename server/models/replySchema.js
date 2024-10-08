@@ -7,7 +7,7 @@ const replySchema = new Schema(
       required: true,
     },
     userRef: {
-      type: String,
+      type: Schema.Types.ObjectId,
       ref: "Profile",
       required: true,
     },

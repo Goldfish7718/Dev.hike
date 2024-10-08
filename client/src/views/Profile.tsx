@@ -39,12 +39,7 @@ import {
 } from "@/components/EditProfileTriggers";
 import { API_URL } from "@/main";
 import axios from "axios";
-import {
-  ConfirmPostDeleteTriggerProps,
-  PostCardProps,
-  ReplyType,
-  TimelineType,
-} from "@/types/types1";
+import { ConfirmPostDeleteTriggerProps, ReplyType } from "@/types/types1";
 import { useMediaQuery } from "usehooks-ts";
 import {
   Drawer,
@@ -66,84 +61,23 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import usePost from "@/hooks/usePost";
+import useTimeline from "@/hooks/useTimeline";
 
 const Profile = () => {
-  const [posts, setPosts] = useState<PostCardProps[]>([]);
   const [replies, setReplies] = useState<ReplyType[]>([]);
   const [repliesLoading, setRepliesLoading] = useState(false);
-  const [timeline, setTimeline] = useState<TimelineType[]>([]);
 
   const navigate = useNavigate();
   const { user } = clerkUseUser();
-  const { currProfile, fetchCurrentProfile } = useUser();
+  const { currProfile, requestDeleteProfile } = useUser();
   const { toast } = useToast();
+  const { posts, requestDownvote, requestUpvote, fetchPosts } = usePost();
+  const { timeline, fetchTimeline } = useTimeline();
 
   const fallback = `${user?.fullName?.split(" ")[0].slice(0, 1)}${user?.fullName
     ?.split(" ")[1]
     .slice(0, 1)}`;
-
-  const fetchPosts = async () => {
-    try {
-      const res = await axios.get(`${API_URL}/posts/get/${currProfile?._id}`);
-      setPosts(res.data.posts);
-    } catch (error) {
-      console.log(error);
-      toast({
-        title: "Sorry an error occured!",
-        duration: 3000,
-        variant: "destructive",
-      });
-    }
-  };
-
-  const requestUpvote = async (postId: string) => {
-    try {
-      const res = await axios.post(
-        `${API_URL}/posts/upvote/${postId}/${user?.id}`
-      );
-
-      const updatedPosts = posts.map((post) => {
-        if (post._id === postId) {
-          return res.data.updatedPost;
-        }
-        return post;
-      });
-
-      setPosts(updatedPosts);
-      console.log(res.data);
-    } catch (error) {
-      console.log(error);
-      toast({
-        title: "Sorry! An error occured!",
-        duration: 3000,
-        variant: "destructive",
-      });
-    }
-  };
-
-  const requestDownvote = async (postId: string) => {
-    try {
-      const res = await axios.post(
-        `${API_URL}/posts/downvote/${postId}/${user?.id}`
-      );
-
-      const updatedPosts = posts.map((post) => {
-        if (post._id === postId) {
-          return res.data.updatedPost;
-        }
-        return post;
-      });
-
-      setPosts(updatedPosts);
-    } catch (error) {
-      console.log(error);
-      toast({
-        title: "Sorry! An error occured!",
-        duration: 3000,
-        variant: "destructive",
-      });
-    }
-  };
 
   const fetchReplies = async (postId: string) => {
     setRepliesLoading(true);
@@ -162,23 +96,11 @@ const Profile = () => {
     }
   };
 
-  const fetchTimeline = async () => {
-    try {
-      const res = await axios.get(`${API_URL}/timeline/get/${user?.id}`);
-      // console.log(res.data);
-      setTimeline(res.data.timeline);
-    } catch (error) {
-      console.log(error);
+  useEffect(() => {
+    if (currProfile) {
+      fetchTimeline(currProfile._id);
+      fetchPosts(currProfile._id);
     }
-  };
-
-  useEffect(() => {
-    fetchCurrentProfile();
-    fetchTimeline();
-  }, []);
-
-  useEffect(() => {
-    if (currProfile) fetchPosts();
   }, [currProfile]);
 
   return (
@@ -245,28 +167,54 @@ const Profile = () => {
               </CardHeader>
               <Separator />
               <div className="flex flex-col gap-1 p-3">
-                <div className="flex items-center">
-                  <Github size={18} className="mx-1" />
-                  <span className="text-sm">{currProfile?.socials.github}</span>
-                </div>
-                <div className="flex items-center">
-                  <Twitter size={18} className="mx-1" />
-                  <span className="text-sm">
-                    {currProfile?.socials.twitter}
-                  </span>
-                </div>
-                <div className="flex items-center">
-                  <Linkedin size={18} className="mx-1" />
-                  <span className="text-sm">
-                    {currProfile?.socials.linkedIn}
-                  </span>
-                </div>
-                <div className="flex items-center">
-                  <Instagram size={18} className="mx-1" />
-                  <span className="text-sm">
-                    {currProfile?.socials.instagram}
-                  </span>
-                </div>
+                {currProfile?.socials.github && (
+                  <div className="flex items-center">
+                    <Github size={18} className="mx-1" />
+                    <span
+                      className="text-sm hover:underline hover:decoration-white hover:cursor-pointer"
+                      onClick={() =>
+                        window.open(currProfile.socials.github, "_blank")
+                      }>
+                      {currProfile?.socials.github}
+                    </span>
+                  </div>
+                )}
+                {currProfile?.socials.twitter && (
+                  <div className="flex items-center">
+                    <Twitter size={18} className="mx-1" />
+                    <span
+                      className="text-sm hover:underline hover:decoration-white hover:cursor-pointer"
+                      onClick={() =>
+                        window.open(currProfile.socials.twitter, "_blank")
+                      }>
+                      {currProfile?.socials.twitter}
+                    </span>
+                  </div>
+                )}
+                {currProfile?.socials.linkedIn && (
+                  <div className="flex items-center">
+                    <Linkedin size={18} className="mx-1" />
+                    <span
+                      className="text-sm hover:underline hover:decoration-white hover:cursor-pointer"
+                      onClick={() =>
+                        window.open(currProfile.socials.linkedIn, "_blank")
+                      }>
+                      {currProfile?.socials.linkedIn}
+                    </span>
+                  </div>
+                )}
+                {currProfile?.socials.instagram && (
+                  <div className="flex items-center">
+                    <Instagram size={18} className="mx-1" />
+                    <span
+                      className="text-sm hover:underline hover:decoration-white hover:cursor-pointer"
+                      onClick={() =>
+                        window.open(currProfile.socials.instagram, "_blank")
+                      }>
+                      {currProfile?.socials.instagram}
+                    </span>
+                  </div>
+                )}
               </div>
               <CardFooter className="mt-3">
                 <Button className="w-full" variant="outline">
@@ -295,7 +243,7 @@ const Profile = () => {
               </CardContent>
               <Separator />
               <CardFooter className="mt-3">
-                <EditDomainsTrigger>
+                <EditDomainsTrigger mode="domains">
                   <Button className="w-full" variant="outline">
                     <SquarePen size={18} className="mx-1" />
                     Edit
@@ -323,10 +271,12 @@ const Profile = () => {
               </CardContent>
               <Separator />
               <CardFooter className="mt-3">
-                <Button className="w-full" variant="outline">
-                  <SquarePen size={18} className="mx-1" />
-                  Edit
-                </Button>
+                <EditDomainsTrigger mode="interests">
+                  <Button className="w-full" variant="outline">
+                    <SquarePen size={18} className="mx-1" />
+                    Edit
+                  </Button>
+                </EditDomainsTrigger>
               </CardFooter>
             </Card>
           </div>
@@ -373,7 +323,7 @@ const Profile = () => {
               </CardHeader>
               <Separator />
               <div className="p-3 flex flex-col gap-3">
-                <Button variant="destructive">
+                <Button variant="destructive" onClick={requestDeleteProfile}>
                   Delete Account
                   <UserRoundX size={18} className="mx-1" />
                 </Button>
@@ -434,7 +384,7 @@ const Profile = () => {
                     <Button
                       onClick={() => requestUpvote(post._id as string)}
                       className={`w-full ${
-                        post.upvoteRefs.includes(user?.id!)
+                        post.upvoteRefs.includes(currProfile?._id as string)
                           ? "text-red-600"
                           : null
                       }`}
@@ -445,7 +395,7 @@ const Profile = () => {
                     <Button
                       onClick={() => requestDownvote(post._id as string)}
                       className={`w-full ${
-                        post.downvoteRefs.includes(user?.id!)
+                        post.downvoteRefs.includes(currProfile?._id as string)
                           ? "text-red-600"
                           : null
                       }`}
@@ -484,22 +434,8 @@ export const ConfirmPostDeleteTrigger = ({
   postId,
 }: ConfirmPostDeleteTriggerProps) => {
   const matches = useMediaQuery("(min-width: 768px)");
-  const { toast } = useToast();
   const { user } = clerkUseUser();
-
-  const requestDeletePost = async () => {
-    try {
-      await axios.delete(`${API_URL}/posts/delete/${postId}/${user?.id}`);
-      window.location.reload();
-    } catch (error) {
-      console.log(error);
-      toast({
-        title: "Sorry! An Error Occured!",
-        duration: 3000,
-        variant: "destructive",
-      });
-    }
-  };
+  const { requestDeletePost } = usePost();
 
   if (matches)
     return (
@@ -517,7 +453,9 @@ export const ConfirmPostDeleteTrigger = ({
             <DialogClose>
               <Button>No</Button>
             </DialogClose>
-            <Button onClick={requestDeletePost} variant="destructive">
+            <Button
+              onClick={() => requestDeletePost(postId, user?.id as string)}
+              variant="destructive">
               Yes
             </Button>
           </DialogFooter>
@@ -541,7 +479,7 @@ export const ConfirmPostDeleteTrigger = ({
             <Button className="w-full">No</Button>
           </DrawerClose>
           <Button
-            onClick={requestDeletePost}
+            onClick={() => requestDeletePost(postId, user?.id as string)}
             className="w-full"
             variant="destructive">
             Yes

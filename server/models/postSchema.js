@@ -41,7 +41,10 @@ const postSchema = new Schema(
 );
 
 postSchema.post("findOneAndDelete", async function (post) {
+  // DELETE REPLIES ON THE DELETED POST
   await Reply.deleteMany({ postRef: post._id });
+
+  // REMOVE POST REFERENCE FROM THE USER
   await Profile.findByIdAndUpdate(post.userRef, {
     $pull: {
       postRefs: post._id,
@@ -50,6 +53,7 @@ postSchema.post("findOneAndDelete", async function (post) {
 });
 
 postSchema.post("save", async function (post) {
+  // ADD REFERENCE TO PROFILE WHEN A POST IS CREATED
   await Profile.findByIdAndUpdate(post.userRef, {
     $push: { postRefs: post._id },
   });
