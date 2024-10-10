@@ -41,6 +41,11 @@ import {
 } from "./ui/drawer";
 import { useUser } from "@/context/UserContext";
 import useTimeline from "@/hooks/useTimeline";
+import { cx } from "class-variance-authority";
+
+interface TimelineCardProps extends TimelineType {
+  className?: string;
+}
 
 const TimelineCard = ({
   title,
@@ -50,7 +55,8 @@ const TimelineCard = ({
   date,
   userRef,
   _id,
-}: TimelineType) => {
+  className,
+}: TimelineCardProps) => {
   const icons = [
     <Star size={24} className="mx-3" />,
     <Check size={24} className="mx-3" />,
@@ -61,7 +67,7 @@ const TimelineCard = ({
   const { currProfile } = useUser();
 
   return (
-    <Card className="w-full my-3">
+    <Card className={cx("w-full my-3", className)}>
       <CardHeader>
         <CardTitle className="flex items-center">
           {icons[Math.floor(Math.random() * 4)]}

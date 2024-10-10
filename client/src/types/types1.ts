@@ -37,6 +37,8 @@ export interface ConfirmTimeLineDeleteTriggerProps extends TriggerProps {
 }
 
 export interface PostCardProps {
+  fullname?: string;
+  imageUrl: string;
   title: string;
   content: string;
   email: string;

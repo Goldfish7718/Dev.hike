@@ -1,5 +1,9 @@
+import Post from "../models/postSchema.js";
 import Profile from "../models/profileSchema.js";
 import clerkClient from "@clerk/clerk-sdk-node";
+import Timeline from "../models/timelineSchema.js";
+import Event from "../models/eventSchema.js";
+import Reply from "../models/replySchema.js";
 
 export const initiateProfile = async (req, res) => {
   try {
@@ -113,5 +117,112 @@ export const followUser = async (req, res) => {
   } catch (error) {
     console.log(error);
     res.status(500).json({ message: "Internal Server Error" });
+  }
+};
+
+export const fetchFeed = async (req, res) => {
+  try {
+    const { userId } = req.params;
+
+    const todayStart = new Date().setHours(0, 0, 0, 0);
+    const todayEnd = new Date().setHours(23, 59, 59, 999);
+
+    const user = await Profile.findById(userId);
+
+    let [posts, events, timelines] = await Promise.all([
+      Post.find({
+        createdAt: {
+          $gte: todayStart,
+          $lt: todayEnd,
+        },
+      }).lean(),
+      Event.find({
+        createdAt: {
+          $gte: todayStart,
+          $lt: todayEnd,
+        },
+      }).lean(),
+      Timeline.find({
+        createdAt: {
+          $gte: todayStart,
+          $lt: todayEnd,
+        },
+      }).lean(),
+    ]);
+
+    posts = posts
+      .filter(
+        (post) =>
+          post.userRef.toString() == user._id.toString() ||
+          user.followingRefs.includes(post.userRef)
+      )
+      .map((post) => ({ ...post, type: "post" }));
+
+    events = events.map((event) => ({ ...event, type: "event" }));
+
+    timelines = timelines
+      .filter(
+        (timeline) =>
+          timeline.userRef.toString() == user._id.toString() ||
+          user.followingRefs.includes(timeline.userRef)
+      )
+      .map((timeline) => ({ ...timeline, type: "timeline" }));
+
+    const transformedTimelines = await Promise.all(
+      timelines.map(async (timeline) => {
+        const timelineUser = await Profile.findById(timeline.userRef);
+        const clerkTimelineUser = await clerkClient.users.getUser(
+          timelineUser.clerkId
+        );
+
+        return {
+          ...timeline,
+          fullname: `${clerkTimelineUser.firstName} ${clerkTimelineUser.lastName}`,
+          imageUrl: clerkTimelineUser.imageUrl,
+        };
+      })
+    );
+
+    const transformedPosts = await Promise.all(
+      posts.map(async (post) => {
+        const replies = await Reply.find({ postRef: post._id });
+        let postUser = await Profile.findById(post.userRef);
+
+        postUser = await clerkClient.users.getUser(postUser.clerkId);
+
+        const transformedReplies = await Promise.all(
+          replies.map(async (reply) => {
+            const dbUser = await Profile.findById(reply.userRef);
+            const user = await clerkClient.users.getUser(dbUser.clerkId);
+            const { imageUrl, firstName, lastName } = user;
+
+            return {
+              ...reply.toObject(),
+              imageUrl,
+              fullname: `${firstName} ${lastName}`,
+            };
+          })
+        );
+
+        return {
+          ...post,
+          replies: transformedReplies,
+          fullname: `${postUser.firstName} ${postUser.lastName}`,
+          imageUrl: postUser.imageUrl,
+        };
+      })
+    );
+
+    const combinedData = [
+      ...transformedPosts,
+      ...events,
+      ...transformedTimelines,
+    ];
+    combinedData.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
+
+    res.status(200).json({ feed: combinedData });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: "Internal server error" });
   }
 };

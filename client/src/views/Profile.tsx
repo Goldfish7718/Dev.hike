@@ -63,6 +63,7 @@ import {
 } from "@/components/ui/dialog";
 import usePost from "@/hooks/usePost";
 import useTimeline from "@/hooks/useTimeline";
+import { getInitials } from "@/utils";
 
 const Profile = () => {
   const [replies, setReplies] = useState<ReplyType[]>([]);
@@ -75,9 +76,7 @@ const Profile = () => {
   const { posts, requestDownvote, requestUpvote, fetchPosts } = usePost();
   const { timeline, fetchTimeline } = useTimeline();
 
-  const fallback = `${user?.fullName?.split(" ")[0].slice(0, 1)}${user?.fullName
-    ?.split(" ")[1]
-    .slice(0, 1)}`;
+  const fallback = getInitials(user?.fullName as string);
 
   const fetchReplies = async (postId: string) => {
     setRepliesLoading(true);
