@@ -1,5 +1,9 @@
+import Post from "../models/postSchema.js";
 import Profile from "../models/profileSchema.js";
 import clerkClient from "@clerk/clerk-sdk-node";
+import Timeline from "../models/timelineSchema.js";
+import Event from "../models/eventSchema.js";
+import Reply from "../models/replySchema.js";
 
 export const initiateProfile = async (req, res) => {
   try {
@@ -113,5 +117,91 @@ export const followUser = async (req, res) => {
   } catch (error) {
     console.log(error);
     res.status(500).json({ message: "Internal Server Error" });
+  }
+};
+
+export const fetchFeed = async (req, res) => {
+  try {
+    const { userId } = req.params;
+
+    const todayStart = new Date().setHours(0, 0, 0, 0);
+    const todayEnd = new Date().setHours(23, 59, 59, 999);
+
+    const user = await Profile.findById(userId);
+
+    let [posts, events, timelines] = await Promise.all([
+      Post.find({
+        createdAt: {
+          $gte: todayStart,
+          $lt: todayEnd,
+        },
+      }).lean(),
+      Event.find({
+        createdAt: {
+          $gte: todayStart,
+          $lt: todayEnd,
+        },
+      }).lean(),
+      Timeline.find({
+        createdAt: {
+          $gte: todayStart,
+          $lt: todayEnd,
+        },
+      }).lean(),
+    ]);
+
+    // Filter and map posts
+    posts = posts
+      .filter(
+        (post) =>
+          post.userRef.toString() == user._id.toString() ||
+          user.followingRefs.includes(post.userRef)
+      )
+      .map((post) => ({ ...post, type: "post" }));
+
+    // Map events (no filtering required based on your logic)
+    events = events.map((event) => ({ ...event, type: "event" }));
+
+    // Filter and map timelines
+    timelines = timelines
+      .filter(
+        (timeline) =>
+          timeline.userRef.toString() == user._id.toString() ||
+          user.followingRefs.includes(timeline.userRef)
+      )
+      .map((timeline) => ({ ...timeline, type: "timeline" }));
+
+    const transformedPosts = await Promise.all(
+      posts.map(async (post) => {
+        const replies = await Reply.find({ postRef: post._id });
+
+        const transformedReplies = await Promise.all(
+          replies.map(async (reply) => {
+            const dbUser = await Profile.findById(reply.userRef);
+            const user = await clerkClient.users.getUser(dbUser.clerkId);
+            const { imageUrl, firstName, lastName } = user;
+
+            return {
+              ...reply.toObject(),
+              imageUrl,
+              fullname: `${firstName} ${lastName}`,
+            };
+          })
+        );
+
+        return {
+          ...post,
+          replies: transformedReplies,
+        };
+      })
+    );
+
+    const combinedData = [...transformedPosts, ...events, ...timelines];
+    combinedData.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
+
+    res.status(200).json({ feed: combinedData });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: "Internal server error" });
   }
 };
