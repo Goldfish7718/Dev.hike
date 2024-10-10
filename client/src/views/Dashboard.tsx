@@ -10,11 +10,17 @@ import { API_URL } from "@/main";
 import { useToast } from "@/components/ui/use-toast";
 import { EventCardProps, PostCardProps, TimelineType } from "@/types/types1";
 import TimelineCard from "@/components/TimelineCard";
+import { Award, Star } from "lucide-react";
+
+interface ExtendedTimelineType extends TimelineType {
+  fullname: string;
+  imageUrl: string;
+}
 
 type CombinedData =
   | (PostCardProps & { type: "post" })
   | (EventCardProps & { type: "event" })
-  | (TimelineType & { type: "timeline" });
+  | (ExtendedTimelineType & { type: "timeline" });
 
 const Dashboard = () => {
   const [feed, setFeed] = useState<CombinedData[]>([]);
@@ -64,10 +70,33 @@ const Dashboard = () => {
         </TabsList>
         <TabsContent value="feed">
           {feed.map((feedItem) => {
-            if (feedItem.type === "post") return <PostCard {...feedItem} />;
-            else if (feedItem.type === "event")
+            if (feedItem.type === "post") {
+              return (
+                <>
+                  <div className="flex gap-1 items-center">
+                    <Star size={16} />
+                    <h4 className="text-neutral-700 text-sm">
+                      {feedItem.fullname} posted{" "}
+                    </h4>
+                  </div>
+                  <PostCard {...feedItem} />
+                </>
+              );
+            } else if (feedItem.type === "event")
               return <EventCard {...feedItem} />;
-            else return <TimelineCard {...feedItem} className="sm:w-2/3" />;
+            else {
+              return (
+                <>
+                  <div className="flex gap-1 items-center">
+                    <Award size={16} />
+                    <h4 className="text-neutral-700 text-sm">
+                      {feedItem.fullname} added to their timeline{" "}
+                    </h4>
+                  </div>
+                  <TimelineCard {...feedItem} className="sm:w-2/3" />
+                </>
+              );
+            }
           })}
         </TabsContent>
         <TabsContent value="posts">

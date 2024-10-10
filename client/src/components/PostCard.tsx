@@ -8,6 +8,7 @@ import { PostCardProps, ReplyType } from "@/types/types1";
 import { useState } from "react";
 import usePost from "@/hooks/usePost";
 import { useUser } from "@/context/UserContext";
+import { getInitials } from "@/utils";
 
 const PostCard = (post: PostCardProps) => {
   const [localReplies, setLocalReplies] = useState<ReplyType[]>(post.replies);
@@ -46,19 +47,23 @@ const PostCard = (post: PostCardProps) => {
 
   return (
     <Card className="lg:w-2/3 w-full my-4">
-      <CardHeader className="flex flex-row gap-4 justify-start items-center">
+      <CardHeader className="flex flex-row gap-4 items-center">
         <Avatar className="h-12 w-12">
-          <AvatarImage src="" />
-          <AvatarFallback className="flex">PM</AvatarFallback>
+          <AvatarImage src={localPost?.imageUrl} />
+          <AvatarFallback className="flex">
+            {getInitials(localPost.fullname as string)}
+          </AvatarFallback>
         </Avatar>
         <div className="flex flex-col">
           <CardTitle>{localPost.title}</CardTitle>
-          <Button
-            className="dark:text-gray-300 text-gray-900 justify-start p-0"
-            variant="link"
-            size="sm">
-            {localPost.email}
-          </Button>
+          {localPost.email && (
+            <Button
+              className="dark:text-gray-300 text-gray-900 justify-start p-0"
+              variant="link"
+              size="sm">
+              {localPost.email}
+            </Button>
+          )}
         </div>
       </CardHeader>
       <Separator />

@@ -168,9 +168,27 @@ export const fetchFeed = async (req, res) => {
       )
       .map((timeline) => ({ ...timeline, type: "timeline" }));
 
+    const transformedTimelines = await Promise.all(
+      timelines.map(async (timeline) => {
+        const timelineUser = await Profile.findById(timeline.userRef);
+        const clerkTimelineUser = await clerkClient.users.getUser(
+          timelineUser.clerkId
+        );
+
+        return {
+          ...timeline,
+          fullname: `${clerkTimelineUser.firstName} ${clerkTimelineUser.lastName}`,
+          imageUrl: clerkTimelineUser.imageUrl,
+        };
+      })
+    );
+
     const transformedPosts = await Promise.all(
       posts.map(async (post) => {
         const replies = await Reply.find({ postRef: post._id });
+        let postUser = await Profile.findById(post.userRef);
+
+        postUser = await clerkClient.users.getUser(postUser.clerkId);
 
         const transformedReplies = await Promise.all(
           replies.map(async (reply) => {
@@ -189,11 +207,17 @@ export const fetchFeed = async (req, res) => {
         return {
           ...post,
           replies: transformedReplies,
+          fullname: `${postUser.firstName} ${postUser.lastName}`,
+          imageUrl: postUser.imageUrl,
         };
       })
     );
 
-    const combinedData = [...transformedPosts, ...events, ...timelines];
+    const combinedData = [
+      ...transformedPosts,
+      ...events,
+      ...transformedTimelines,
+    ];
     combinedData.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
 
     res.status(200).json({ feed: combinedData });

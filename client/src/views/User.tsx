@@ -29,6 +29,7 @@ import ReplyDialogTrigger from "@/components/ReplyDialogTrigger";
 import { useUser } from "../context/UserContext";
 import usePost from "@/hooks/usePost";
 import useTimeline from "@/hooks/useTimeline";
+import { getInitials } from "@/utils";
 
 const User1 = () => {
   const { toast } = useToast();
@@ -103,9 +104,7 @@ const User1 = () => {
     }
   }, [user]);
 
-  const fallback = `${user?.fullname?.split(" ")[0].slice(0, 1)}${user?.fullname
-    ?.split(" ")[1]
-    .slice(0, 1)}`;
+  const fallback = getInitials(user?.fullname as string);
 
   return (
     <>
