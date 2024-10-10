@@ -150,7 +150,6 @@ export const fetchFeed = async (req, res) => {
       }).lean(),
     ]);
 
-    // Filter and map posts
     posts = posts
       .filter(
         (post) =>
@@ -159,10 +158,8 @@ export const fetchFeed = async (req, res) => {
       )
       .map((post) => ({ ...post, type: "post" }));
 
-    // Map events (no filtering required based on your logic)
     events = events.map((event) => ({ ...event, type: "event" }));
 
-    // Filter and map timelines
     timelines = timelines
       .filter(
         (timeline) =>
