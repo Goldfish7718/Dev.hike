@@ -49,7 +49,7 @@ const User1 = () => {
         `${API_URL}/profile/fetchUser/mongoId/${userId}`
       );
       setUser(res.data.user);
-    } catch (error) {
+    } catch (error: any) {
       console.log(error);
       toast({
         title: error.response.data.message,
