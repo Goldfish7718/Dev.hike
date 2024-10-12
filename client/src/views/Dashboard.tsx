@@ -10,7 +10,7 @@ import { API_URL } from "@/main";
 import { useToast } from "@/components/ui/use-toast";
 import { EventCardProps, PostCardProps, TimelineType } from "@/types/types1";
 import TimelineCard from "@/components/TimelineCard";
-import { Award, Star } from "lucide-react";
+import { Award, Loader2, Star } from "lucide-react";
 
 interface ExtendedTimelineType extends TimelineType {
   fullname: string;
@@ -24,6 +24,8 @@ type CombinedData =
 
 const Dashboard = () => {
   const [feed, setFeed] = useState<CombinedData[]>([]);
+  const [feedLoading, setFeedLoading] = useState(false);
+
   const { posts, fetchFeedPosts } = usePost();
   const { events, fetchEvents } = useEvent();
   const { currProfile } = useUser();
@@ -31,6 +33,7 @@ const Dashboard = () => {
 
   const fetchFeed = async () => {
     try {
+      setFeedLoading(true);
       const res = await axios.get(
         `${API_URL}/profile/fetchFeed/${currProfile?._id}`
       );
@@ -43,6 +46,8 @@ const Dashboard = () => {
         description: "An error occured while fetching feed",
         variant: "destructive",
       });
+    } finally {
+      setFeedLoading(false);
     }
   };
 
@@ -69,47 +74,62 @@ const Dashboard = () => {
           </TabsTrigger>
         </TabsList>
         <TabsContent value="feed">
-          {feed.map((feedItem) => {
-            if (feedItem.type === "post") {
-              return (
-                <>
-                  <div className="flex gap-1 items-center">
-                    <Star size={16} />
-                    <h4 className="text-neutral-700 text-sm">
-                      {feedItem.fullname} posted{" "}
-                    </h4>
-                  </div>
-                  <PostCard {...feedItem} />
-                </>
-              );
-            } else if (feedItem.type === "event")
-              return <EventCard {...feedItem} />;
-            else {
-              return (
-                <>
-                  <div className="flex gap-1 items-center">
-                    <Award size={16} />
-                    <h4 className="text-neutral-700 text-sm">
-                      {feedItem.fullname} added to their timeline{" "}
-                    </h4>
-                  </div>
-                  <TimelineCard {...feedItem} className="sm:w-2/3" />
-                </>
-              );
-            }
-          })}
+          {feed.length > 0 &&
+            feed.map((feedItem) => {
+              if (feedItem.type === "post") {
+                return (
+                  <>
+                    <div className="flex gap-1 items-center">
+                      <Star size={16} />
+                      <h4 className="text-neutral-700 text-sm">
+                        {feedItem.fullname} posted{" "}
+                      </h4>
+                    </div>
+                    <PostCard {...feedItem} />
+                  </>
+                );
+              } else if (feedItem.type === "event")
+                return <EventCard {...feedItem} />;
+              else {
+                return (
+                  <>
+                    <div className="flex gap-1 items-center">
+                      <Award size={16} />
+                      <h4 className="text-neutral-700 text-sm">
+                        {feedItem.fullname} added to their timeline{" "}
+                      </h4>
+                    </div>
+                    <TimelineCard {...feedItem} className="sm:w-2/3" />
+                  </>
+                );
+              }
+            })}
+          {feed.length == 0 && (
+            <div className="h-screen sm:w-2/3 flex justify-center items-center">
+              {!feedLoading && (
+                <h3 className="text-neutral-500">Nothing to see here!</h3>
+              )}
+              {feedLoading && <Loader2 className="animate-spin duration-300" />}
+            </div>
+          )}
         </TabsContent>
         <TabsContent value="posts">
           {posts.length > 0 ? (
             posts.map((post) => <PostCard {...post} />)
           ) : (
-            <>No Posts to show</>
+            <div className="h-screen sm:w-2/3 flex justify-center items-center">
+              <h3 className="text-neutral-500">Nothing to see here!</h3>
+            </div>
           )}
         </TabsContent>
         <TabsContent value="events">
-          {events.map((event) => (
-            <EventCard {...event} key={event._id} />
-          ))}
+          {events.length > 0 ? (
+            events.map((event) => <EventCard {...event} key={event._id} />)
+          ) : (
+            <div className="h-screen sm:w-2/3 flex justify-center items-center">
+              <h3 className="text-neutral-500">Nothing to see here!</h3>
+            </div>
+          )}
         </TabsContent>
       </Tabs>
     </>

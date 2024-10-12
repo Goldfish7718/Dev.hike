@@ -343,83 +343,111 @@ const Profile = () => {
               </TabsTrigger>
             </TabsList>
             <TabsContent value="timeline">
-              {timeline.map((item) => (
-                <TimelineCard key={item._id} {...item} />
-              ))}
+              {timeline.length > 0 ? (
+                timeline.map((item) => (
+                  <TimelineCard key={item._id} {...item} />
+                ))
+              ) : (
+                <div className="h-screen flex flex-col justify-center items-center gap-4">
+                  <h3 className="text-neutral-500">
+                    You haven't added anything to your timeline yet.
+                  </h3>
+                  <Button
+                    variant="outline"
+                    className="text-neutral-500"
+                    onClick={() => navigate("/new/timeline")}>
+                    Add to Timeline <Plus size={18} className="mx-2" />
+                  </Button>
+                </div>
+              )}
             </TabsContent>
             <TabsContent value="posts">
-              {posts.map((post) => (
-                <Card className="w-full my-3" key={post._id}>
-                  <CardHeader className="flex flex-row gap-4 justify-start items-center">
-                    <Avatar className="h-12 w-12">
-                      <AvatarImage src="" />
-                      <AvatarFallback className="flex">
-                        {fallback}
-                      </AvatarFallback>
-                    </Avatar>
-                    <div className="flex flex-col">
-                      <CardTitle>{post.title}</CardTitle>
-                      <Button
-                        className="dark:text-gray-300 text-gray-900 justify-start p-0"
-                        variant="link"
-                        size="sm">
-                        {user?.emailAddresses[0].emailAddress}
-                      </Button>
-                    </div>
-                  </CardHeader>
-                  <Separator />
-                  <CardContent>
-                    <div className="mt-4">
-                      <p>{post.content}</p>
-                      <ConfirmPostDeleteTrigger postId={post._id as string}>
-                        <Button variant="outline" className="mt-2">
-                          Delete <Trash className="mx-2" size={18} />
+              {posts.length > 0 ? (
+                posts.map((post) => (
+                  <Card className="w-full my-3" key={post._id}>
+                    <CardHeader className="flex flex-row gap-4 justify-start items-center">
+                      <Avatar className="h-12 w-12">
+                        <AvatarImage src="" />
+                        <AvatarFallback className="flex">
+                          {fallback}
+                        </AvatarFallback>
+                      </Avatar>
+                      <div className="flex flex-col">
+                        <CardTitle>{post.title}</CardTitle>
+                        <Button
+                          className="dark:text-gray-300 text-gray-900 justify-start p-0"
+                          variant="link"
+                          size="sm">
+                          {user?.emailAddresses[0].emailAddress}
                         </Button>
-                      </ConfirmPostDeleteTrigger>
-                    </div>
-                  </CardContent>
-                  <Separator />
-                  <div className="flex">
-                    <Button
-                      onClick={() => requestUpvote(post._id as string)}
-                      className={`w-full ${
-                        post.upvoteRefs.includes(currProfile?._id as string)
-                          ? "text-red-600"
-                          : null
-                      }`}
-                      variant="ghost">
-                      <ArrowBigUp size={24} className="mx-1" />
-                      {post.upvoteRefs.length} Upvotes
-                    </Button>
-                    <Button
-                      onClick={() => requestDownvote(post._id as string)}
-                      className={`w-full ${
-                        post.downvoteRefs.includes(currProfile?._id as string)
-                          ? "text-red-600"
-                          : null
-                      }`}
-                      variant="ghost">
-                      <ArrowBigDown size={24} className="mx-1" />
-                      {post.downvoteRefs.length} Downvotes
-                    </Button>
-
-                    <ReplyDialogTrigger
-                      setReplies={setReplies}
-                      loading={repliesLoading}
-                      replies={replies}
-                      postId={post._id as string}
-                      onOpenChange={() => setReplies([])}>
+                      </div>
+                    </CardHeader>
+                    <Separator />
+                    <CardContent>
+                      <div className="mt-4">
+                        <p>{post.content}</p>
+                        <ConfirmPostDeleteTrigger postId={post._id as string}>
+                          <Button variant="outline" className="mt-2">
+                            Delete <Trash className="mx-2" size={18} />
+                          </Button>
+                        </ConfirmPostDeleteTrigger>
+                      </div>
+                    </CardContent>
+                    <Separator />
+                    <div className="flex">
                       <Button
-                        className="w-full"
-                        variant="ghost"
-                        onClick={() => fetchReplies(post._id as string)}>
-                        <MessagesSquare size={24} className="mx-1" />
-                        {post.replyRefs.length} Replies
+                        onClick={() => requestUpvote(post._id as string)}
+                        className={`w-full ${
+                          post.upvoteRefs.includes(currProfile?._id as string)
+                            ? "text-red-600"
+                            : null
+                        }`}
+                        variant="ghost">
+                        <ArrowBigUp size={24} className="mx-1" />
+                        {post.upvoteRefs.length} Upvotes
                       </Button>
-                    </ReplyDialogTrigger>
-                  </div>
-                </Card>
-              ))}
+                      <Button
+                        onClick={() => requestDownvote(post._id as string)}
+                        className={`w-full ${
+                          post.downvoteRefs.includes(currProfile?._id as string)
+                            ? "text-red-600"
+                            : null
+                        }`}
+                        variant="ghost">
+                        <ArrowBigDown size={24} className="mx-1" />
+                        {post.downvoteRefs.length} Downvotes
+                      </Button>
+
+                      <ReplyDialogTrigger
+                        setReplies={setReplies}
+                        loading={repliesLoading}
+                        replies={replies}
+                        postId={post._id as string}
+                        onOpenChange={() => setReplies([])}>
+                        <Button
+                          className="w-full"
+                          variant="ghost"
+                          onClick={() => fetchReplies(post._id as string)}>
+                          <MessagesSquare size={24} className="mx-1" />
+                          {post.replyRefs.length} Replies
+                        </Button>
+                      </ReplyDialogTrigger>
+                    </div>
+                  </Card>
+                ))
+              ) : (
+                <div className="h-screen flex flex-col justify-center items-center gap-4">
+                  <h3 className="text-neutral-500">
+                    You haven't posted anything yet.
+                  </h3>
+                  <Button
+                    variant="outline"
+                    className="text-neutral-500"
+                    onClick={() => navigate("/new/post")}>
+                    New Post <SquarePen size={18} className="mx-2" />
+                  </Button>
+                </div>
+              )}
             </TabsContent>
           </Tabs>
         </div>

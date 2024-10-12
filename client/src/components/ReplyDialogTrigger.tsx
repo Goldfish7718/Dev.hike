@@ -39,9 +39,11 @@ const ReplyDialogTrigger = ({
   const { toast } = useToast();
 
   const [reply, setReply] = useState("");
+  const [replyPostingloading, setReplyPostingLoading] = useState(false);
 
   const postReply = async () => {
     try {
+      setReplyPostingLoading(true);
       const res = await axios.post(
         `${API_URL}/replies/reply/${postId}/${currProfile?._id}`,
         {
@@ -58,6 +60,9 @@ const ReplyDialogTrigger = ({
         duration: 3000,
         variant: "destructive",
       });
+    } finally {
+      setReply("");
+      setReplyPostingLoading(false);
     }
   };
 
@@ -74,18 +79,22 @@ const ReplyDialogTrigger = ({
               </DialogTitle>
             </DialogHeader>
             <div>
-              <ScrollArea className="h-96">
-                {loading && (
-                  <div className="flex items-center justify-center h-full">
-                    <Loader2
-                      size={48}
-                      className="animate-spin duration-500 my-auto"
-                    />
-                  </div>
-                )}
-                {!loading && replies.length === 0 && <h2>No replies</h2>}
-                {replies.length > 0 &&
-                  replies.map((reply) => (
+              {loading && (
+                <div className="flex items-center justify-center h-full">
+                  <Loader2
+                    size={48}
+                    className="animate-spin duration-500 my-auto"
+                  />
+                </div>
+              )}
+              {!loading && replies.length === 0 && (
+                <div className="h-full flex items-center justify-center">
+                  <h2 className="text-neutral-500">No replies</h2>
+                </div>
+              )}
+              {!loading && replies.length > 0 && (
+                <ScrollArea className="h-96">
+                  {replies.map((reply) => (
                     <>
                       <Card className="my-2">
                         <CardHeader>
@@ -103,15 +112,20 @@ const ReplyDialogTrigger = ({
                       </Card>
                     </>
                   ))}
-              </ScrollArea>
+                </ScrollArea>
+              )}
 
               <div className="mt-4 mx-2 flex gap-2">
                 <Input
                   placeholder="Reply"
                   onChange={(e) => setReply(e.target.value)}
+                  value={reply}
                 />
-                <Button onClick={postReply}>
-                  <SendHorizonal />
+                <Button onClick={postReply} disabled={Boolean(!reply)}>
+                  {!replyPostingloading && <SendHorizonal />}
+                  {replyPostingloading && (
+                    <Loader2 className="animate-spin duration-300" />
+                  )}
                 </Button>
               </div>
             </div>
@@ -131,18 +145,22 @@ const ReplyDialogTrigger = ({
           </DrawerTitle>
         </DrawerHeader>
         <div className="p-4">
-          <ScrollArea className="h-96">
-            {loading && (
-              <div className="flex items-center justify-center h-full">
-                <Loader2
-                  size={48}
-                  className="animate-spin duration-500 my-auto"
-                />
-              </div>
-            )}
-            {!loading && replies.length === 0 && <h2>No replies</h2>}
-            {replies.length > 0 &&
-              replies.map((reply) => (
+          {loading && (
+            <div className="flex items-center justify-center h-full">
+              <Loader2
+                size={48}
+                className="animate-spin duration-500 my-auto"
+              />
+            </div>
+          )}
+          {!loading && replies.length === 0 && (
+            <div className="h-full flex items-center justify-center">
+              <h2 className="text-neutral-500">No replies</h2>
+            </div>
+          )}
+          {!loading && replies.length > 0 && (
+            <ScrollArea className="h-96">
+              {replies.map((reply) => (
                 <>
                   <Card className="my-2">
                     <CardHeader>
@@ -160,15 +178,20 @@ const ReplyDialogTrigger = ({
                   </Card>
                 </>
               ))}
-          </ScrollArea>
+            </ScrollArea>
+          )}
 
           <div className="mt-4 mx-2 flex gap-2">
             <Input
               placeholder="Reply"
               onChange={(e) => setReply(e.target.value)}
+              value={reply}
             />
-            <Button onClick={postReply}>
-              <SendHorizonal />
+            <Button onClick={postReply} disabled={Boolean(!reply)}>
+              {!replyPostingloading && <SendHorizonal />}
+              {replyPostingloading && (
+                <Loader2 className="animate-spin duration-300" />
+              )}
             </Button>
           </div>
         </div>

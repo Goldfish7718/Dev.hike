@@ -26,8 +26,17 @@ export const fetchUser = async (req, res) => {
 
     if (method === "clerkId") {
       user = await Profile.findOne({ clerkId: userId });
+
+      if (!user) {
+        return res.status(404).json({ message: "User not found" });
+      }
     } else {
       user = await Profile.findById(userId);
+
+      if (!user) {
+        return res.status(404).json({ message: "User not found" });
+      }
+
       const { firstName, lastName, imageUrl } = await clerkClient.users.getUser(
         user.clerkId
       );
