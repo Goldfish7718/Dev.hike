@@ -42,7 +42,6 @@ const User1 = () => {
   const [user, setUser] = useState<UserType | null>(null);
   const [replies, setReplies] = useState<ReplyType[]>([]);
   const [repliesLoading, setRepliesLoading] = useState(false);
-  // const [timeline, setTimeline] = useState<TimelineType[]>([]);
 
   const fetchUser = async () => {
     try {
@@ -50,10 +49,10 @@ const User1 = () => {
         `${API_URL}/profile/fetchUser/mongoId/${userId}`
       );
       setUser(res.data.user);
-    } catch (error) {
+    } catch (error: any) {
       console.log(error);
       toast({
-        title: "Sorry an error occured!",
+        title: error.response.data.message,
         duration: 3000,
         variant: "destructive",
       });
