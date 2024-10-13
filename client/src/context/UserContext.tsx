@@ -195,12 +195,15 @@ function UserProvider({ children }: UserContextProps) {
       if (!res.data.user) {
         navigate("/initiate-profile/1");
       } else setCurrProfile(res.data.user);
-    } catch (error) {
+    } catch (error: any) {
       console.log(error);
-      toast({
-        title: "Sorry an error occured!",
-        variant: "destructive",
-      });
+      if (error.response.status == 404) {
+        navigate("/initiate-profile/1");
+      } else
+        toast({
+          title: "Sorry an error occured!",
+          variant: "destructive",
+        });
     }
   };
 
