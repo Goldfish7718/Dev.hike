@@ -7,17 +7,16 @@ import {
   getPosts,
   upvote,
 } from "../controllers/postControllers.js";
-import authenticateToken from "../middleware/verifyToken.js";
 
 const router = Router();
 
-router.get("/get/feed-posts", authenticateToken, getFeedPosts);
-router.get("/get/:userId", authenticateToken, getPosts);
+router.get("/get/feed-posts", getFeedPosts);
+router.get("/get/:userId", getPosts);
 
-router.post("/post/:userId", authenticateToken, addPost);
-router.post("/downvote/:postId/:userId", authenticateToken, downvote);
-router.post("/upvote/:postId/:userId", authenticateToken, upvote);
+router.post("/post/:userId", addPost);
+router.post("/downvote/:postId/:userId", downvote);
+router.post("/upvote/:postId/:userId", upvote);
 
-router.delete("/delete/:postId/:userId", authenticateToken, deletePost);
+router.delete("/delete/:postId/:userId", deletePost);
 
 export default router;

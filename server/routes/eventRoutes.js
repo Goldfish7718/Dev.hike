@@ -1,12 +1,16 @@
-import { Router } from 'express'
-import { addEvent, deleteEvent, getEvents, registerEvent } from '../controllers/eventControllers.js'
-import authenticateToken from '../middleware/verifyToken.js'
+import { Router } from "express";
+import {
+  addEvent,
+  deleteEvent,
+  getEvents,
+  registerEvent,
+} from "../controllers/eventControllers.js";
 
-const router = Router()
+const router = Router();
 
-router.get('/get', authenticateToken, getEvents)
-router.post('/post/:userRef', authenticateToken, addEvent)
-router.delete('/delete/:eventId', authenticateToken, deleteEvent)
-router.post('/register/:eventId/:userId', authenticateToken, registerEvent)
+router.get("/get", getEvents);
+router.post("/post/:userRef", addEvent);
+router.delete("/delete/:eventId", deleteEvent);
+router.post("/register/:eventId/:userId", registerEvent);
 
-export default router
+export default router;
