@@ -11,6 +11,7 @@ import postRoutes from "./routes/postRoutes.js";
 import eventRoutes from "./routes/eventRoutes.js";
 import replyRoutes from "./routes/replyRoutes.js";
 import timelineRoutes from "./routes/timelineRoutes.js";
+import geminiRoutes from "./routes/geminiRoutes.js";
 
 // MIDDLEWARE
 import authenticateToken from "./middleware/verifyToken.js";
@@ -39,6 +40,7 @@ app.use("/posts", postRoutes);
 app.use("/replies", replyRoutes);
 app.use("/timeline", timelineRoutes);
 app.use("/events", eventRoutes);
+app.use("/gemini", geminiRoutes);
 
 const connectDB = async (url) => {
   await mongoose
