@@ -1,8 +1,12 @@
 import { Router } from "express";
-import { enhanceText } from "../controllers/geminiControllers.js";
+import {
+  enhanceText,
+  summarizeProfile,
+} from "../controllers/geminiControllers.js";
 
 const router = Router();
 
+router.get("/summarize-profile/:userId", summarizeProfile);
 router.post("/enhance", enhanceText);
 
 export default router;

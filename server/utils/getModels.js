@@ -10,3 +10,14 @@ export const getTextEnhancingModel = async () => {
 
   return model;
 };
+
+export const getProfileSummarizationModel = async () => {
+  const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+  const model = genAI.getGenerativeModel({
+    model: "gemini-1.5-flash",
+    systemInstruction:
+      "You are person's profile summarizer. You will recieve a stringified JSON rpompt of the person's profile details and you'll have to enhance the information in a paragraph format and return it.",
+  });
+
+  return model;
+};
