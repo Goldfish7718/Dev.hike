@@ -4,6 +4,7 @@ import {
   getProfileSummarizationModel,
   getTextEnhancingModel,
 } from "../utils/getModels.js";
+import { useModel } from "../utils/useModel.js";
 
 export const enhanceText = async (req, res) => {
   try {
@@ -13,10 +14,8 @@ export const enhanceText = async (req, res) => {
     console.log(prompt);
 
     const textEnhancerModel = getTextEnhancingModel();
-    let result = (await textEnhancerModel).generateContent(prompt);
 
-    result = (await result).response;
-    result = result.text();
+    let result = await useModel(textEnhancerModel, prompt);
 
     result = JSON.parse(result);
 
@@ -41,12 +40,9 @@ export const summarizeProfile = async (req, res) => {
     };
 
     const profileSummarizerModel = getProfileSummarizationModel();
-
     const prompt = JSON.stringify(user);
 
-    let result = (await profileSummarizerModel).generateContent(prompt);
-    result = (await result).response;
-    result = result.text();
+    const result = await useModel(profileSummarizerModel, prompt);
 
     res.status(200).json({ result });
   } catch (error) {
