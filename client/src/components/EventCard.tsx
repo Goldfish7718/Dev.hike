@@ -34,9 +34,9 @@ const EventCard = (event: EventCardProps) => {
         <CardContent>
           <p>{event.description}</p>
           <div className="my-4">
-            <span className="dark:text-gray-400 text-sm text-neutral-800">
+            <span className="text-sm">
               Organized by:{" "}
-              <span className="hover:underline hover:cursor-pointer text-black">
+              <span className="hover:underline hover:cursor-pointer text-black dark:text-white">
                 {event.organiser}
               </span>
             </span>

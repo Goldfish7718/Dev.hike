@@ -81,7 +81,7 @@ const Dashboard = () => {
                   <>
                     <div className="flex gap-1 items-center">
                       <Star size={16} />
-                      <h4 className="text-neutral-700 text-sm">
+                      <h4 className="text-neutral-700 dark:text-neutral-300 text-sm">
                         {feedItem.fullname} posted{" "}
                       </h4>
                     </div>
@@ -95,7 +95,7 @@ const Dashboard = () => {
                   <>
                     <div className="flex gap-1 items-center">
                       <Award size={16} />
-                      <h4 className="text-neutral-700 text-sm">
+                      <h4 className="text-neutral-700 dark:text-neutral-300 text-sm">
                         {feedItem.fullname} added to their timeline{" "}
                       </h4>
                     </div>

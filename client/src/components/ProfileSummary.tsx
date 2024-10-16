@@ -1,24 +1,7 @@
-import {
-  Dialog,
-  DialogContent,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
+import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { useMediaQuery } from "usehooks-ts";
-import {
-  Drawer,
-  DrawerClose,
-  DrawerContent,
-  DrawerFooter,
-  DrawerHeader,
-  DrawerTitle,
-  DrawerTrigger,
-} from "@/components/ui/drawer";
-import { TriggerProps } from "@/types/types1";
+import { Drawer, DrawerContent } from "@/components/ui/drawer";
 import { useEffect, useState } from "react";
-
 interface ProfileSummaryProps {
   profileSummary: string;
   dialogOpen: boolean;
@@ -41,7 +24,6 @@ const ProfileSummaryTrigger = ({
   if (matches)
     return (
       <Dialog open={open} onOpenChange={setOpen}>
-        {/* <DialogTrigger>{children}</DialogTrigger> */}
         <DialogContent>
           <p>{profileSummary}</p>
         </DialogContent>
@@ -50,8 +32,7 @@ const ProfileSummaryTrigger = ({
 
   return (
     <Drawer open={open} onOpenChange={setOpen}>
-      {/* <DrawerTrigger>{children}</DrawerTrigger> */}
-      <DrawerContent>
+      <DrawerContent className="p-4">
         <p>{profileSummary}</p>
       </DrawerContent>
     </Drawer>

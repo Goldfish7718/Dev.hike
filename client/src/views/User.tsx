@@ -35,6 +35,7 @@ import { getInitials } from "@/utils";
 import ShinyButton from "@/components/ui/shiny-button";
 import useGemini from "@/hooks/useGemini";
 import ProfileSummaryTrigger from "@/components/ProfileSummary";
+import TimelineSummaryTrigger from "@/components/TimelineSummaryTrigger";
 
 const User1 = () => {
   const { toast } = useToast();
@@ -43,8 +44,16 @@ const User1 = () => {
   const { currProfile } = useUser();
   const { posts, requestDownvote, requestUpvote, fetchPosts } = usePost();
   const { fetchTimeline, timeline } = useTimeline();
-  const { profileSummary, profileSummaryLoading, requestProfileSummarization } =
-    useGemini();
+  const {
+    profileSummary,
+    profileSummaryLoading,
+
+    timelineSummary,
+    timelineSummaryLoading,
+
+    requestProfileSummarization,
+    requestTimelineSummarization,
+  } = useGemini();
 
   const [user, setUser] = useState<UserType | null>(null);
   const [replies, setReplies] = useState<ReplyType[]>([]);
@@ -158,30 +167,26 @@ const User1 = () => {
                   <UserPlus size={20} className="mx-1" />
                 </Button>
               )}
-
-              {/* <ProfileSummaryTrigger profileSummary={profileSummary}> */}
-              <div
-                onClick={() => requestProfileSummarization(userId as string)}>
-                <ShinyButton className="w-full">
-                  {!profileSummaryLoading && (
-                    <span className="flex justify-center">
-                      SUMMARIZE PROFILE
-                      <Stars className="mx-2" />
-                    </span>
-                  )}
-                  {profileSummaryLoading && (
-                    <span className="flex justify-center">
-                      <Loader2
-                        className="animate-spin duration-300"
-                        size={24}
-                      />
-                    </span>
-                  )}
-                </ShinyButton>
-              </div>
-              {/* </ProfileSummaryTrigger> */}
             </div>
           )}
+
+          <div
+            onClick={() => requestProfileSummarization(userId as string)}
+            className="mt-4">
+            <ShinyButton className="w-full">
+              {!profileSummaryLoading && (
+                <span className="flex justify-center">
+                  SUMMARIZE PROFILE
+                  <Stars className="mx-2" />
+                </span>
+              )}
+              {profileSummaryLoading && (
+                <span className="flex justify-center">
+                  <Loader2 className="animate-spin duration-300" size={24} />
+                </span>
+              )}
+            </ShinyButton>
+          </div>
 
           {/* ABOUT */}
           <div className="mt-4">
@@ -279,6 +284,25 @@ const User1 = () => {
               </TabsTrigger>
             </TabsList>
             <TabsContent value="timeline">
+              <div
+                onClick={() => requestTimelineSummarization(userId as string)}>
+                <ShinyButton className="w-full">
+                  {!timelineSummaryLoading && (
+                    <span className="flex justify-center">
+                      SUMMARIZE TIMELINE
+                      <Stars className="mx-2" />
+                    </span>
+                  )}
+                  {timelineSummaryLoading && (
+                    <span className="flex justify-center">
+                      <Loader2
+                        className="animate-spin duration-300"
+                        size={24}
+                      />
+                    </span>
+                  )}
+                </ShinyButton>
+              </div>
               {timeline.map((item) => (
                 <TimelineCard key={item._id} {...item} />
               ))}
@@ -359,6 +383,10 @@ const User1 = () => {
       <ProfileSummaryTrigger
         profileSummary={profileSummary}
         dialogOpen={Boolean(profileSummary)}
+      />
+      <TimelineSummaryTrigger
+        timelineSummary={timelineSummary}
+        dialogOpen={timelineSummary ? true : false}
       />
     </>
   );
