@@ -10,14 +10,19 @@ import { API_URL } from "@/main";
 import { useToast } from "@/components/ui/use-toast";
 import { EventCardProps, PostCardProps, TimelineType } from "@/types/types1";
 import TimelineCard from "@/components/TimelineCard";
-import { Award, Loader2, Star } from "lucide-react";
+import { Award, Calendar, Loader2, Star, Stars } from "lucide-react";
+import ShinyButton from "@/components/ui/shiny-button";
+import useGemini from "@/hooks/useGemini";
+import FeedSummaryTrigger, {
+  FeedSummaryType,
+} from "@/components/FeedSummaryTrigger";
 
 interface ExtendedTimelineType extends TimelineType {
   fullname: string;
   imageUrl: string;
 }
 
-type CombinedData =
+export type CombinedData =
   | (PostCardProps & { type: "post" })
   | (EventCardProps & { type: "event" })
   | (ExtendedTimelineType & { type: "timeline" });
@@ -30,6 +35,8 @@ const Dashboard = () => {
   const { events, fetchEvents } = useEvent();
   const { currProfile } = useUser();
   const { toast } = useToast();
+  const { feedSummary, feedSummaryLoading, requestFeedSummarization } =
+    useGemini();
 
   const fetchFeed = async () => {
     try {
@@ -74,6 +81,23 @@ const Dashboard = () => {
           </TabsTrigger>
         </TabsList>
         <TabsContent value="feed">
+          <div onClick={() => requestFeedSummarization(feed)} className="my-4">
+            {feed.length > 0 && (
+              <ShinyButton className="sm:w-2/3 w-full">
+                {!feedSummaryLoading && (
+                  <span className="flex justify-center">
+                    SUMMARIZE FEED
+                    <Stars className="mx-2" />
+                  </span>
+                )}
+                {feedSummaryLoading && (
+                  <span className="flex justify-center">
+                    <Loader2 className="animate-spin duration-300" size={24} />
+                  </span>
+                )}
+              </ShinyButton>
+            )}
+          </div>
           {feed.length > 0 &&
             feed.map((feedItem) => {
               if (feedItem.type === "post") {
@@ -89,7 +113,17 @@ const Dashboard = () => {
                   </>
                 );
               } else if (feedItem.type === "event")
-                return <EventCard {...feedItem} />;
+                return (
+                  <>
+                    <div className="flex gap-1 items-center">
+                      <Calendar size={16} />
+                      <h4 className="text-neutral-700 dark:text-neutral-300 text-sm">
+                        New Event
+                      </h4>
+                    </div>
+                    <EventCard {...feedItem} />
+                  </>
+                );
               else {
                 return (
                   <>
@@ -132,6 +166,11 @@ const Dashboard = () => {
           )}
         </TabsContent>
       </Tabs>
+
+      <FeedSummaryTrigger
+        dialogOpen={feedSummary ? true : false}
+        feedSummary={feedSummary}
+      />
     </>
   );
 };

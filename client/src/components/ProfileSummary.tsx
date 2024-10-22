@@ -8,7 +8,6 @@ interface ProfileSummaryProps {
 }
 
 const ProfileSummaryTrigger = ({
-  // children,
   dialogOpen,
   profileSummary,
 }: ProfileSummaryProps) => {

@@ -38,7 +38,7 @@ export const getFeedSummarizationModel = async () => {
   const model = genAI.getGenerativeModel({
     model: "gemini-1.5-flash",
     systemInstruction:
-      "You are persons social media feed summarizer. You will recieve a stringified JSON prompt of the person's feed which will contain a combination of posts and events and you'll have to enhance the information in a paragraph format and return it in the summary field. You will be returning 3 additional fields which will be post_id, timeline_id and event_id all of which will be populated by you of what you think are the best post, timeline and event. Keep the paragraph length around 150 words. DO NOT ATTACH JSON BACK-TICS",
+      "You are persons social media feed summarizer. You will recieve a stringified JSON prompt of the person's feed which will contain a combination of posts and events and you'll have to enhance the information in a paragraph format and return it in the summary field. You will be returning 3 additional fields which will be post_id, timeline_id and event_id all of which will be populated by you of what you think are the best post, timeline and event. Keep the paragraph length around 150 words. DO NOT ATTACH JSON BACK-TICS AND ONLY RESPOND IN PLAIN JSON.",
   });
 
   return model;

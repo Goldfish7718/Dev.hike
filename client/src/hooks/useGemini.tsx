@@ -1,5 +1,7 @@
+import { FeedSummaryType } from "@/components/FeedSummaryTrigger";
 import { TimelineSummaryType } from "@/components/TimelineSummaryTrigger";
 import { API_URL } from "@/main";
+import { CombinedData } from "@/views/Dashboard";
 import axios from "axios";
 import { useState } from "react";
 
@@ -11,9 +13,13 @@ interface UseGeminiReturns {
   timelineSummary: TimelineSummaryType | null;
   timelineSummaryLoading: boolean;
 
+  feedSummary: FeedSummaryType | null;
+  feedSummaryLoading: boolean;
+
   // FUNCTIONS
   requestProfileSummarization: (userId: string) => void;
   requestTimelineSummarization: (userId: string) => void;
+  requestFeedSummarization: (feed: CombinedData[]) => void;
 }
 
 const useGemini = (): UseGeminiReturns => {
@@ -23,6 +29,9 @@ const useGemini = (): UseGeminiReturns => {
   const [timelineSummary, setTimelineSummary] =
     useState<TimelineSummaryType | null>(null);
   const [timelineSummaryLoading, setTimelineSummaryLoading] = useState(false);
+
+  const [feedSummary, setFeedSummary] = useState<FeedSummaryType | null>(null);
+  const [feedSummaryLoading, setFeedSummaryLoading] = useState(false);
 
   const requestProfileSummarization = async (userId: string) => {
     try {
@@ -53,6 +62,22 @@ const useGemini = (): UseGeminiReturns => {
     }
   };
 
+  const requestFeedSummarization = async (feed: CombinedData[]) => {
+    try {
+      setFeedSummaryLoading(true);
+
+      const res = await axios.post(`${API_URL}/gemini/summarize-feed`, {
+        feed,
+      });
+
+      setFeedSummary(res.data.result);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setFeedSummaryLoading(false);
+    }
+  };
+
   return {
     profileSummary,
     profileSummaryLoading,
@@ -60,8 +85,12 @@ const useGemini = (): UseGeminiReturns => {
     timelineSummary,
     timelineSummaryLoading,
 
+    feedSummary,
+    feedSummaryLoading,
+
     requestProfileSummarization,
     requestTimelineSummarization,
+    requestFeedSummarization,
   };
 };
 
