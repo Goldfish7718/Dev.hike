@@ -15,6 +15,8 @@ import {
   MessagesSquare,
   Linkedin,
   Instagram,
+  Stars,
+  Loader2,
 } from "lucide-react";
 import { Tabs, TabsTrigger, TabsContent, TabsList } from "@/components/ui/tabs";
 import TimelineCard from "@/components/TimelineCard";
@@ -30,6 +32,10 @@ import { useUser } from "../context/UserContext";
 import usePost from "@/hooks/usePost";
 import useTimeline from "@/hooks/useTimeline";
 import { getInitials } from "@/utils";
+import ShinyButton from "@/components/ui/shiny-button";
+import useGemini from "@/hooks/useGemini";
+import ProfileSummaryTrigger from "@/components/ProfileSummary";
+import TimelineSummaryTrigger from "@/components/TimelineSummaryTrigger";
 
 const User1 = () => {
   const { toast } = useToast();
@@ -38,6 +44,16 @@ const User1 = () => {
   const { currProfile } = useUser();
   const { posts, requestDownvote, requestUpvote, fetchPosts } = usePost();
   const { fetchTimeline, timeline } = useTimeline();
+  const {
+    profileSummary,
+    profileSummaryLoading,
+
+    timelineSummary,
+    timelineSummaryLoading,
+
+    requestProfileSummarization,
+    requestTimelineSummarization,
+  } = useGemini();
 
   const [user, setUser] = useState<UserType | null>(null);
   const [replies, setReplies] = useState<ReplyType[]>([]);
@@ -136,7 +152,7 @@ const User1 = () => {
             </div>
           </div>
           {currProfile?._id !== userId && (
-            <div>
+            <div className="flex flex-col gap-2">
               {user?.followerRefs.includes(currProfile?._id as string) ? (
                 <Button
                   className="mt-4 w-full"
@@ -154,8 +170,26 @@ const User1 = () => {
             </div>
           )}
 
+          <div
+            onClick={() => requestProfileSummarization(userId as string)}
+            className="mt-4">
+            <ShinyButton className="w-full">
+              {!profileSummaryLoading && (
+                <span className="flex justify-center">
+                  SUMMARIZE PROFILE
+                  <Stars className="mx-2" />
+                </span>
+              )}
+              {profileSummaryLoading && (
+                <span className="flex justify-center">
+                  <Loader2 className="animate-spin duration-300" size={24} />
+                </span>
+              )}
+            </ShinyButton>
+          </div>
+
           {/* ABOUT */}
-          <div className="mt-8">
+          <div className="mt-4">
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center">
@@ -250,6 +284,25 @@ const User1 = () => {
               </TabsTrigger>
             </TabsList>
             <TabsContent value="timeline">
+              <div
+                onClick={() => requestTimelineSummarization(userId as string)}>
+                <ShinyButton className="w-full">
+                  {!timelineSummaryLoading && (
+                    <span className="flex justify-center">
+                      SUMMARIZE TIMELINE
+                      <Stars className="mx-2" />
+                    </span>
+                  )}
+                  {timelineSummaryLoading && (
+                    <span className="flex justify-center">
+                      <Loader2
+                        className="animate-spin duration-300"
+                        size={24}
+                      />
+                    </span>
+                  )}
+                </ShinyButton>
+              </div>
               {timeline.map((item) => (
                 <TimelineCard key={item._id} {...item} />
               ))}
@@ -326,6 +379,15 @@ const User1 = () => {
           </Tabs>
         </div>
       </div>
+
+      <ProfileSummaryTrigger
+        profileSummary={profileSummary}
+        dialogOpen={Boolean(profileSummary)}
+      />
+      <TimelineSummaryTrigger
+        timelineSummary={timelineSummary}
+        dialogOpen={timelineSummary ? true : false}
+      />
     </>
   );
 };

@@ -10,9 +10,11 @@ import { Button } from "./ui/button";
 import EventRegisterTrigger from "./EventRegister";
 import { EventCardProps } from "@/types/types1";
 import { useUser } from "@/context/UserContext";
+import { useNavigate } from "react-router-dom";
 
 const EventCard = (event: EventCardProps) => {
   const { currProfile } = useUser();
+  const navigate = useNavigate();
 
   const userRegistered = () => {
     const potentialUser = event.registrations.find(
@@ -34,9 +36,11 @@ const EventCard = (event: EventCardProps) => {
         <CardContent>
           <p>{event.description}</p>
           <div className="my-4">
-            <span className="dark:text-gray-400 text-sm text-neutral-800">
+            <span className="text-sm">
               Organized by:{" "}
-              <span className="hover:underline hover:cursor-pointer text-black">
+              <span
+                className="hover:underline hover:cursor-pointer text-black dark:text-white"
+                onClick={() => navigate(`/user/${event.userRef}`)}>
                 {event.organiser}
               </span>
             </span>
@@ -53,7 +57,7 @@ const EventCard = (event: EventCardProps) => {
         <CardFooter>
           <div className="w-full flex flex-col gap-1">
             <span className="dark:text-gray-400 text-sm text-neutral-800">
-              Khushi, Samruddhi and 3 others have participated
+              Khushi, Tejas and 3 others have participated
             </span>
             {userRegistered() ? (
               <Button variant="secondary">
