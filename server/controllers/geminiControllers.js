@@ -10,6 +10,7 @@ import { useModel } from "../utils/useModel.js";
 import Timeline from "../models/timelineSchema.js";
 import Post from "../models/postSchema.js";
 import Event from "../models/eventSchema.js";
+import Reply from "../models/replySchema.js";
 
 export const enhanceText = async (req, res) => {
   try {
@@ -92,6 +93,7 @@ export const summarizeFeed = async (req, res) => {
     const prompt = JSON.stringify(feed);
 
     let result = await useModel(feedSummarizatonModel, prompt);
+    // console.log(result);
     result = JSON.parse(result);
 
     let post;
@@ -99,7 +101,42 @@ export const summarizeFeed = async (req, res) => {
     let timeline;
 
     if (result.post_id) {
-      post = await Post.findById(result.post_id);
+      post = await Post.findById(result.post_id).lean();
+      const user = await Profile.findById(post.userRef);
+
+      const clerkUser = await clerkClient.users.getUser(user.clerkId);
+
+      const { firstName, lastName, imageUrl } = clerkUser;
+
+      post = {
+        ...post,
+        fullname: `${firstName} ${lastName}`,
+        imageUrl,
+      };
+
+      let replies = await Reply.find({ postRef: post._id }).lean();
+
+      replies = await Promise.all(
+        replies.map(async (reply) => {
+          const replyingUser = await Profile.findById(reply.userRef);
+          const clerkUser = await clerkClient.users.getUser(
+            replyingUser.clerkId
+          );
+
+          const { firstName, lastName, imageUrl } = clerkUser;
+
+          return {
+            ...reply,
+            fullname: `${firstName} ${lastName}`,
+            imageUrl,
+          };
+        })
+      );
+
+      post = {
+        ...post,
+        replies,
+      };
     }
 
     if (result.timeline_id) {
