@@ -49,6 +49,10 @@ const connectDB = async (url) => {
     .catch((err) => console.log(err));
 };
 
+app.get('/', (req, res) => {
+  res.send("Dev.hike server")
+})
+
 app.listen(PORT, async () => {
   await connectDB(process.env.DB_URI || "mongodb://0.0.0.0:27017/Devhike");
   console.log(`Server started on port ${PORT}`);
